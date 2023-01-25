@@ -1,0 +1,141 @@
+<head>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart"],"language":"en"});
+</script>
+<script>document.domain=document.domain;</script>
+{% extends "home/base.html" %} 
+{% load static %} 
+{% block addon_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+
+.panel ol {
+  counter-reset: item;
+}
+
+.panel ol > li {
+  padding: 0 0 0 1em;
+  text-indent: -2em;
+  list-style-type: none;
+  counter-increment: item;
+}
+
+.panel ol > li:before {
+  display: inline-block;
+  width: 1em;
+  padding-right: 0.5em;
+  font-weight: bold;
+  text-align: right;
+  content: counter(item) ".";
+}
+
+.panel li {
+  margin: 10px 0;
+
+}
+.no-bullets{
+  list-style-type: none;
+  text-indent:-10px;
+  text-align: justify;
+  margin:auto;
+  max-width:900px;
+  padding-right:20px
+}
+
+</style>
+{% endblock %}
+</head>
+<body>
+
+
+
+{% block content %} 
+
+<div class="panel panel-primary" style="background-color:#3278B4;text-align:center;margin-bottom:10px;color:white;">  
+       <div class="panel-body">
+        <h2>The GPCRmd community</h2>
+       </div> 
+ </div>
+
+<div class="panel panel-primary">  
+  <div style="margin:40px 100px">
+    <!--<h3>The GPCRmd community</h3>-->
+     <div style="overflow:auto;margin:auto;max-width:700px">
+      <div class="text-center" style="width: 900px; height: 320px; overflow: hidden;margin-left:-220px">
+        <iframe title=" " aria-label="Map" id="datawrapper-chart-f743N" src="https://datawrapper.dwcdn.net/T5E0n/2/" scrolling="no" frameborder="0" style="border: none;" width="1400" height="686"></iframe>
+      </div>
+
+
+    </div>
+    <ul class="no-bullets">
+      <li>Ismael Rodríguez-Espigares, <strong>Hospital del Mar Medical Research Institute—Pompeu Fabra University</strong> (Barcelona, Spain) </li>
+      <li>Mariona Torrens-Fontanals, <strong>Hospital del Mar Medical Research Institute—Pompeu Fabra University</strong> (Barcelona, Spain)</li>
+      <li>Johanna K. S. Tiemann, <strong>University of Copenhagen</strong> (Copenhagen, Denmark), <strong>Medical University Leipzig</strong> (Leipzig, Germany), <strong>Charite University Medicine Berlin</strong> (Berlin, Germany)</li>
+      <li>David Aranda-García, <strong>Hospital del Mar Medical Research Institute—Pompeu Fabra University</strong> (Barcelona, Spain)</li>
+      <li>Juan Manuel Ramírez-Anguita, <strong>Hospital del Mar Medical Research Institute—Pompeu Fabra University</strong> (Barcelona, Spain)</li>
+      <li>Tomasz Maciej Stepniewski, <strong>Hospital del Mar Medical Research Institute—Pompeu Fabra University</strong> (Barcelona, Spain)</li>
+      <li>Nathalie Worp, <strong>Hospital del Mar Medical Research Institute—Pompeu Fabra University</strong> (Barcelona, Spain)</li>
+      <li>Alejandro Varela-Rial, <strong>Pompeu Fabra University</strong> (Barcelona, Spain)</li>
+      <li>Adrián Morales-Pastor, <strong>Hospital del Mar Medical Research Institute—Pompeu Fabra University</strong> (Barcelona, Spain)</li>
+      <li>Brian Medel-Lacruz, <strong>Hospital del Mar Medical Research Institute—Pompeu Fabra University</strong> (Barcelona, Spain)</li>
+      <li>Gáspár Pándy-Szekeres, <strong>University of Copenhagen</strong> (Copenhagen, Denmark)</li>
+      <li>Eduardo Mayol, <strong>Universitat Autònoma de Barcelona</strong> (Bellaterra, Spain)</li>
+      <li>Toni Giorgino, <strong>National Research Council of Italy</strong> (Milan, Italy), <strong>University of Milan</strong> (Milan, Italy)</li>
+      <li>Jens Carlsson, <strong>Uppsala University</strong> (Uppsala, Sweden)</li>
+      <li>Xavier Deupi, <strong>Paul Scherrer Institute</strong> (Villigen PSI, Switzerland)</li>
+      <li>Slawomir Filipek,<strong> University of Warsaw</strong> (Warsaw, Poland)</li>
+      <li>Marta Filizola, <strong>Icahn School of Medicine at Mount Sinai</strong> (New York, USA)</li>
+      <li>José Carlos Gómez-Tamayo, <strong>Universitat Autònoma de Barcelona</strong> (Bellaterra, Spain)</li>
+      <li>Angel Gonzalez, <strong>Universitat Autònoma de Barcelona</strong> (Bellaterra, Spain)</li>
+      <li>Hugo Gutiérrez-de-Terán, <strong>Uppsala University</strong> (Uppsala, Sweden)</li>
+      <li>Mireia Jiménez-Rosés, <strong>Universitat Autònoma de Barcelona</strong> (Bellaterra, Spain)</li>
+      <li>Willem Jespers, <strong>Uppsala University</strong> (Uppsala, Sweden)</li>
+      <li>Jon Kapla, <strong>Uppsala University</strong> (Uppsala, Sweden)</li>
+      <li>George Khelashvili, <strong>Weill Cornell Medical College of Cornell University</strong> (New York,  USA)</li>
+      <li>Peter Kolb, <strong>Philipps-University Marburg</strong> (Marburg, Germany)</li>
+      <li>Dorota Latek, <strong>University of Warsaw</strong> (Warsaw, Poland)</li>
+      <li>Maria Marti-Solano, <strong>MRC Laboratory of Molecular Biology</strong> (Cambridge, UK), <strong>Philipps-University Marburg</strong> (Marburg, Germany)</li>
+      <li>Pierre Matricon, <strong>Uppsala University</strong> (Uppsala, Sweden)</li>
+      <li>Minos-Timotheos Matsoukas, <strong>University of Patras</strong> (Patras, Greece), <strong>Universitat Autònoma de Barcelona</strong> (Bellaterra, Spain)</li>
+      <li>Przemyslaw Miszta, <strong>University of Warsaw</strong> (Warsaw, Poland)</li>
+      <li>Mireia Olivella, <strong>Universitat Autònoma de Barcelona</strong> (Bellaterra, Spain)</li>
+      <li>Laura Perez-Benito,<strong> Universitat Autònoma de Barcelona</strong> (Bellaterra, Spain)</li>
+      <li>Davide Provasi, <strong>Icahn School of Medicine at Mount Sinai</strong> (New York, USA)</li>
+      <li>Santiago Ríos, <strong>Universitat Autònoma de Barcelona</strong> (Bellaterra, Spain)</li>
+      <li>Iván R. Torrecillas,<strong> Universitat Autònoma de Barcelona</strong> (Bellaterra, Spain)</li>
+      <li>Jessica Sallander, <strong>Uppsala University</strong> (Uppsala, Sweden)</li>
+      <li>Agnieszka Sztyler, <strong>University of Warsaw</strong> (Warsaw, Poland)</li>
+      <li>Silvana Vasile, <strong>Uppsala University</strong> (Uppsala, Sweden)</li>
+      <li>Harel Weinstein, <strong>Weill Cornell Medical College of Cornell University</strong> (New York, USA)</li>
+      <li>Ulrich Zachariae, <strong>University of Dundee</strong> (Dundee, UK)</li>
+      <li>Peter W. Hildebrand, <strong>Medical University Leipzig</strong> (Leipzig, Germany), <strong>Charite University Medicine Berlin</strong> (Berlin, Germany), <strong>Berlin Institute of Health</strong> (Berlin, Germany)</li>
+      <li>Gianni De Fabritiis, <strong>Pompeu Fabra University</strong> (Barcelona, Spain), <strong>Acellera</strong> (Barcelona, Spain) </li>
+      <li>Ferran Sanz, <strong>Hospital del Mar Medical Research Institute—Pompeu Fabra University</strong> (Barcelona, Spain)</li>
+      <li>David E. Gloriam, <strong>University of Copenhagen</strong> (Copenhagen, Denmark)</li>
+      <li>Arnau Cordomi, <strong>Universitat Autònoma de Barcelona</strong> (Bellaterra, Spain)</li>
+      <li>Ramon Guixà-González, <strong>Paul Scherrer Institute</strong> (Villigen PSI, Switzerland)</li>
+      <li>Irina Tikhonova, <strong>Queen's University Belfast</strong> (Belfast, UK)</li>
+      <li>Antonella di Pizio, <strong>Technical University of Munich</strong> (Munich, Germany)</li>            
+      <li>Alessandro Nicoli, <strong>Technical University of Munich</strong> (Munich, Germany)</li>            
+      <li>Jesper Madsen, <strong>University of South Florida</strong> (Tampa, USA)</li>            
+      <li>Célien Jacquemard, <strong>University of Strasbourg</strong> (Strasbourg, France)</li>            
+      <li>Aida Shahraki, <strong>Philipps-University Marburg</strong> (Marburg, Germany)</li>            
+      <li>Matthaeus Drabek, <strong>Philipps-University Marburg</strong> (Marburg, Germany)</li>            
+      <li>Victor Lim, <strong>Philipps-University Marburg</strong> (Marburg, Germany)</li>            
+      <li>Jana Selent, <strong>Hospital del Mar Medical Research Institute—Pompeu Fabra University</strong> (Barcelona, Spain)</li>
+
+    </ul>
+  </div>
+
+
+
+</div>
+{% endblock content %} 
+         
+
+{% block addon_js %} 
+{% endblock %}
+
+
+</body>

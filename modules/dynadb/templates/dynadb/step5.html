@@ -1,0 +1,77 @@
+{% extends "home/base.html" %} 
+{% load static %} 
+
+<!-- Form styles -->
+{% block addon_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'dynadb/newform_styles.css' %}" />
+{% endblock %}
+
+<!--Form javascripts -->
+{% block addon_js %}
+<script src="{% static 'dynadb/ajaxConfig.js' %}"></script>
+<script src="{% static 'dynadb/jquery.form.min.js' %}"></script>
+<script src="{% static 'dynadb/searchtop.js' %}"></script>
+<script src="{% static 'dynadb/required_fields.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<!--The main submission form tag. All the input tags refering to it will have form="mainform"-->
+<form method="post" id="mainform" onsubmit="return createAllErrors('mainform','loading_submit')" action="/dynadb/step5_submit/{{submission_id}}/" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <div class="col-md-12">
+    <div class="col-md-12 panel panel-primary form_title">   
+      <div class="panel-body">
+        <h2 >Step 5: References and authors</h2>
+     </div> 
+    </div>
+    <!-- Main Files div -->
+    <div id="main_prot_div" action="/dynadb/step4_submit/{{submission_id}}/">
+      <div class='col-md-12 panel panel-primary panel-body'>
+        <h4>Please, introduce the information concerning the authorship, publication and references of this MD simulation. </h4>
+      </div>
+      <div class='col-md-12 alert-info' id="ref_info">
+        <p><b>IMPORTANT:</b> Should your simulation not be publicated yet, please skip this step. You will still be able to fill it later on.</p>
+      </div>      
+      <div class="col-md-12 panel panel-primary panel-body">    
+
+        <div class=row id='PRUEBA'>
+
+          <input id="submission_id" maxlength="30" name="submission_id" type="hidden" style="width:180px" placeholder="" value="{{submission_id}}" />
+          {% for field in fdbREFF %}
+          <div class="row">
+            <div class="col-md-3 label_div">
+              <label for="id_name">
+                <p>{{ field.label }}:</p>
+              </label>
+            </div>
+            <div class="col-md-6">
+              {{field.as_widget}}{{field.errors }}
+            </div>
+            <br>
+          </div>
+          {% endfor %}
+          
+        </div>  
+      </div>    
+    </div>
+  </div>
+
+</form>
+
+<script type="text/javascript">
+  //To add class format to input fields
+  $("form input").addClass("input_step")
+
+  //Alert on submit of this step
+  function conf(){
+    var con=confirm("Do you really want to finnish this submission? No further changes will be possible in the future.");
+    return(con)
+  }
+</script>
+
+{% include "./dynadb/submission_steps_menu.html" %}
+
+
+{% endblock content %}
+

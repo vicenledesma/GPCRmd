@@ -1,0 +1,99 @@
+
+{% extends "home/base.html" %} 
+{% load static %}
+{% load static %} 
+{% block addon_css %}
+  <style>
+  .panel-body {
+    word-break:break-all
+}
+   .mol-container {
+        width: 80%;
+        height: 400px;
+        position: relative;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+    <div class="container">
+    <div class="panel panel-info">
+    <div class="panel-heading"><b>Molecule Info: {{answer.name}} </b></div>
+    <div class="panel-body">  
+    {% if answer.smiles %}
+    <b>Smiles</b>:<br> {{answer.smiles}} <br>  
+    {%endif%}
+<br>
+    {% if answer.netcharge %}
+        <b>Netcharge</b>:<br>{{answer.netcharge}} <br>
+    {%endif%}
+<br>
+    {% if answer.inchikey %}
+        <b>InChIKey</b>:<br>{{answer.inchikey}} <br>
+    {%endif%}
+<br>
+    {% if answer.inchi %}
+        <b>InChI</b>:<br>{{answer.inchi}} <br>
+    {%endif%}
+<br>
+    {% if answer.inchicol %}
+        <b>InChIcol</b>:<br>{{answer.inchicol}} <br>
+    {%endif%}
+<br>
+    {% if answer.link_2_compound %}
+        <b>+info (from its Standard Form)</b>:<br> 
+           <a class='btn btn-info' role='button' href= /dynadb/compound/id/{{answer.link_2_compound}}>{{answer.name}}</a>
+    {%endif%}
+<br>
+    {% if answer.inmodels %}
+        <br><b> Complex structures in which this molecule appears </b>:<br>
+        {%for model in answer.inmodels%}
+            <a class='btn btn-info' role='button' href= /dynadb/model/id/{{model}}> Complex Structure ID: {{model}}</a>
+        {%endfor%}
+    {%endif%}
+<br>
+    {% if answer.references %} 
+        <br><b>References in which this molecule is mentioned</b>:<br>
+        {%for reference in answer.references%}
+                {%if reference.pmid%}
+                    <p>{{reference.authors}}. {{reference.pub_year}}. {{reference.title}}. {{reference.journal}} {{reference.volume}} ({{reference.issue}}). doi: {{reference.doi}}. Available in: <a href=https://www.ncbi.nlm.nih.gov/pubmed/{{reference.pmid}}>Pubmed Link</a></p><br>
+                {%else%}
+                    <p>{{reference.authors}}. {{reference.pub_year}}. {{reference.title}}. {{reference.journal}} {{reference.volume}} ({{reference.issue}}). doi: {{reference.doi}}.</p><br>
+                {%endif%}
+        {%endfor%}
+    {% endif %} 
+
+    <br><center><a href=/dynadb/files/Molecule/{{answer.sdfile}}> <button class="btn btn-primary" type="button">Download the SDF file</button></a></center>
+
+    </div>
+    </div>
+    </div>
+
+    <div class="container">
+    <div class="panel panel-info">
+    <div class="panel-heading"><b>Image of the Specific State:</b></div>
+    <div class="panel-body">
+    <div id='leftdiv' class="col-sm-6">
+        <center><button  style="display:none;" type="button" class="btn btn-primary ortoligand" id={{answer.myid}}> See 3D </button></center><br>
+        <center><img src="{{answer.imagelink}}" /></center>
+    </div>
+    <div id='rightdiv' class="col-sm-6">
+        <div id="container-01" class="mol-container"></div>
+    </div>
+
+    </div>
+    </div>
+    </div>
+
+{% endblock content %}
+
+
+{% block addon_js %}
+<script src="{% static 'dynadb/mol3dv.js' %}"></script>
+<script src="https://3Dmol.csb.pitt.edu/build/3Dmol-nojquery.js"></script>
+<script type="text/javascript" >
+    $( document ).ready(function() {
+        $('.ortoligand:first').click();
+    });
+</script>
+{% endblock%}
+

@@ -1,8 +1,8 @@
 For GPCRmd files:
 
-Copyright 2017-2020. All rights reserved.
+Copyright 2017-2022. All rights reserved.
 
-Copyright (c) 2017-2020 Ismael Rodríguez-Espigares, Mariona Torrens-Fontanals,
+Copyright (c) 2017-2022 Adrián García Recio, Ismael Rodríguez-Espigares, Mariona Torrens-Fontanals,
 Juan Manuel Ramírez-Anguita, Alejandro Varela-Rial, Jana Selent,
 Universitat Pompeu Fabra (Barcelona, Spain) and
 Institut Hospital del Mar d'Investigacions Mèdiques (Barcelona, Spain).
@@ -20,5 +20,5 @@ http://www.apache.org/licenses/LICENSE-2.0
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and 
+See the License for the specific language governing permissions and
 limitations under the License.
