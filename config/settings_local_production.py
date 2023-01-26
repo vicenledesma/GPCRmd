@@ -17,13 +17,12 @@ DOCUMENTATION_URL = 'http://docs.gpcrdb.org/'
 GOOGLE_ANALYTICS_KEY = False
 
 # Database
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'protwis',
-        'USER': 'protwis',
-        'PASSWORD': 'protwis',
+        'NAME': 'gpcrmd',
+        'USER': 'gpcrmd',
+        'PASSWORD': '6PC4m5!',
         'HOST': 'localhost',
     }
 }
@@ -35,7 +34,7 @@ FILES_NO_LOGIN = False
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 #Import secrets
-from protwis.SECRETS import *
+from config.settings_local_development import SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
