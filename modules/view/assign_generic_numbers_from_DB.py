@@ -1,7 +1,7 @@
-from dynadb.pipe4_6_0 import *
-from dynadb.models import  DyndbModel, DyndbModeledResidues, DyndbProteinSequence, DyndbProtein, DyndbProteinMutations
-from protein.models import  Residue, Protein
-from residue.models import  ResidueGenericNumber
+from modules.dynadb.pipe4_6_0 import *
+from modules.dynadb.models import  DyndbModel, DyndbModeledResidues, DyndbProteinSequence, DyndbProtein, DyndbProteinMutations
+from modules.protein.models import  Residue, Protein
+from modules.residue.models import  ResidueGenericNumber
 import re 
 import pickle
 

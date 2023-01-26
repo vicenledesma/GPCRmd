@@ -16,25 +16,22 @@ DOCUMENTATION_URL = 'http://docs.gpcrdb.org/'
 GOOGLE_ANALYTICS_KEY = False
 
 # Database
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'protwis',
-        'USER': 'protwis',
-        'PASSWORD': 'protwis',
+        'NAME': 'gpcrmd',
+        'USER': 'gpcrmd',
+        'PASSWORD': '6PC4m5!',
         'HOST': 'localhost',
     }
 }
 
 # Quick-start development settings - unsuitable for production
-
 QUERY_CHECK_PUBLISHED = False
 FILES_NO_LOGIN = False
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_TRANSACTIONAL_HEADERS = {}
-
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '-eqrx61@n*z3y1mc1w_@x1+yo(@^!k7i-vjaz0tx1$902a!4mu'

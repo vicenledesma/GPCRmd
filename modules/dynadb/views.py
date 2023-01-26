@@ -77,9 +77,9 @@ from django.conf import settings
 from django.views.defaults import server_error
 from revproxy.views import ProxyView
 import mdtraj as md
-from view.assign_generic_numbers_from_DB import obtain_gen_numbering 
+from modules.view.assign_generic_numbers_from_DB import obtain_gen_numbering 
 from scipy import constants
-from dynadb.data import *
+from modules.dynadb.data import *
 
 model_2_dynamics_molecule_type = Model2DynamicsMoleculeType()
 color_label_forms=["blue","red","yellow","green","orange","magenta","brown","pink"]
@@ -7522,14 +7522,12 @@ def get_dynamics_file_types():
         for field in file_types[key]['db']:
             fields_extension[field] = set()
             
-    
     fields_list = fields_extension.keys()
     for field in fields_list:
         q = q | q.filter(**{field:True,'is_accepted':True})
     values_list = list(fields_list)
     values_list.append('extension')
 
-  
     q=q.values(*values_list)
     result = list(q)
     for row in result:
@@ -7545,7 +7543,6 @@ def get_dynamics_file_types():
 file_types = get_dynamics_file_types()
 
 def delete_uploaded_dynamic_files(submission_id,dbtype):
-
     dyndb_submission_dynamics_files = DyndbSubmissionDynamicsFiles.objects.filter(submission_id=submission_id,type=dbtype)
     dyndb_submission_dynamics_files = dyndb_submission_dynamics_files.values('filepath')
     for row in dyndb_submission_dynamics_files:
@@ -7558,7 +7555,6 @@ def delete_uploaded_dynamic_files(submission_id,dbtype):
 
 @csrf_protect
 def _upload_dynamics_files(request,submission_id,trajectory=None,trajectory_max_files=200):
-    
     file_types = get_dynamics_file_types()
     file_type = None
     new_window = '0'
@@ -7602,8 +7598,6 @@ def _upload_dynamics_files(request,submission_id,trajectory=None,trajectory_max_
     else:
         response = HttpResponse('Unknown file type: '+str(file_type),status=422,reason='Unprocessable Entity',content_type='text/plain; charset=UTF-8')
         return response
-
-    
 
     accept_string = ',.'.join(file_types[file_type]['extension'])
     accept_string = '.' + accept_string

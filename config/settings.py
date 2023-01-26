@@ -121,7 +121,6 @@ USE_L10N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-
 STATIC_URL = '/static/'
 STATIC_ROOT = '/var/www/GPCRmd/static'
 STATICFILES_DIRS = (os.sep.join([BASE_DIR, "static"]),)
@@ -213,10 +212,10 @@ if DEBUG:
                'filename': 'logs/build.log',
                'formatter': 'verbose'
            },
-           'protwis': {
+           'gpcrmd': {
                'level': 'DEBUG',
                'class': 'logging.FileHandler',
-               'filename': 'logs/protwis.log',
+               'filename': 'logs/gpcrmd.log',
                'formatter': 'verbose'
            },
        },
@@ -230,8 +229,8 @@ if DEBUG:
                'handlers': ['build'],
                'level': 'DEBUG',
            },
-           'protwis': {
-               'handlers': ['protwis'],
+           'gpcrmd': {
+               'handlers': ['gpcrmd'],
                'level': 'DEBUG',
            },
        }
