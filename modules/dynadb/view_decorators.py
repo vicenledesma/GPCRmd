@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
 
 
-from dynadb.models import DyndbSubmission
+from modules.dynadb.models import DyndbSubmission
 
 
 from functools import wraps

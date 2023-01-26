@@ -1,7 +1,7 @@
-from dynadb.models import DyndbFiles, DyndbFileTypes, DyndbModel, DyndbModeledResidues, DyndbProtein, DyndbSubmissionDynamicsFiles,DyndbOtherProteinNames, DyndbProteinSequence, DyndbCannonicalProteins, DyndbProteinMutations, DyndbCompound, DyndbOtherCompoundNames, DyndbMolecule, DyndbFiles, DyndbFilesMolecule, DyndbComplexExp, DyndbComplexProtein, DyndbComplexMolecule, DyndbComplexMoleculeMolecule, DyndbModelComponents, DyndbDynamicsComponents, DyndbFilesModel, DyndbDynamics,DyndbDynamicsComponents, DyndbDynamicsTags, DyndbDynamicsTagsList, DyndbFilesDynamics, DyndbRelatedDynamics, DyndbRelatedDynamicsDynamics,  DyndbReferences, DyndbDynamicsMembraneTypes, DyndbSubmission, DyndbSubmissionModel, DyndbSubmissionProtein, DyndbSubmissionMolecule, DyndbProteinCannonicalProtein,  DyndbComplexCompound, DyndbReferencesModel, DyndbReferencesProtein, DyndbReferencesMolecule, DyndbReferencesDynamics, DyndbReferencesCompound
-from protein.models import Protein
-from structure.models import StructureModel
-from ligand.models import Ligand
+from modules.dynadb.models import DyndbFiles, DyndbFileTypes, DyndbModel, DyndbModeledResidues, DyndbProtein, DyndbSubmissionDynamicsFiles,DyndbOtherProteinNames, DyndbProteinSequence, DyndbCannonicalProteins, DyndbProteinMutations, DyndbCompound, DyndbOtherCompoundNames, DyndbMolecule, DyndbFiles, DyndbFilesMolecule, DyndbComplexExp, DyndbComplexProtein, DyndbComplexMolecule, DyndbComplexMoleculeMolecule, DyndbModelComponents, DyndbDynamicsComponents, DyndbFilesModel, DyndbDynamics,DyndbDynamicsComponents, DyndbDynamicsTags, DyndbDynamicsTagsList, DyndbFilesDynamics, DyndbRelatedDynamics, DyndbRelatedDynamicsDynamics,  DyndbReferences, DyndbDynamicsMembraneTypes, DyndbSubmission, DyndbSubmissionModel, DyndbSubmissionProtein, DyndbSubmissionMolecule, DyndbProteinCannonicalProtein,  DyndbComplexCompound, DyndbReferencesModel, DyndbReferencesProtein, DyndbReferencesMolecule, DyndbReferencesDynamics, DyndbReferencesCompound
+from modules.protein.models import Protein
+from modules.structure.models import StructureModel
+from modules.ligand.models import Ligand
 from django import forms
 from django.forms import ModelForm, formset_factory, modelformset_factory, Textarea
 from haystack.forms import SearchForm

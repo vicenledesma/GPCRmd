@@ -32,8 +32,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.staticfiles',
     'modules.accounts',
+    'modules.common',
     'modules.dynadb',
-    'modules.home'
+    'modules.home',
+    'modules.ligand',
+    'modules.protein',
+    'modules.residue',
+    'modules.structure',
+    'modules.view'
+
 ]
 # INSTALLED_APPS = [
 #     'dynadb.apps.DynadbConfig',
@@ -99,9 +106,9 @@ MIDDLEWARE = DEBUG_TOOLBAR_MIDDLEWARE+\
 
 #['protwis.custom_middlewares.MultipleProxyMiddleware']+\'protwis.custom_middlewares.WsgiLogErrors', 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
 
-ROOT_URLCONF = 'run.urls'
+ROOT_URLCONF = 'config.urls'
 
-WSGI_APPLICATION = 'run.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 # Analytics
 GOOGLE_ANALYTICS_KEY = False
@@ -143,7 +150,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             # insert your TEMPLATE_DIRS here
-            '/var/www/GPCRmd/templates/search/'
+            '/var/www/GPCRmd/templates/'
         ],
         'APP_DIRS': True,
         'OPTIONS': {

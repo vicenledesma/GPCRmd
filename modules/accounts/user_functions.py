@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.six.moves.urllib.parse import urlparse
 
 
-from dynadb.models import DyndbSubmission, DyndbProtein, DyndbCompound ,DyndbMolecule, DyndbComplexExp, DyndbComplexMolecule, DyndbModel, DyndbDynamics 
+from modules.dynadb.models import DyndbSubmission, DyndbProtein, DyndbCompound ,DyndbMolecule, DyndbComplexExp, DyndbComplexMolecule, DyndbModel, DyndbDynamics 
 
 
 from functools import wraps
