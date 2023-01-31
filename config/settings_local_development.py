@@ -20,8 +20,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'gpcrmd',
-        'USER': 'gpcrmd',
-        'PASSWORD': '6PC4m5!',
+        'USER': 'gpcrmd_admin',
+        'PASSWORD': '0nly-U',
         'HOST': 'localhost',
     }
 }

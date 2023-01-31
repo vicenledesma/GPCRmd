@@ -23,7 +23,7 @@ class DyndbAssayTypes(models.Model):
 
 
 class DyndbBinding(models.Model):
-    id = models.ForeignKey('DyndbExpInteractionData', models.DO_NOTHING, db_column='id', primary_key=True)
+    id = models.OneToOneField('DyndbExpInteractionData', models.DO_NOTHING, db_column='id', primary_key=True)
     rvalue = models.FloatField()
     units = models.CharField(max_length=10)
     description = models.CharField(max_length=900, blank=True, null=True)
@@ -33,7 +33,7 @@ class DyndbBinding(models.Model):
         db_table = 'dyndb_binding'
 
 class DyndbInhibition(models.Model):
-    id = models.ForeignKey('DyndbExpInteractionData', models.DO_NOTHING, db_column='id', primary_key=True)
+    id = models.OneToOneField('DyndbExpInteractionData', models.DO_NOTHING, db_column='id', primary_key=True)
     rvalue = models.FloatField()
     units = models.CharField(max_length=10)
     description = models.CharField(max_length=900, blank=True, null=True)
@@ -44,7 +44,7 @@ class DyndbInhibition(models.Model):
 
 
 class DyndbCannonicalProteins(models.Model):
-    id_protein = models.ForeignKey('DyndbProtein', models.DO_NOTHING, db_column='id_protein', primary_key=True)
+    id_protein = models.OneToOneField('DyndbProtein', models.DO_NOTHING, db_column='id_protein', primary_key=True)
 
     class Meta:
         managed = False
@@ -340,7 +340,7 @@ class DyndbEfficacy(models.Model):
         (3, 'Inverse Agonist'),
         (4,'Other')
     )
-    id = models.ForeignKey('DyndbExpInteractionData', models.DO_NOTHING, db_column='id', primary_key=True)
+    id = models.OneToOneField('DyndbExpInteractionData', models.DO_NOTHING, db_column='id', primary_key=True)
     rvalue = models.FloatField()
     units = models.CharField(max_length=10)
     description = models.CharField(max_length=900,blank=True, null=True)
@@ -499,7 +499,7 @@ class DyndbFilesMolecule(models.Model):
 
 
 class DyndbFunctional(models.Model):
-    id = models.ForeignKey(DyndbExpInteractionData, models.DO_NOTHING, db_column='id', primary_key=True)
+    id = models.OneToOneField(DyndbExpInteractionData, models.DO_NOTHING, db_column='id', primary_key=True)
     description = models.CharField(max_length=60)
     go_id = models.IntegerField(blank=True, null=True)
 
@@ -682,7 +682,7 @@ class DyndbProtein(models.Model):
 
 
 class DyndbProteinActivity(models.Model):
-    id = models.ForeignKey(DyndbExpProteinData, models.DO_NOTHING, db_column='id', primary_key=True)
+    id = models.OneToOneField(DyndbExpProteinData, models.DO_NOTHING, db_column='id', primary_key=True)
     rvalue = models.FloatField()
     units = models.CharField(max_length=10)
     description = models.CharField(max_length=150)
@@ -715,7 +715,7 @@ class DyndbProteinMutations(models.Model):
 
 
 class DyndbProteinSequence(models.Model):
-    id_protein = models.ForeignKey(DyndbProtein, models.DO_NOTHING, db_column='id_protein', primary_key=True)
+    id_protein = models.OneToOneField(DyndbProtein, models.DO_NOTHING, db_column='id_protein', primary_key=True)
     sequence = models.TextField()
     length = models.SmallIntegerField()
 
@@ -820,7 +820,7 @@ class DyndbReferencesProtein(models.Model):
 
 
 class DyndbRelatedDynamics(models.Model):
-    id_dynamics = models.ForeignKey(DyndbDynamics, models.DO_NOTHING, db_column='id_dynamics', primary_key=True)
+    id_dynamics = models.OneToOneField(DyndbDynamics, models.DO_NOTHING, db_column='id_dynamics', primary_key=True)
 
     class Meta:
         managed = True

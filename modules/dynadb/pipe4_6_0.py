@@ -1,4 +1,4 @@
-from Bio import pairwise2
+from Bio.Align import PairwiseAligner
 #from Bio.pairwise2 import format_alignment
 #from Bio.Alphabet import generic_protein
 from Bio import AlignIO
@@ -265,11 +265,11 @@ def fasta_to_phylip(align_string):
 
 #############################################################################################################################################
 def align_wt_mut(wtseq,mutseq):
-	bestalig=pairwise2.align.localms(wtseq,mutseq,5,-1,-1.5,-1)[0]
+	bestalig=PairwiseAligner.align.localms(wtseq,mutseq,5,-1,-1.5,-1)[0]
 	return bestalig
 	
 def align_wt_mut_viewer(wtseq,mutseq):
-	bestalig=pairwise2.align.localms(wtseq,mutseq,5,-1,-1.5,-1.5)[0]
+	bestalig=PairwiseAligner.align.localms(wtseq,mutseq,5,-1,-1.5,-1.5)[0]
 	return bestalig
 #############################################################################################################################################
 natural_aa=['TRP', 'PHE', 'ASN', 'GLY', 'MET', 'VAL', 'ARG', 'PRO', 'LYS', 'GLU', 'TYR', 'ALA', 'THR', 'HIS', 'CYS', 'SER', 'LEU', 'GLN', 'ILE', 'ASP']
@@ -280,7 +280,7 @@ def matchpdbfa(sequence,pdbseq,tablepdb,hexflag,start=1):
 	 the changes in the pdb numbering according to the database sequence.'''
 	warningmessage=''
 	try:
-		bestalig=pairwise2.align.localms(sequence, pdbseq,5,-1,-1.5,-5)[0] #select the aligment with the best score.
+		bestalig=PairwiseAligner.align.localms(sequence, pdbseq,5,-1,-1.5,-5)[0] #select the aligment with the best score.
 		#pairwise2.align.localms(seq1,seq2,score for identical matches, score for mismatches, score for opening a gap, score for extending a gap)
 	except:
 		return 'Incorrect alignment. Make sure you have defined a correct range of sequence and PDB. '
@@ -352,7 +352,7 @@ def matchpdbfa_ngl(sequence,pdbseq,tablepdb,hexflag,start=1):
 	 Do an alignment to check if the resids are corrupted in the pdb. Returns a table showing
 	 the changes in the pdb numbering according to the database sequence.'''
 
-	bestalig=pairwise2.align.localms(sequence, pdbseq,100,-1,-10,-10)[0] #select the aligment with the best score.
+	bestalig=PairwiseAligner.align.localms(sequence, pdbseq,100,-1,-10,-10)[0] #select the aligment with the best score.
 	#pairwise2.align.localms(seq1,seq2,score for identical matches, score for mismatches, score for opening a gap, score for extending a gap)
 	#print(bestalig)
 	biglist=list()
@@ -626,7 +626,7 @@ def searchtop(pdbfile,sequence, start,stop,chain='', segid=''):
 	else:
 		tablepdb,simplified_sequence,hexflag=result
 
-	bestalig=pairwise2.align.localms(sequence, simplified_sequence,5,-1,-5,-5)[0] #select the aligment with the best score.
+	bestalig=PairwiseAligner.align.localms(sequence, simplified_sequence,5,-1,-5,-5)[0] #select the aligment with the best score.
 	print(bestalig)
 	'''
 	The resulting alignment should be like:

@@ -4,7 +4,7 @@ from django.views.generic.base import RedirectView
 from django.views.generic import TemplateView
 from django.conf import settings
 
-from home import views
+from modules.home import views
 
 urlpatterns = [
     re_path(r'^$', RedirectView.as_view(url='/home/', permanent=False), name='index'), 

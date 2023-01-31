@@ -5,7 +5,8 @@ from protein.models import Protein, ProteinSegment
 from structure.models import Structure
 from structure.functions import BlastSearch, BlastSearchOnline
 
-from Bio import SeqIO, pairwise2
+from Bio import SeqIO
+from Bio.Align import PairwiseAligner
 from Bio.PDB import PDBParser, PPBuilder
 import Bio.PDB.Polypeptide as polypeptide
 
@@ -377,7 +378,7 @@ class SequenceParser(object):
         else:
             return
 
-        wt, chain_seq, score, start, end = pairwise2.align.localms(self.wt_seq, seq, 2, -4, -4, -.1, one_alignment_only=True)[0]
+        wt, chain_seq, score, start, end = PairwiseAligner.align.localms(self.wt_seq, seq, 2, -4, -4, -.1, one_alignment_only=True)[0]
 
         offset = 0
         for w, c in zip(wt, chain_seq):
@@ -560,7 +561,7 @@ class SequenceParserPW(object):
         """
         Get the pairwise alignment between wildtype and a given sequence.
         """
-        return pairwise2.align.localms(self.wt_seq, sequence, 2, -4, -4, -.1, one_alignment_only=True)[0]
+        return PairwiseAligner.align.localms(self.wt_seq, sequence, 2, -4, -4, -.1, one_alignment_only=True)[0]
 
 
     def map_wildtype(self, chain=None, seqres=None, sequence=None):

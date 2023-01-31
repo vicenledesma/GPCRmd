@@ -33,11 +33,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'modules.accounts',
     'modules.common',
+    'modules.contact_maps',
+    'modules.corplots',
+    'modules.covid19',
+    'modules.crossreceptor_analysis',
     'modules.dynadb',
     'modules.home',
+    'modules.interaction',
     'modules.ligand',
+    'modules.mutation',
+    'modules.news',
     'modules.protein',
     'modules.residue',
+    'modules.sc2md',
     'modules.structure',
     'modules.view'
 
@@ -99,9 +107,10 @@ MIDDLEWARE = DEBUG_TOOLBAR_MIDDLEWARE+\
     ['django.middleware.common.CommonMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    
 ]
 
 #['protwis.custom_middlewares.MultipleProxyMiddleware']+\'protwis.custom_middlewares.WsgiLogErrors', 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
@@ -122,8 +131,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATIC_ROOT = '/var/www/GPCRmd/static'
-STATICFILES_DIRS = (os.sep.join([BASE_DIR, "static"]),)
+# STATIC_ROOT = '/var/www/protwis/static/protwis/gpcrmd_srv'
+# STATICFILES_DIRS = (os.sep.join([BASE_DIR, "static"]),)
+if DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static')
+    ]
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/files/'
 MEDIA_ROOT = '/var/www/GPCRmd/media/files/'
 SENDFILE_BACKEND = 'sendfile.backends.xsendfile'
@@ -257,7 +272,7 @@ LOGOUT_REDIRECT_URL = 'accounts:memberpage'
 import mimetypes
 mimetypes.add_type('text/x-log; charset=UTF-8', '.log', strict=True)
 mimetypes.add_type('chemical/x-mdl-sdfile; charset=UTF-8', '.sdf', strict=True)
-mimetypes.add_type(' chemical/x-pdb', '.pdb', strict=True)
+mimetypes.add_type('chemical/x-pdb', '.pdb', strict=True)
 mimetypes.add_type('chemical/x-charmm-param', '.prm', strict=True)
 mimetypes.add_type('chemical/x-charmm-psf', '.psf', strict=True)
 

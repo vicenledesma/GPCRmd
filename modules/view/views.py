@@ -4,16 +4,16 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
 from django.conf import settings
-from dynadb.models import DyndbFiles, DyndbFilesDynamics, DyndbModelComponents, DyndbCompound, DyndbDynamicsComponents,DyndbDynamics, DyndbModel, DyndbProtein,DyndbProteinSequence,DyndbReferences,DyndbModeledResidues, DyndbNonGPCRDynamics,DyndbSubmission
+from modules.dynadb.models import DyndbFiles, DyndbFilesDynamics, DyndbModelComponents, DyndbCompound, DyndbDynamicsComponents,DyndbDynamics, DyndbModel, DyndbProtein,DyndbProteinSequence,DyndbReferences,DyndbModeledResidues, DyndbNonGPCRDynamics,DyndbSubmission
 from django.db.models import F
 from django.template import loader
 from django.template.defaulttags import register
 
-from protein.models import Protein
-from mutation.models import Mutation,MutationExperiment
-from view.assign_generic_numbers_from_DB import obtain_gen_numbering 
-from dynadb.pipe4_6_0 import *
-from view.data import *
+from modules.protein.models import Protein
+from modules.mutation.models import Mutation,MutationExperiment
+from modules.view.assign_generic_numbers_from_DB import obtain_gen_numbering 
+from modules.dynadb.pipe4_6_0 import *
+from modules.view.data import *
 import re
 import json
 from Bio.PDB import *
@@ -26,7 +26,7 @@ import csv
 import pickle
 import math
 from os import path
-from dynadb.views import  get_precomputed_file_path, get_file_name , get_file_name_dict, get_file_paths
+from modules.dynadb.views import  get_precomputed_file_path, get_file_name , get_file_name_dict, get_file_paths
 from django.shortcuts import redirect
 import os
 from pathlib import Path

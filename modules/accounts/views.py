@@ -19,8 +19,8 @@ from django.template.response import TemplateResponse
 from django.conf import settings
 from django.db.models import F
 
-from dynadb.models import DyndbSubmission, DyndbDynamics, DyndbSubmissionDynamicsFiles
-from accounts.models import User
+from modules.dynadb.models import DyndbSubmission, DyndbDynamics, DyndbSubmissionDynamicsFiles
+from modules.accounts.models import User
 from .forms import AuthenticationForm, RegistrationForm, ChangeForm, ChangePassw, ChangeMailForm, PasswordResetForm
 
 import datetime

@@ -1,6 +1,6 @@
 from django.conf import settings
 from django import forms
-from accounts.models import User
+from modules.accounts.models import User
 from django.forms import ModelForm, PasswordInput
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.tokens import default_token_generator
@@ -13,7 +13,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.forms import PasswordResetForm as PasswordResetForm_default
 
 
-from accounts.models import User
+from modules.accounts.models import User
 
 class RegistrationForm(forms.ModelForm):
     """

@@ -12787,7 +12787,7 @@ def reset_permissions(request):
     
     
 from django.conf import settings
-from dynadb.views import join_path
+from modules.dynadb.views import join_path
 
 def get_precomputed_file_path(objecttype,comp_type=None,url=False):
     precomputed_folder = "Precomputed"

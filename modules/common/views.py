@@ -3,12 +3,12 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.conf import settings
 
-from common.selection import SimpleSelection, Selection, SelectionItem
-from common import definitions
-from structure.models import Structure
-from protein.models import Protein, ProteinFamily, ProteinSegment, Species, ProteinSource, ProteinSet, ProteinGProtein, ProteinGProteinPair
-from residue.models import ResidueGenericNumber, ResidueNumberingScheme, ResidueGenericNumberEquivalent, ResiduePositionSet
-from interaction.forms import PDBform
+from modules.common.selection import SimpleSelection, Selection, SelectionItem
+from modules.common import definitions
+from modules.structure.models import Structure
+from modules.protein.models import Protein, ProteinFamily, ProteinSegment, Species, ProteinSource, ProteinSet, ProteinGProtein, ProteinGProteinPair
+from modules.residue.models import ResidueGenericNumber, ResidueNumberingScheme, ResidueGenericNumberEquivalent, ResiduePositionSet
+from modules.interaction.forms import PDBform
 
 import inspect
 from collections import OrderedDict
