@@ -13,6 +13,8 @@ import json
 import os
 import pickle
 
+from config.settings import MEDIA_ROOT
+
 def json_dict(path):
     """
     Converts json file to pyhton dict.
@@ -62,7 +64,7 @@ def gpcrmd_home(request):
     context['documentation_url'] = settings.DOCUMENTATION_URL
     context['logo_path'] = 'home/logo/' + settings.SITE_NAME + '/main.png';
     context['logo_text_path'] = 'home/logo/' + settings.SITE_NAME + '/text.png';
-    gpcrmdtree_path="/var/www/protwis/sites/files/Precomputed/Summary_info/gpcrmdtree.data"
+    gpcrmdtree_path=f"{MEDIA_ROOT}/Precomputed/Summary_info/gpcrmdtree.data"
     with open(gpcrmdtree_path, 'rb') as filehandle:  
         tree_data = pickle.load(filehandle)
     context['tree_data']=json.dumps(tree_data)
@@ -177,7 +179,7 @@ def gpcrmd_home(request):
 
     context["subm_data"] =json.dumps(subm_data)
     ################
-    #gpcrmdtree_path='/var/www/protwis/sites/files/Precomputed/Summary_info/gpcrmdtree.data'
+    #gpcrmdtree_path=f'{MEDIA_ROOT}/Precomputed/Summary_info/gpcrmdtree.data'
     #with open(gpcrmdtree_path, 'rb') as filehandle:  
         #tree_data = pickle.load(filehandle)
     fam_count=0
@@ -238,7 +240,7 @@ def gpcrmd_home(request):
 
 
 #    # Activation state
-#    stats_precomp_file="/var/www/protwis/sites/files/Precomputed/Summary_info/dyn_stats.data"
+#    stats_precomp_file=f"{MEDIA_ROOT}/Precomputed/Summary_info/dyn_stats.data"
 #    exists=os.path.isfile(stats_precomp_file)
 #    act_li=False
 #    if exists:
@@ -248,7 +250,7 @@ def gpcrmd_home(request):
 
 
     # Entry of the month
-    entry_month_data = json_dict("/var/www/protwis/sites/files/entry_month.json")
+    entry_month_data = json_dict(f"{MEDIA_ROOT}/entry_month.json")
     dyn_id=entry_month_data['dynid']
     context["dyn_id"]=dyn_id
     dynobj=dynall.filter(id=dyn_id)#.latest("creation_timestamp")
@@ -333,16 +335,16 @@ def is_updating(request):
     """
     Check out if a load-all-simulations-after-updating thing is going on
     """
-    print(os.path.exists("/var/www/protwis/sites/files/Precomputed/WaterMaps/isloading.txt"))
-    isloading = os.path.exists("/var/www/protwis/sites/files/Precomputed/WaterMaps/isloading.txt")
+    print(os.path.exists(f"{MEDIA_ROOT}/Precomputed/WaterMaps/isloading.txt"))
+    isloading = os.path.exists(f"{MEDIA_ROOT}/Precomputed/WaterMaps/isloading.txt")
     return(HttpResponse(isloading))
 
 def remove_marker(request): 
     """
     Delete the load-all-simulations-after-updating once quickloading is done
     """
-    if os.path.exists("/var/www/protwis/sites/files/Precomputed/WaterMaps/isloading.txt"):
-        os.remove("/var/www/protwis/sites/files/Precomputed/WaterMaps/isloading.txt")
+    if os.path.exists(f"{MEDIA_ROOT}/Precomputed/WaterMaps/isloading.txt"):
+        os.remove(f"{MEDIA_ROOT}/Precomputed/WaterMaps/isloading.txt")
     return(HttpResponse())
 
 def quickloadall_both(request):
@@ -352,7 +354,7 @@ def quickloadall_both(request):
     """
 
     # Create uploading file
-    f = open('/var/www/protwis/sites/files/Precomputed/WaterMaps/isloading.txt','w')
+    f = open(f'{MEDIA_ROOT}/Precomputed/WaterMaps/isloading.txt','w')
     f.close()
 
     #DyndbFiles.objects.filter(dyndbfilesdynamics__id_dynamics=dyn_id, id_file_types__is_trajectory=True)

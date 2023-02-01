@@ -3,6 +3,7 @@ from dynadb.models import DyndbDynamics
 from django.db.models import F
 import pickle
 from django.core.management.base import BaseCommand, CommandError
+from config.settings import MEDIA_ROOT
 
 class Command(BaseCommand):
     help = "Creates a pickle file with a list of number of active, inactive and intermediate published simulaitons (according to PDB used)."
@@ -39,7 +40,7 @@ class Command(BaseCommand):
                    ["Inactive",len(inactive_set)],
                    ["Intermediate",len(interm_set)],
                   ]
-        out_file="/var/www/protwis/sites/files/Precomputed/Summary_info/dyn_stats.data"
+        out_file=f"{MEDIA_ROOT}/Precomputed/Summary_info/dyn_stats.data"
         with open(out_file, 'wb') as filehandle:  
             # store the data as binary data stream
             pickle.dump(act_stats, filehandle)

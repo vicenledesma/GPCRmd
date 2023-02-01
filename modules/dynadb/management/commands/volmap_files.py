@@ -14,6 +14,7 @@ from django.db.models import F
 import numpy as np
 
 from dynadb.models import *
+from config.settings import MEDIA_ROOT
 
 
 class Command(BaseCommand):
@@ -74,8 +75,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         #create folder where files should be accessed from and where information will be stored
-        dynamics_path = "/var/www/protwis/sites/files/Dynamics"
-        pickle_path = "/var/www/protwis/sites/files/Precomputed/WaterMaps"
+        dynamics_path = f"{MEDIA_ROOT}/Dynamics"
+        pickle_path = f"{MEDIA_ROOT}/Precomputed/WaterMaps"
 
         #give the options of the different parserarguments. 
 
@@ -104,7 +105,7 @@ class Command(BaseCommand):
         pdbfiles = pdbfiles.values('dyn_id', 'file_id', 'pdb_path')
         #print(pdbfiles)
 
-        #{'pdb_path': '/var/www/protwis/sites/files/Dynamics/10177_dyn_9.pdb', 'dyn_id': 9, 'file_id': 10177} which is a dictionary 
+        #{'pdb_path': f'{MEDIA_ROOT}/Dynamics/10177_dyn_9.pdb', 'dyn_id': 9, 'file_id': 10177} which is a dictionary 
 
         #create the actual dictionary 
         dyn_dict = {}

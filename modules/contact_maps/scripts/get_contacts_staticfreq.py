@@ -6,6 +6,7 @@ import pandas as pd
 from json import loads, dump
 from sys import stdout
 from shutil import copyfile,copyfileobj
+from config.settings import MEDIA_ROOT
 
 
 def json_dict(path):
@@ -52,7 +53,7 @@ def create_labelfile(outname, outfolder = "./", ligand = None):
      'A': 'ALA', 'V': 'VAL', 'E': 'GLU', 'Y': 'TYR', 'M': 'MET'}
 
     #Reading dictionary file with the Ballesteros numeration for this protein sequence
-    compl_data = json_dict("/var/www/protwis/sites/files/Precomputed/get_contacts_files/compl_info.json")
+    compl_data = json_dict(f"{MEDIA_ROOT}/Precomputed/get_contacts_files/compl_info.json")
     dictfile = compl_data[outname]['gpcr_pdb']
 
     #open a output label file. It's name will be the same as the pdb, but with a _label.tsv at the end
@@ -194,7 +195,7 @@ ligfile = args.ligfile
 repeat_static = args.repeat_static
 cores = args.cores
 get_contacts_path = "~/bin/"
-files_path = "/var/www/protwis/sites/files/Precomputed/get_contacts_files/dynamic_symlinks/" + dynname + "/"
+files_path = f"{MEDIA_ROOT}/Precomputed/get_contacts_files/dynamic_symlinks/" + dynname + "/"
 
 #Interaction multi-types dictionary
 multi_itypes = {

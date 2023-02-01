@@ -11,6 +11,7 @@ import urllib
 import re
 from dynadb.pipe4_6_0 import d as aa_short
 from django.db.models import F
+from config.settings import MEDIA_ROOT
 
 class Command(BaseCommand):
     help = "Obtains data on known mutations and/or variants for the GPCRs stored in the database from GPCRdb"
@@ -160,7 +161,7 @@ class Command(BaseCommand):
                             vars_dict[entry][seqNum]=[pos_vars]
             return vars_dict
 
-        mypath="/var/www/protwis/sites/files/Precomputed/muts_vars_info"
+        mypath=f"{MEDIA_ROOT}/Precomputed/muts_vars_info"
         if not os.path.isdir(mypath):
             os.makedirs(mypath)
         vars_filepath=os.path.join(mypath,"gpcr_vars.json")

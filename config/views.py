@@ -3,7 +3,6 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import Context, loader
 
-
 ##
 # Handle 404 Errors
 # @param request WSGIRequest list with all HTTP Request

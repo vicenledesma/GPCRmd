@@ -9,17 +9,17 @@ FILES_NO_LOGIN = False
 
 #Determine http or https (ssl)
 SSL=False
+DEV = True
 
 #Settings selection
-try:
-    from config.settings_local_production import *
-except ImportError:
-    from config.settings_local_development import *
+if DEV == False:
+    from config.settings_production import *
+else:
+    from config.settings_development import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
 DEBUG_TOOLBAR = True
 
 # Application definition
@@ -131,7 +131,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-# STATIC_ROOT = '/var/www/protwis/static/protwis/gpcrmd_srv'
+# STATIC_ROOT = '/var/www/GPCRmd/static'
 # STATICFILES_DIRS = (os.sep.join([BASE_DIR, "static"]),)
 if DEBUG:
     STATICFILES_DIRS = [
@@ -140,9 +140,11 @@ if DEBUG:
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/files/'
-MEDIA_ROOT = '/var/www/GPCRmd/media/files/'
+MEDIA_ROOT = '/var/www/GPCRmd/media/files'
 SENDFILE_BACKEND = 'sendfile.backends.xsendfile'
 
+#MODULES DIR
+MODULES_ROOT = "/var/www/GPCRmd/modules"
 #Search Engine
 
 HAYSTACK_CONNECTIONS = {
@@ -196,7 +198,6 @@ if DEBUG:
    TEMPLATES[0]['OPTIONS']['debug'] = True
    #VOLVER A PONER EN TRUE
 
-
 # Debug toolbar
 if DEBUG:
     DEBUG_TOOLBAR_PATCH_SETTINGS = False
@@ -218,19 +219,19 @@ if DEBUG:
            'django': {
                'level': 'DEBUG',
                'class': 'logging.FileHandler',
-               'filename': 'logs/django.log',
+               'filename': f'{BASE_DIR}/logs/django.log',
                'formatter': 'verbose'
            },
            'build': {
                'level': 'DEBUG',
                'class': 'logging.FileHandler',
-               'filename': 'logs/build.log',
+               'filename': f'{BASE_DIR}/logs/build.log',
                'formatter': 'verbose'
            },
            'gpcrmd': {
                'level': 'DEBUG',
                'class': 'logging.FileHandler',
-               'filename': 'logs/gpcrmd.log',
+               'filename': f'{BASE_DIR}/logs/gpcrmd.log',
                'formatter': 'verbose'
            },
        },

@@ -46,6 +46,8 @@ from bokeh.plotting import figure, output_file, show
 import plotly.express as px
 import plotly as pt
 
+from config.settings import MEDIA_ROOT
+
 ############GLOBAL VARIABLES
 
 #Options avalible for each subtype of allosteric communication
@@ -811,7 +813,7 @@ def relate_atomSerial_mdtrajIndex(pdb_path):
 
 
 def distances_notraj(dist_struc,dist_ids):
-    struc_path = "/var/www/protwis/sites/files/"+dist_struc
+    struc_path = f"{MEDIA_ROOT}/"+dist_struc
     try:
         strc=md.load(struc_path)
     except Exception:
@@ -915,8 +917,8 @@ def res_to_atom(seg_to_chain,struc,res, chain, atm):
         return False
 
 def distances_Wtraj(dist_str,struc_path,traj_path,strideVal,seg_to_chain,gpcr_chains):
-    struc_path = "/var/www/protwis/sites/files/"+struc_path
-    traj_path = "/var/www/protwis/sites/files/"+traj_path
+    struc_path = f"{MEDIA_ROOT}/"+struc_path
+    traj_path = f"{MEDIA_ROOT}/"+traj_path
     dist_li=dist_str.split(",")
     #serial_mdInd=relate_atomSerial_mdtrajIndex(struc_path) 
     frames=[]
@@ -1160,7 +1162,7 @@ def get_var_info_datatypes():
 def extract_var_info_file(pdb_vars,gpcr_Gprot,seq_pdb):
     var_info_data=get_var_info_datatypes()
 
-    mypath="/var/www/protwis/sites/files/Precomputed/muts_vars_info"
+    mypath=f"{MEDIA_ROOT}/Precomputed/muts_vars_info"
     vars_filepath=os.path.join(mypath,"gpcr_vars.json")
     filepath_obj = Path(vars_filepath)
     try:
@@ -1955,9 +1957,9 @@ def load_chemshift_data(dyn_id,traj_id):
     Checks if CS data is available and defines the seleciton options
     """
     cs_data_avail = cs_selection_params = False
-    spartafile = "/var/www/protwis/sites/files/Precomputed/chemical_shift/cs_sparta_dyn%s_%s.txt" % (dyn_id,traj_id)
+    spartafile = f"{MEDIA_ROOT}/Precomputed/chemical_shift/cs_sparta_dyn%s_%s.txt" % (dyn_id,traj_id)
     cs_sparta_avail = os.path.exists(spartafile)
-    shiftyfile = "/var/www/protwis/sites/files/Precomputed/chemical_shift/cs_dyn%s_%s.txt" % (dyn_id,traj_id)
+    shiftyfile = f"{MEDIA_ROOT}/Precomputed/chemical_shift/cs_dyn%s_%s.txt" % (dyn_id,traj_id)
     if os.path.isfile(shiftyfile):                        
         cs_data_avail=True
         df=pd.read_csv(shiftyfile,sep="\t")
@@ -2252,7 +2254,7 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
         if occupancy:
             watermaps = True 
 #### ---- PHarmacophores ------------
-        pharma_jsonpath = "/var/www/protwis/sites/files/Precomputed/pharmacophores/dyn"+str(dyn_id)+'/pharmaco_itypes.json'
+        pharma_jsonpath = f"{MEDIA_ROOT}/Precomputed/pharmacophores/dyn"+str(dyn_id)+'/pharmaco_itypes.json'
         if os.path.exists(pharma_jsonpath):
             has_pharmacophores = True
             pharma_json = json_dict(pharma_jsonpath)
@@ -2263,7 +2265,7 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
 #### -----Allosteric communication---
 
         # Check if Allosteric communication data is avaliable for this entry
-        ac_data_avail = os.path.exists("/var/www/protwis/sites/files/Precomputed/allosteric_com/dyn"+str(dyn_id)) # Example file 
+        ac_data_avail = os.path.exists(f"{MEDIA_ROOT}/Precomputed/allosteric_com/dyn"+str(dyn_id)) # Example file 
 
 
 #### --------------------------------
@@ -2283,7 +2285,7 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
         first_strideval=trajidToFramenum[traj_list[0][2]][1]
         #structure_file="Dynamics/with_prot_lig_multchains_gpcrs.pdb"########################### [!] REMOVE
         #structure_name="with_prot_lig_multchains_gpcrs.pdb" ################################### [!] REMOVE
-        pdb_name = "/var/www/protwis/sites/files/"+structure_file
+        pdb_name = f"{MEDIA_ROOT}/"+structure_file
         chain_name_li=obtain_prot_chains(pdb_name)
         #traj_list=sorted(traj_list,key=lambda x: x[2])
         #(traj_list,fpdir)=get_fplot_path(dyn_id,traj_list)
@@ -2302,7 +2304,7 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
         presel_pos=""
         bind_domain=""
         if sel_pos:
-            cra_path="/var/www/protwis/sites/files/Precomputed/crossreceptor_analysis_files"
+            cra_path=f"{MEDIA_ROOT}/Precomputed/crossreceptor_analysis_files"
             resli_file_path=path.join(cra_path,"ligres_int.csv")
             resli_file_pathobj = Path(resli_file_path)
             if resli_file_pathobj.is_file():
@@ -2737,9 +2739,9 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
 
 def compute_rmsd(rmsdStr,rmsdTraj,traj_frame_rg,ref_frame,rmsdRefTraj,traj_sel,strideVal,seg_to_chain):
     i=0
-    struc_path = "/var/www/protwis/sites/files/" + rmsdStr
-    traj_path = "/var/www/protwis/sites/files/" + rmsdTraj
-    ref_traj_path = "/var/www/protwis/sites/files/" + rmsdRefTraj
+    struc_path = f"{MEDIA_ROOT}/" + rmsdStr
+    traj_path = f"{MEDIA_ROOT}/" + rmsdTraj
+    ref_traj_path = f"{MEDIA_ROOT}/" + rmsdRefTraj
     small_errors=[]
     set_sel=None
     if traj_sel == "bck":
@@ -2969,11 +2971,11 @@ def update_bokeh(request):
 
         # If Mean CS plot
         if atype=="comp":
-            csinput_path="/var/www/protwis/sites/files/Precomputed/chemical_shift/cs_%sdyn%s_%s.txt" % (pred,dyn_id, traj_id)
+            csinput_path=f"{MEDIA_ROOT}/Precomputed/chemical_shift/cs_%sdyn%s_%s.txt" % (pred,dyn_id, traj_id)
             cs_df=pd.read_csv(csinput_path,sep="\t")
             (p,avail_res_atoms)=generate_comparative_cs_plot(cs_df,ignore_HA=False,res_id_li=res_id_li,atoms_li=atoms_li,return_avail_res_atoms=True)
         else:
-            csinput_path="/var/www/protwis/sites/files/Precomputed/chemical_shift/cs_%sdyn%s_%s.csv" % (pred,dyn_id, traj_id)
+            csinput_path=f"{MEDIA_ROOT}/Precomputed/chemical_shift/cs_%sdyn%s_%s.csv" % (pred,dyn_id, traj_id)
             cs_df=pd.read_csv(csinput_path, sep=";",index_col=False)
             cs_df = cs_df.loc[:, ~cs_df.columns.str.contains('^Unnamed')]
             # If streaming CS plot
@@ -3104,8 +3106,8 @@ def select_prot_chains(structable,seg_to_chain,mytop,chains):
 
 def compute_interaction(res_li,struc_p,traj_p,num_prots,thresh,serial_mdInd,gpcr_chains,dist_scheme,strideVal,seg_to_chain):
 
-    struc_path = "/var/www/protwis/sites/files/"+struc_p
-    traj_path = "/var/www/protwis/sites/files/"+traj_p
+    struc_path = f"{MEDIA_ROOT}/"+struc_p
+    traj_path = f"{MEDIA_ROOT}/"+traj_p
     itertraj=md.iterload(filename=traj_path,chunk=10, top=struc_path, stride=strideVal)
     first=True 
     structable=False
@@ -3290,10 +3292,10 @@ def hbonds(request):
         arrays=request.POST.getlist('frames[]')
         full_results=dict()
         dyn_id=arrays[5]
-        struc_path = "/var/www/protwis/sites/files/"+arrays[4]
+        struc_path = f"{MEDIA_ROOT}/"+arrays[4]
         whole_seg_to_chain=obtain_wholeModel_seg_to_chain(struc_path)
         traj_shortpath=arrays[3]
-        traj_path = "/var/www/protwis/sites/files/"+traj_shortpath
+        traj_path = f"{MEDIA_ROOT}/"+traj_shortpath
         start=int(arrays[0])
         end=int(arrays[1])
         backbone=arrays[6]=='true'
@@ -3480,9 +3482,9 @@ def saltbridges(request):#
 
         arrays=request.POST.getlist('frames[]')
         dyn_id=arrays[5]
-        struc_path = "/var/www/protwis/sites/files/"+arrays[4]
+        struc_path = f"{MEDIA_ROOT}/"+arrays[4]
         traj_shortpath=arrays[3]
-        traj_path = "/var/www/protwis/sites/files/"+traj_shortpath
+        traj_path = f"{MEDIA_ROOT}/"+traj_shortpath
         whole_seg_to_chain=obtain_wholeModel_seg_to_chain(struc_path);
         label = lambda hbond : '%s--%s' % (mytop.atom(hbond[0]), mytop.atom(hbond[2]))
         full_results=dict()
@@ -3619,8 +3621,8 @@ def saltbridges(request):#
 def sasa(request):
     zatoms=[]
     arrays=request.POST.getlist('frames[]')
-    struc_path = "/var/www/protwis/sites/files/"+arrays[4]
-    traj_path = "/var/www/protwis/sites/files/"+arrays[3]
+    struc_path = f"{MEDIA_ROOT}/"+arrays[4]
+    traj_path = f"{MEDIA_ROOT}/"+arrays[3]
     sel=arrays[6]
     residue_indexes=arrays[7].split(',')
     traj_name=traj_path[traj_path.rfind('/'):].replace('.','_')
@@ -3790,8 +3792,8 @@ def grid(request):
     if request.method == 'POST':
         arrays=request.POST.getlist('frames[]')
         percentage_cutoff=int(arrays[2])
-        struc_path = "/var/www/protwis/sites/files/"+arrays[4]
-        traj_path = "/var/www/protwis/sites/files/"+arrays[3]
+        struc_path = f"{MEDIA_ROOT}/"+arrays[4]
+        traj_path = f"{MEDIA_ROOT}/"+arrays[3]
         #t = md.load(traj_path,top=struc_path)
         trajectory = md.load('dynadb/b2ar_isoprot/b2ar.dcd',top='dynadb/b2ar_isoprot/build.pdb')
         trajectory=trajectory[0:10]
@@ -3940,7 +3942,7 @@ def view_session(request , session_name):
     """
     Now only opens structure & traj of adenosine receptor with colesterol.
     """
-    sessions_path="/var/www/protwis/sites/files/Sessions"
+    sessions_path=f"{MEDIA_ROOT}/Sessions"
     s_li=os.listdir(sessions_path)
     if session_name+".ngl" in s_li:
         mdsrv_url=obtain_domain_url(request)
@@ -3975,7 +3977,7 @@ def quickload(request,dyn_id,trajfile_id):
 def quickloadall(request):
 
     # Create uploading file
-    f = open('/var/www/protwis/sites/files/Precomputed/WaterMaps/isloading.txt','w')
+    f = open(f'{MEDIA_ROOT}/Precomputed/WaterMaps/isloading.txt','w')
     f.close()
 
     #DyndbFiles.objects.filter(dyndbfilesdynamics__id_dynamics=dyn_id, id_file_types__is_trajectory=True)
@@ -4089,7 +4091,7 @@ def ac_load_data(request,dyn_id):
     nedges = request.POST.get('ac_nedges')
 
     # Open file with specified options
-    infile = '/var/www/protwis/sites/files/Precomputed/allosteric_com/dyn%s/%s_%s.csv'%(dyn_id,options,protsel)
+    infile = f'{MEDIA_ROOT}/Precomputed/allosteric_com/dyn%s/%s_%s.csv'%(dyn_id,options,protsel)
     if os.path.exists(infile):
         df = pd.read_csv(infile)
     else: 

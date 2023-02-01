@@ -2,6 +2,7 @@
 from django.core.management.base import BaseCommand, CommandError
 import pickle
 import requests
+from config.settings import MEDIA_ROOT
 
 
 class Command(BaseCommand):
@@ -44,6 +45,6 @@ class Command(BaseCommand):
                 gpcrclassif[c]["children"][f]["children"][sf]["children"].append(mye)
                 p+=1
 
-        with open("/var/www/protwis/sites/files/Precomputed/Summary_info/considered_gpcrs.data", 'wb') as filehandle:  
+        with open(f"{MEDIA_ROOT}/Precomputed/Summary_info/considered_gpcrs.data", 'wb') as filehandle:  
             # store the data as binary data stream
             pickle.dump(gpcrclassif, filehandle)

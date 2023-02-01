@@ -15,6 +15,7 @@ from dynadb.pipe4_6_0 import *
 from view.views import obtain_prot_chains , obtain_DyndbProtein_id_list, obtain_seq_pos_info, findGPCRclass, obtain_rel_dicts, traduce_all_poslists_to_ourclass_numb,obtain_predef_positions_lists,find_missing_positions
 import copy
 import operator
+from config.settings import MEDIA_ROOT
 
 
 class Command(BaseCommand):
@@ -50,7 +51,7 @@ class Command(BaseCommand):
 
         def generate_gpcr_pdb (dyn_id, structure_file):
             """Code extracted frin view/views index"""
-            pdb_name = "/var/www/protwis/sites/files/"+structure_file
+            pdb_name = f"{MEDIA_ROOT}/"+structure_file
             chain_name_li=obtain_prot_chains(pdb_name)
             multiple_chains=False
             if len(chain_name_li) > 1:
@@ -204,7 +205,7 @@ class Command(BaseCommand):
             if (not df.empty) and (identifier in df.loc[thresh_li[0]].index):
                 self.stdout.write(self.style.NOTICE("Interaction for this trajectory was already computed. Skipping."))
             else:
-                allfiles_path="/var/www/protwis/sites/files/"
+                allfiles_path=f"{MEDIA_ROOT}/"
                 model=dyn.id_model
                 model_id=model.id
                 pdb_id=model.pdbid
@@ -306,7 +307,7 @@ class Command(BaseCommand):
     
         #thresh_li=[2.2,2.5,2.8]
         thresh_li=[2.8,3.2,3.6]
-        cra_path="/var/www/protwis/sites/files/Precomputed/crossreceptor_analysis_files"
+        cra_path=f"{MEDIA_ROOT}/Precomputed/crossreceptor_analysis_files"
         if not os.path.isdir(cra_path):
             os.makedirs(cra_path)
         upd_now=datetime.datetime.now()

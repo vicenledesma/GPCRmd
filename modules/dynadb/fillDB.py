@@ -3,7 +3,7 @@
 #run with /env/bin/python fillDB.py
 #if you have any doubts, contact: alejandrovarelarial@gmail.com
 import os, sys
-proj_path = "/var/www/protwis/sites/protwis/gpcrmd_srv/"
+proj_path = "/protwis/sites/protwis/gpcrmd_srv/"
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "protwis.settings")
 sys.path.append(proj_path)
@@ -1343,13 +1343,13 @@ def fill_db_iuphar(filename):
      containing the csv records in a format available to the record_complex_in_DB function. This file is created after the first use. '''
     records=iuphar_parser(filename)
     try:
-        with open ('/var/www/protwis/sites/protwis/gpcrmd_srv/iuphar_useful_complexes_pickle', 'rb') as fp:
+        with open ('/protwis/sites/protwis/gpcrmd_srv/iuphar_useful_complexes_pickle', 'rb') as fp:
             complexes = pickle.load(fp)
         print('Pickle found...this is going to be fast')
     except:
         print('This could take a while...')
         complexes=to_bindingdb_format(records)
-        with open ('/var/www/protwis/sites/protwis/gpcrmd_srv/iuphar_useful_complexes_pickle', 'wb') as fp:
+        with open ('/protwis/sites/protwis/gpcrmd_srv/iuphar_useful_complexes_pickle', 'wb') as fp:
             pickle.dump(complexes,fp) 
     print('lets record in DB')
     for comple in complexes:
@@ -1358,7 +1358,7 @@ def fill_db_iuphar(filename):
         except:
             raise
 
-mypath='/var/www/protwis/sites/protwis/gpcrmd_srv/dynadb/chunks/chunksBindingDB'
+mypath='/protwis/sites/protwis/gpcrmd_srv/dynadb/chunks/chunksBindingDB'
 chunks=[os.path.join(mypath, f) for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))][28:]
 fill_db(chunks)
 fill_db_iuphar('./dynadb/interactions.csv')

@@ -1,9 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
-from dynadb.models import DyndbDynamics, DyndbFiles, DyndbDynamicsComponents
+from modules.dynadb.models import DyndbDynamics, DyndbFiles, DyndbDynamicsComponents
 import random
 import mdtraj as md
 import os
 import json
+from config.settings import MEDIA_ROOT, DEV
 
 class Command(BaseCommand):
     help="Set new random entry of the month. To choose among published dynamics."
@@ -13,17 +14,19 @@ class Command(BaseCommand):
         def random_entrymonth():
 
             # Get random published dynamics objects
-            filespath = "/var/www/protwis/sites/files/"
+            filespath = f"{MEDIA_ROOT}/"
             DD = list(DyndbDynamics.objects.filter(is_published=True))
             random_dyn = random.choice(DD)
             dynid = random_dyn.id
+            if DEV == True:
+                dynid = 90
             print("The selected entry of the month is %d"%dynid)
 
             # Get first trajectory file and model PDB file of this thing
             df = DyndbFiles.objects.filter(dyndbfilesdynamics__type=2, dyndbfilesdynamics__id_dynamics=dynid)[0]
-            trajfile = df.filepath
+            trajfile = MEDIA_ROOT + df.filepath
             fileid = df.id
-            pdbfile = DyndbFiles.objects.filter(dyndbfilesdynamics__type=0, dyndbfilesdynamics__id_dynamics=dynid)[0].filepath
+            pdbfile = MEDIA_ROOT + DyndbFiles.objects.filter(dyndbfilesdynamics__type=0, dyndbfilesdynamics__id_dynamics=dynid)[0].filepath
 
             # Create filtered trajectory file if not yet exists
             # trajfile_out = "Dynamics/%d_dyn_%d_filtered.dcd"%(fileid,dynid)
@@ -33,8 +36,6 @@ class Command(BaseCommand):
             # trajfile_path = filespath+trajfile_out
             topfile_path = filespath+topfile_out
             if not os.path.exists(topfile_path):
-
-
                 # Get ligands resnames
                 resname_list = [a[0] for a in DyndbDynamicsComponents.objects.filter(id_dynamics=dynid, type=1).values_list('resname')]
                 lignames = ' '.join(resname_list)
@@ -52,7 +53,7 @@ class Command(BaseCommand):
                 traj_reduced.save_pdb(topfile_path)
 
             # Modify entry of the month dictionary 
-            entrymonth = "/var/www/protwis/sites/files/entry_month.json"
+            entrymonth = f"{MEDIA_ROOT}/entry_month.json"
             with open(entrymonth, "w") as out:
                 json.dump(entrymonth_dict, out)
 

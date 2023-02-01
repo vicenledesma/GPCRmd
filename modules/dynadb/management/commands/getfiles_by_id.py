@@ -23,6 +23,8 @@ from protein.models import Protein
 from view.assign_generic_numbers_from_DB import obtain_gen_numbering 
 from dynadb.pipe4_6_0 import *
 
+from config.settings import MEDIA_ROOT
+
 def parse_pdb(pdbfile, chainid_list = [], resname_list = [], resid_list = []):
     """ 
     Find and annotate residues that are identified as ligands
@@ -158,7 +160,7 @@ def retrieve_info(self,dyn,data_dict,change_lig_name):
     #Getting information from model
     dyn_id=dyn.id
     identifier="dyn"+str(dyn_id)
-    allfiles_path="/var/www/protwis/sites/files/"
+    allfiles_path=f"{MEDIA_ROOT}/"
     model=dyn.id_model
     model_id=model.id
     pdb_id=model.pdbid
@@ -203,7 +205,7 @@ def retrieve_info(self,dyn,data_dict,change_lig_name):
         return({"traj_fnames" : False}, data_dict)
     else:
         traj_files = [ i[0] for i in traj_list ]
-        pdb_name = "/var/www/protwis/sites/files/"+structure_file
+        pdb_name = f"{MEDIA_ROOT}/"+structure_file
         try: 
             (gpcr_pdb,classes_dict,current_class)=generate_gpcr_pdb(dyn_id, pdb_name, True)
         except Exception as e:
@@ -323,10 +325,10 @@ class Command(BaseCommand):
             raise CommandError("Neither dynid(s) nor --all options have been specified. Use --help for more details.")
 
         # In this file will be stored all commands to run in ORI (for the computer-spending steps, you know)
-        commands_path = "/var/www/protwis/sites/files/Precomputed/get_contacts_files/dyn_freq_commands.sh"
+        commands_path = f"{MEDIA_ROOT}/Precomputed/get_contacts_files/dyn_freq_commands.sh"
 
         #Prepare compl_data json file and the "last time modified" upd file
-        cra_path="/var/www/protwis/sites/files/Precomputed/get_contacts_files"
+        cra_path=f"{MEDIA_ROOT}/Precomputed/get_contacts_files"
         dyncounter = 1
         if not os.path.isdir(cra_path):
             os.makedirs(cra_path)
@@ -441,7 +443,7 @@ class Command(BaseCommand):
                 else:
                     tail_comand = "\n"
 
-                commands_line += str("python /var/www/protwis/sites/protwis/gpcrmd_srv/contact_maps/scripts/get_contacts_dynfreq.py \
+                commands_line += str("python /protwis/sites/protwis/gpcrmd_srv/contact_maps/scripts/get_contacts_dynfreq.py \
                     --dynid %s \
                     --traj %s \
                     --topology %s \

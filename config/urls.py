@@ -8,7 +8,7 @@ from modules.dynadb import views as dyn_views
 
 urlpatterns = [
     re_path(r'^contmaps/', include('modules.contact_maps.urls')),
-#   re_path(r'^juanmaapp/', include('juanmaapp.urls')),  #### introducida por mi para  /var/www/protwis/sites/protwis/gpcrmd_srv/juanmaapp
+#   re_path(r'^juanmaapp/', include('juanmaapp.urls')),  #### introducida por mi para  /protwis/sites/protwis/gpcrmd_srv/juanmaapp
 #    re_path(r'^polls/', include('polls.urls')),
 #    re_path(r'^tutorial/', include('tutorial.urls')),
     re_path(r'^dynadb/', include('modules.dynadb.urls')),

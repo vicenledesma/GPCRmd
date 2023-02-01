@@ -90,6 +90,7 @@ import copy
 
 
 from rdkit.Chem import ForwardSDMolSupplier, AssignAtomChiralTagsFromStructure
+from config.settings import MEDIA_ROOT
 
 def obtain_prot_chains(pdb_name):
     chain_name_s=set()
@@ -5192,7 +5193,7 @@ def DYNAMICSreuseview(request, submission_id, model_id ):
                     print("Errores en el form Simulation Components ", ii, " ", Scom_inst[ii][iii].errors.as_data()) 
             #Create storage directory: Every Simulation # has its own directory labeled as "dyn"+dyn_obj[ii].pk
             #Maybe we have to label the directory with submissionID?????
-            direct='/var/www/protwis/sites/files/Dynamics/dyn'+str(submission_id)
+            direct=f'{MEDIA_ROOT}/Dynamics/dyn'+str(submission_id)
             print("\nDirectorio a crear ", direct)
             if not os.path.exists(direct):
                 os.makedirs(direct)
@@ -5243,7 +5244,7 @@ def DYNAMICSreuseview(request, submission_id, model_id ):
                         initFiles['id_file_types']=dict_ext_id[fext]
                         initFiles['filename']=val.name
                         initFiles['filepath']=direct
-                        #initFiles['filepath']='/var/www/protwis/sites/files/Dynamics/dyn'+dyn_obj[ii].pk#modificar
+                        #initFiles['filepath']=f'{MEDIA_ROOT}/Dynamics/dyn'+dyn_obj[ii].pk#modificar
                     else:
                         print("This extension is not valid for submission")
              
@@ -6699,10 +6700,10 @@ def testpng(request):
     context={}
     #context["form"]=form
 
-    suppl = SDMolSupplier('/var/www/protwis/sites/files/water.sdf')
+    suppl = SDMolSupplier(f'{MEDIA_ROOT}/water.sdf')
     mol = next(suppl)
     print(mol.GetNumAtoms())
-    filename = '/var/www/protwis/sites/files/uploadedmol.png'
+    filename = f'{MEDIA_ROOT}/uploadedmol.png'
     MolToFile(mol, filename, size=(300,300))
 
     return render(request, 'dynadb/testpng.html', context)
@@ -6720,7 +6721,7 @@ def testsub(request):
         sdfname="uploaded.sdf"
         pngname="uploaded.png"
  #       logname="submission_test.log"
-        submission_path="/var/www/protwis/sites/files/submission_test/"
+        submission_path=f"{MEDIA_ROOT}/submission_test/"
         os.makedirs(submission_path,exist_ok=True)
 
 
@@ -8244,7 +8245,7 @@ def DYNAMICSview(request, submission_id, model_id=None):
                                 return response                                                                                                         
 
 
-            direct='/var/www/protwis/sites/files/Dynamics/dyn'+str(submission_id)
+            direct=f'{MEDIA_ROOT}/Dynamics/dyn'+str(submission_id)
             print("\nDirectorio a crear ", direct)
             if not os.path.exists(direct):
                 os.makedirs(direct)
@@ -8417,11 +8418,11 @@ def DYNAMICSview(request, submission_id, model_id=None):
 #       if dd.is_valid():
 #           # process the data in form.cleaned_data as required
 #           ddi=dd.save(commit=False)
-#           with open('/var/www/protwis/sites/protwis/gpcrmd_srv/dynadb/DYNdd.txt', 'wb') as handle:
+#           with open('/protwis/sites/protwis/gpcrmd_srv/dynadb/DYNdd.txt', 'wb') as handle:
 #               pickle.dump(ddi, handle)
 
 #           dd.save()
-#           with open('/var/www/protwis/sites/protwis/gpcrmd_srv/dynadb/DYNddi.txt', 'wb') as handle:
+#           with open('/protwis/sites/protwis/gpcrmd_srv/dynadb/DYNddi.txt', 'wb') as handle:
 #               pickle.dump(ddi, handle)
 #           dynafk=ddi.pk 
 #           print(dynafk)
@@ -10440,7 +10441,7 @@ def SMALL_MOLECULEfunction(postd_single_molecule, number_of_molecule, submission
    #        ooo= molec_file_table(dname)
    #        dnameref={'dnamesdf':{'path':path_namefrefsdf,'url':url_namefrefsdf},'dnamepng':{'path':path_namereffpng,'url':url_namefrefpng}}
    #        oooref=molec_file_table(dnameref)
-   ##       direct='/var/www/protwis/sites/files/Molecule/mol'+str(submission_id)
+   ##       direct=f'{MEDIA_ROOT}/Molecule/mol'+str(submission_id)
     #       print("\nDirectorio a crear ", direct)
     #       if not os.path.exists(direct):
     #           os.makedirs(direct)
@@ -10797,7 +10798,7 @@ def SMALL_MOLECULEfunction(postd_single_molecule, number_of_molecule, submission
 #                elif len(qMF.values())==0:
 #                    pass
 ########################   FILES!!!!!!!!!!!!!!!!!!
-#               direct='/var/www/protwis/sites/files/Molecule/mol'+str(submission_id)
+#               direct=f'{MEDIA_ROOT}/Molecule/mol'+str(submission_id)
 #               print("\nDirectorio a crear ", direct)
 #               if not os.path.exists(direct):
 #                   os.makedirs(direct)
@@ -12833,7 +12834,7 @@ def search_in_treeData(classifli,myslug):#gpcrclassif_fams,myfam_slug
     return(False)
 
 def datasets(request):
-    consideredgpcrs_path='/var/www/protwis/sites/files/Precomputed/Summary_info/considered_gpcrs.data'
+    consideredgpcrs_path=f'{MEDIA_ROOT}/Precomputed/Summary_info/considered_gpcrs.data'
     with open(consideredgpcrs_path, 'rb') as filehandle:  
         gpcrclassif = pickle.load(filehandle)
 
@@ -12953,7 +12954,7 @@ def datasets(request):
     context["gpcrclassif"]= gpcrclassif
     context["others_gpcrclassif"]=others_gpcrclassif
 
-    gpcrmdtree_path="/var/www/protwis/sites/files/Precomputed/Summary_info/gpcrmdtree.data"
+    gpcrmdtree_path=f"{MEDIA_ROOT}/Precomputed/Summary_info/gpcrmdtree.data"
     with open(gpcrmdtree_path, 'rb') as filehandle:  
         tree_data = pickle.load(filehandle)
 
@@ -15280,7 +15281,7 @@ def step4_submit(request, submission_id):
 
             # In other case, new tables must be created
             else:
-                basepath = "/var/www/protwis/sites/files/Dynamics/"
+                basepath = f"{MEDIA_ROOT}/Dynamics/"
                 baseurl = "/dynadb/files/Dynamics/"
                 
                 # Get file DyndbFileTypes id. The first one, because whatever

@@ -17,6 +17,7 @@ from view.views import obtain_prot_chains , obtain_DyndbProtein_id_list, obtain_
 import copy
 import operator
 from django.db.models import CharField,TextField, Case, When, Value as V, F, Q, Count, Prefetch
+from config.settings import MEDIA_ROOT
 
 
 class Command(BaseCommand):
@@ -75,7 +76,7 @@ class Command(BaseCommand):
             class_letters = set(('A','B','C','F'))
 
             #Open and load existing dictionary, if any
-            classdict_path="/var/www/protwis/sites/files/Precomputed/get_contacts_files/GPCRnomenclatures_dict.json"
+            classdict_path=f"{MEDIA_ROOT}/Precomputed/get_contacts_files/GPCRnomenclatures_dict.json"
             if os.path.isfile(classdict_path):
                 classdict = json_dict(classdict_path)
             else:
@@ -174,7 +175,7 @@ class Command(BaseCommand):
             #Getting information from model
             dyn_id=dyn.id
             identifier="dyn"+str(dyn_id)
-            allfiles_path="/var/www/protwis/sites/files/"
+            allfiles_path=f"{MEDIA_ROOT}/"
             model=dyn.id_model
             model_id=model.id
             pdb_id=model.pdbid
@@ -211,7 +212,7 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.NOTICE("No trajectories found. Skipping."))
             else:
                 traj_files = [ i[0] for i in traj_list ]
-                pdb_name = "/var/www/protwis/sites/files/"+structure_file
+                pdb_name = f"{MEDIA_ROOT}/"+structure_file
                 (gpcr_pdb,classes_dict,current_class)=generate_gpcr_pdb(dyn_id, pdb_name, True)
                 pdb_to_gpcr = {v: k for k, v in gpcr_pdb.items()}
                 delta=DyndbDynamics.objects.get(id=dyn_id).delta
@@ -260,7 +261,7 @@ class Command(BaseCommand):
             last_upd_dt=datetime.datetime(u["year"], u["month"], u["day"], u["hour"], u["minute"], u["second"], u["microsecond"])
             return last_upd_dt
     
-        cra_path="/var/www/protwis/sites/files/Precomputed/get_contacts_files"
+        cra_path=f"{MEDIA_ROOT}/Precomputed/get_contacts_files"
         if not os.path.isdir(cra_path):
             os.makedirs(cra_path)
         upd_now=datetime.datetime.now()

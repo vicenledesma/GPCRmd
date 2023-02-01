@@ -10,6 +10,7 @@ import csv
 import tqdm
 import gc
 import pickle
+from config.settings import MEDIA_ROOT
 
 class Command(BaseCommand):
     help = "Saves info from GSAID to the database."
@@ -49,7 +50,7 @@ class Command(BaseCommand):
                 ##isolates=pd.read_csv( os.path.join( gsaid_path, "isolates.csv.xz"))
                 #isolates_path=os.path.join( gsaid_path, "isolates.csv.xz")
 
-            gsaid_path="/var/www/protwis/sites/files/Covid19Data/Data/gisaid/tables"
+            gsaid_path=f"{MEDIA_ROOT}/Covid19Data/Data/gisaid/tables"
             
             #genesdf=pd.read_csv( os.path.join(gsaid_path,"genes_validseq.csv"))
             with open(os.path.join(gsaid_path,"genes_validseq.data"),"rb") as fh:
@@ -244,7 +245,7 @@ class Command(BaseCommand):
             self.stdout.write(self.style.NOTICE("Saving dicitonary relating final proteins with isolates that have mutations there..."))
 
 
-            out_fp_iso_path="/var/www/protwis/sites/files/Precomputed/covid19/finprot_to_isolates"
+            out_fp_iso_path=f"{MEDIA_ROOT}/Precomputed/covid19/finprot_to_isolates"
             if not os.path.isdir(out_fp_iso_path):
                 os.mkdir(out_fp_iso_path)
 

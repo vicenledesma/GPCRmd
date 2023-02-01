@@ -1,4 +1,6 @@
 import os
+from config.settings import MEDIA_ROOT
+
 
 def mkdir_p(path):
     if not os.path.exists(path):
@@ -39,7 +41,7 @@ def prepare_tables(original_table, new_table, itype):
 # Set paths
 get_contacts_path="~/bin/"
 scripts_path="/protwis/sites/protwis/contact_maps/scripts/"
-files_path="/var/www/protwis/sites/files/Precomputed/get_contacts_files/"
+files_path=f"{MEDIA_ROOT}/Precomputed/get_contacts_files/"
 
 # Creating folder, if it doesn't exist
 mkdir_p(str(files_path + "contact_tables"))

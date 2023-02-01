@@ -26,6 +26,8 @@ import pickle
 import pandas as pd
 import statistics
 
+from config.settings import MEDIA_ROOT
+
 def extract_table_info(request,mydyn):
     context={}
     if request.user.is_authenticated():
@@ -169,7 +171,7 @@ def get_fplot_data(dyn_id,traj_id):
     fp_data=[]
     for int_type in int_type_l:
         fpfilename= "%(traj_id)s_trj_%(dyn_id)s_%(int_type)s.json"%{"dyn_id":dyn_id,"traj_id":traj_id,"int_type":int_type}
-        fpdir = "/var/www/protwis/sites/files/Precomputed/covid19/flare_plot/%s" % int_type
+        fpdir = f"{MEDIA_ROOT}/Precomputed/covid19/flare_plot/%s" % int_type
         fppath = os.path.join(fpdir,fpfilename)
         exists=os.path.isfile(fppath)
         if exists:
@@ -245,7 +247,7 @@ def dynanalysis(request,dyn_id,sel_genome_id=None):
             traj_id=fileobj.id
             filedata["id"]=traj_id
             filedata["name"]=fileobj.filename
-            filedata["path"]=fileobj.filepath.replace("/var/www/protwis/sites/files/","")
+            filedata["path"]=fileobj.filepath.replace(f"{MEDIA_ROOT}/","")
             (fp_data, fp_avail)=get_fplot_data(dyn_id,traj_id)
             show_fp=show_fp or fp_avail
             filedata["fplot"]=fp_data
@@ -257,7 +259,7 @@ def dynanalysis(request,dyn_id,sel_genome_id=None):
             filedata={}
             filedata["id"]=fileobj.id
             filedata["name"]=fileobj.filename
-            filedata["path"]=fileobj.filepath.replace("/var/www/protwis/sites/files/","")
+            filedata["path"]=fileobj.filepath.replace(f"{MEDIA_ROOT}/","")
             context["files"]["pdb"]=filedata
     context["trajidToFramenum"]=json.dumps(trajidToFramenum)
     context["show_fp"]=show_fp
@@ -603,8 +605,8 @@ def compute_rmsf(rmsfStr,rmsfTraj,traj_frame_rg,traj_sel,strideVal):
     #remove reference traj option
     #manage seleciton
     i=0
-    struc_path = "/var/www/protwis/sites/files/" + rmsfStr
-    traj_path = "/var/www/protwis/sites/files/" + rmsfTraj
+    struc_path = f"{MEDIA_ROOT}/" + rmsfStr
+    traj_path = f"{MEDIA_ROOT}/" + rmsfTraj
     small_errors=[]
     atom_sel=None
     if traj_sel == "bck":
@@ -637,9 +639,9 @@ def compute_rmsf(rmsfStr,rmsfTraj,traj_frame_rg,traj_sel,strideVal):
 
 def compute_rmsd(rmsdStr,rmsdTraj,traj_frame_rg,ref_frame,rmsdRefTraj,traj_sel,strideVal):
     i=0
-    struc_path = "/var/www/protwis/sites/files/" + rmsdStr
-    traj_path = "/var/www/protwis/sites/files/" + rmsdTraj
-    ref_traj_path = "/var/www/protwis/sites/files/" + rmsdRefTraj
+    struc_path = f"{MEDIA_ROOT}/" + rmsdStr
+    traj_path = f"{MEDIA_ROOT}/" + rmsdTraj
+    ref_traj_path = f"{MEDIA_ROOT}/" + rmsdRefTraj
     small_errors=[]
     set_sel=None
     if traj_sel == "bck":
@@ -1196,7 +1198,7 @@ def upload_success(request,dyn_id):
 
 def home(request):    
     context={}
-    input_path_colors="/var/www/protwis/sites/files/Covid19Data/Data/colorscales.data"
+    input_path_colors=f"{MEDIA_ROOT}/Covid19Data/Data/colorscales.data"
     if os.path.isfile(input_path_colors):
         with open(input_path_colors, 'rb') as filehandle:  
             colors_dict = pickle.load(filehandle)

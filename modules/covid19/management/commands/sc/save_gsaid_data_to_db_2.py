@@ -7,6 +7,7 @@ import datetime
 import re
 import csv
 import tqdm
+from config.settings import MEDIA_ROOT
 
 class Command(BaseCommand):
     help = "Saves info from GSAID to the database."
@@ -57,7 +58,7 @@ class Command(BaseCommand):
             return var_to_dfrow
 
 
-        gsaid_path="/var/www/protwis/sites/files/Covid19Data/Data/gisaid/tables"
+        gsaid_path=f"{MEDIA_ROOT}/Covid19Data/Data/gisaid/tables"
         data_toni=False
 
         self.stdout.write(self.style.NOTICE("Loading data..."))

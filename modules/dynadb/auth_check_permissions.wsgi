@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.append('/var/www/protwis/sites/protwis/gpcrmd_srv')
+sys.path.append('/protwis/sites/protwis/gpcrmd_srv')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "protwis.settings")
 import django
 django.setup()

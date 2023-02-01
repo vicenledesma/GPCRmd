@@ -6,6 +6,7 @@ import mdtraj as md
 
 from covid19.models import *
 from dynadb.models import DyndbFileTypes
+from config.settings import MEDIA_ROOT
 
 def get_prot_from_pdb(pdbid):
     pdb_url="https://data.rcsb.org/rest/v1/core/entry/%s"%pdbid
@@ -85,12 +86,12 @@ def download_bioexcel_file(filename,projID,db_filepath=False,overwrite=False):
     #urllib.request.urlretrieve(url, '/home/mariona/testtraj')
     url="https://bioexcel-cv19.bsc.es/api/rest/current/projects/%s/files/%s"%(projID,filename)
     if not db_filepath:
-        db_filepath=os.path.join("/var/www/protwis/sites/files/Covid19Dynamics/bioexcel",filename)
+        db_filepath=os.path.join(f"{MEDIA_ROOT}/Covid19Dynamics/bioexcel",filename)
     if overwrite or not os.path.isfile(db_filepath):
         print("Downloading file: %s"% filename)
         urllib.request.urlretrieve(url, db_filepath)
 
-def save_bioexcel_file_data(dynobj,filename,total_numframes,sub_file_num=0,db_path="/var/www/protwis/sites/files/Covid19Dynamics/",db_fileURL='/dynadb/files/Covid19Dynamics/'):
+def save_bioexcel_file_data(dynobj,filename,total_numframes,sub_file_num=0,db_path=f"{MEDIA_ROOT}/Covid19Dynamics/",db_fileURL='/dynadb/files/Covid19Dynamics/'):
     dyn_id=dynobj.id
     ext=filename.split(".")[-1]
     tmp_db_filename ="tmp_%s_dyn_%s.%s"%(sub_file_num,dyn_id,ext)

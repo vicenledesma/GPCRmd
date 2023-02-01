@@ -29,5 +29,5 @@ class Command(BaseCommand):
 		st.index= [st.strftime("%b %Y") for st in st.index]
 
 		# Save this in a json for future uses
-		outfile = '/var/www/protwis/sites/files/accumtime_by_month.json'
+		outfile = f'{MEDIA_ROOT}/accumtime_by_month.json'
 		st.to_json(outfile)

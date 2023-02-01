@@ -4,6 +4,7 @@ from modules.protein.models import  Residue, Protein
 from modules.residue.models import  ResidueGenericNumber
 import re 
 import pickle
+from config.settings import MEDIA_ROOT
 
 def gpcr_num_insertion(gpcr_n):
     """Adds the +1 to the GPCR generic num when there is an insertion. 
@@ -123,11 +124,11 @@ def obtain_gen_numbering(dyn_id, dprot_gpcr, gprot_gpcr):
     for alt_class in other_classes:
         all_num_schemes[alt_class]=obtain_gpcr_num_alt(alt_class,res_gpcr_li,rgn_ids)
 #        try:
-#            file = open("/var/www/protwis/sites/files/Dynamics/ballesteros_"+str(dyn_id)+"_"+alt_class,'rb')
+#            file = open(f"{MEDIA_ROOT}/Dynamics/ballesteros_"+str(dyn_id)+"_"+alt_class,'rb')
 #            all_num_schemes[alt_class]= pickle.load(file)
 #            file.close()
 #        except:
-#            filehandler = open("/var/www/protwis/sites/files/Dynamics/ballesteros_"+str(dyn_id)+'_'+alt_class,"wb") 
+#            filehandler = open(f"{MEDIA_ROOT}/Dynamics/ballesteros_"+str(dyn_id)+'_'+alt_class,"wb") 
 #            all_num_schemes[alt_class]=obtain_gpcr_num_alt(alt_class,res_gpcr_li,rgn_ids)
 #            pickle.dump(all_num_schemes[alt_class],filehandler)
 #            filehandler.close()

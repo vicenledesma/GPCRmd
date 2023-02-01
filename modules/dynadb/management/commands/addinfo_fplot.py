@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 import os
 import re
 import json
+from config.settings import MEDIA_ROOT
 
 def fp_dict(path):
     json_file=open(path)
@@ -57,7 +58,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        hb_json_path="/var/www/protwis/sites/files/Precomputed/flare_plot/hbonds"
+        hb_json_path=f"{MEDIA_ROOT}/Precomputed/flare_plot/hbonds"
         if not os.path.isdir(hb_json_path):
             self.stdout.write(self.style.ERROR("No json files found."))
             return    

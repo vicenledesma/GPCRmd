@@ -12,6 +12,8 @@ from bokeh.models import Label, HoverTool, TapTool, CustomJS, BasicTicker, Color
 from bokeh.transform import transform
 from math import ceil
 from scipy.cluster.hierarchy import linkage, fcluster, cut_tree
+from config.settings import MEDIA_ROOT
+
 
 print("functions imported")
 # Be careful with this!!! Put here only because some false-positive warnings from pandas
@@ -1061,7 +1063,7 @@ noprt_itypes = set(("hbls","hblb"))
 ipartners = set(("lg","prt","prt_lg"))
 
 # Basepath for files
-basepath = "/var/www/protwis/sites/files/Precomputed/get_contacts_files/"
+basepath = f"{MEDIA_ROOT}/Precomputed/get_contacts_files/"
 
 typelist =  {
     'sb' : 'salt bridge',
@@ -1272,7 +1274,7 @@ def get_contacts_plots(itype, ligandonly):
             number_heatmaps = ceil((inter_number/inter_per_pair)/max_columns)
             
             #Create heatmap folder if not yet exists
-            heatmap_path_jupyter = "/var/www/protwis/sites/files/Precomputed/get_contacts_files/contmaps_inputs/%s/%s/%s/heatmaps/%s/" % (itype,stnd,ligandonly,rev)
+            heatmap_path_jupyter = f"{MEDIA_ROOT}/Precomputed/get_contacts_files/contmaps_inputs/%s/%s/%s/heatmaps/%s/" % (itype,stnd,ligandonly,rev)
             heatmap_path = "%sheatmaps/%s/" % (options_path,rev)
             os.makedirs(heatmap_path, exist_ok=True)
 

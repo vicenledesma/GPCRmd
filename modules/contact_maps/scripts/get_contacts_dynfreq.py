@@ -11,6 +11,8 @@ from shutil import copyfile,copyfileobj
 import time
 import MDAnalysis as md
 
+from config.settings import MEDIA_ROOT
+
 def json_dict(path):
     """Converts json file to pyhton dict."""
     json_file=open(path)
@@ -74,12 +76,12 @@ def create_labelfile(outname, outfolder = "./", ligand = None):
      'A': 'ALA', 'V': 'VAL', 'E': 'GLU', 'Y': 'TYR', 'M': 'MET'}
 
     #Reading dictionary file with the GPCR numeration for this protein sequence
-    compl_data = json_dict("/var/www/protwis/sites/files/Precomputed/get_contacts_files/compl_info.json")
+    compl_data = json_dict(f"{MEDIA_ROOT}/Precomputed/get_contacts_files/compl_info.json")
     dictfile = compl_data[outname]['gpcr_pdb']
     gpcr_class = compl_data[outname]['class']
 
     #Reading GPCRnomenclatures Json: the json with the equivalences between different GPCR scales (Wooten, Ballesteros, Pi, ...)
-    GPCRnomenclatures = json_dict("/var/www/protwis/sites/files/Precomputed/get_contacts_files/GPCRnomenclatures_dict.json")
+    GPCRnomenclatures = json_dict(f"{MEDIA_ROOT}/Precomputed/get_contacts_files/GPCRnomenclatures_dict.json")
 
     #Iterate over residues in the dictionary, and extract its corresponding aminoacid type from the PDB
     pattern = re.compile("-\d\d")
@@ -223,7 +225,7 @@ def pharmacophores(dynname, path, dyn_contacts_file, trajfile, topfile, mytrajid
         return 
 
     # Take original trajectory fileid from compl_data
-    compl_data = json_dict("/var/www/protwis/sites/files/Precomputed/get_contacts_files/compl_info.json")
+    compl_data = json_dict(f"{MEDIA_ROOT}/Precomputed/get_contacts_files/compl_info.json")
 
     #Load trajectory into mdAnalysis object
     u = md.Universe(topfile, trajfile)
@@ -452,7 +454,7 @@ ligfile = args.ligfile
 repeat_dynamics = args.repeat_dynamics
 cores = args.cores
 get_contacts_path = "~/bin/"
-basepath = "/var/www/protwis/sites/files/Precomputed/"
+basepath = f"{MEDIA_ROOT}/Precomputed/"
 pharma_path = basepath + "pharmacophores/"
 files_basepath=basepath + "get_contacts_files/"
 files_path = files_basepath + "dynamic_symlinks/" + dynname + "/"

@@ -94,7 +94,7 @@ urlpatterns = [
     re_path(r'^modelreuserequest/(?P<model_id>[0-9]+)/$', views.MODELreuseREQUESTview, name='modelreuserequest'),
     re_path(r'^MODELfilled/(?P<submission_id>[0-9]+)/$', views.MODELview, name='MODELfilled'),
     #re_path(r'^ajax_pdbchecker/(?P<submission_id>[0-9]+)/$', views.pdbcheck, name='pdbcheck'), 
-    re_path(r'^search/$', SearchView(template='/var/www/protwis/sites/protwis/gpcrmd_srv/dynadb/templates/search/search.html', searchqueryset=sqs, form_class=MainSearchForm),name='haystack_search'),
+    re_path(r'^search/$', SearchView(template='/protwis/sites/protwis/gpcrmd_srv/dynadb/templates/search/search.html', searchqueryset=sqs, form_class=MainSearchForm),name='haystack_search'),
     re_path(r'^ajaxsearch/',views.ajaxsearcher,name='ajaxsearcher'),
     re_path(r'^empty_search/',views.emptysearcher,name='emptysearcher'),
     re_path(r'^autocomplete/',views.autocomplete,name='autocomplete'),
