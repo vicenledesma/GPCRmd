@@ -1,60 +1,44 @@
 <head>
-{% extends "home/base.html" %} 
-{% load static %} 
-{% block addon_css %}
-<style>
-#chart {
-     width: 825px; 
-     height: 825px;
-     margin:auto;
-}
-
-g rect {
-    fill: rgb(38, 38, 38);
-    opacity:0.75;  
-}
-
-g circle , g text {
-  cursor: pointer;
-}
-
-#closePopup{
-  cursor:pointer;
-}
-
-#closePopup:hover{
-  fill:white;
-}
-
-.tooltip text {
-    fill: black;
-    font-size: 12px;
-    font-family: sans-serif;
-}
-.tooltip rect {
-    fill: yellow;
-    stroke: blue;
-}
-
-</style>
-{% endblock %}
+  {% extends "home/base.html" %}
+  {% load staticfiles %}
 
 </head>
+
 <body>
-{% block content %} 
 
+  {% block content %}
 
-<div id="chart">    
-</div>
+  <!-- Family tree -->
+  <div class="row famTreeBlock">
+    <div class="ftDiv">
+      <!-- famTree in the left -->
+      <div id="chart" data-chart_data="{{tree_data}}" class="ftImg col-lg-8" >
+      </div>
+      <!-- Panel with intructions in the right -->
+      <div class="col-xs-4 col-md-4">
+        <div class="ftPanel panel panel-primary text_col">
+          <h3 class="panel-heading">3D-GPCRome tree</h3>
+          <div class="panel-body">
+            <p>The GPCRs are classified by class and family. In the exterior part of the circle
+              you can find the PDBs of each GPCR. <br>  <br> 
+              Click on a GPCR structure (PDB id) to access the MD simulations.</p>
+            <div class="ftBtnDiv">
+              <a class="btnOrange btn" href="https://youtu.be/sNQNWcBhIyg" target="_blank" role="button">How to use it</a>
+            </div>
+          </div>
 
+        </div>
+      </div>  
 
+    </div>
+  </div>
+  
+  {% endblock %}
 
-{% endblock %}
-
-{% block addon_js %} 
-<script src="https://d3js.org/d3.v5.min.js"></script>
-<script  src="{% static 'home/js/gpcrmd_homepage_min.js' %}"></script>
-{% endblock %}
+  {% block addon_js %}
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="{% static 'home/js/gpcrmd_homepage_min.js' %}"></script>
+  {% endblock %}
 
 
 </body>

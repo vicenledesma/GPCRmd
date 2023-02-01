@@ -1,6 +1,6 @@
 {% load mainmenu %}
 {% load site_title %}
-{% load static %}
+{% load staticfiles %}
 
 <!DOCTYPE html>
 <html lang="en">
