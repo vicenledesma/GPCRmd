@@ -1,17 +1,14 @@
 from django.urls import re_path
 from django.views.generic.base import RedirectView
-#from home import views
 from django.views.generic import TemplateView
 from django.conf import settings
 
 from modules.home import views
 
 urlpatterns = [
-    re_path(r'^$', RedirectView.as_view(url='/home/', permanent=False), name='index'), 
-    re_path(r'^home/$', views.gpcrmd_home, name='gpcrmd_home'),
+    re_path(r'^home/$', RedirectView.as_view(url='/', permanent=False), name='index'), 
+    re_path(r'^$', views.gpcrmd_home, name='gpcrmd_home'),
     re_path(r'^newround/$', views.newround, name='newround'),
-    #re_path(r'^hometest/$', views.gpcrmd_home, name='gpcrmd_home'),
-    #re_path(r'^mhometest/$', views.gpcrmd_hometest, name='gpcrmd_hometest'),
     re_path(r'^gpcrtree/$', views.gpcrtree, name='gpcrtree'),
     re_path(r'^contact/$', views.contact, name='contact'),
     re_path(r'^community/$', views.community, name='community'),

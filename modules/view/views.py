@@ -396,12 +396,13 @@ def obtain_dyn_files(dynfiles,get_framenum=False):
     structure_name=""
     traj_list=[]
     trajidToFramenum={}
-    p=re.compile("(/protwis/sites/files/)(.*)")
+    p=re.compile(f"({MEDIA_ROOT}/)(.*)")
     p2=re.compile("[\.\w]*$")
     for e in dynfiles:
         f_id=e.id_files.id
         path=e.id_files.filepath
-        myfile=p.search(path).group(2)
+        print(MEDIA_ROOT+path)
+        myfile=p.search(MEDIA_ROOT+path).group(2)
         myfile_name=p2.search(path).group()
         if myfile_name.endswith(".pdb"): #, ".ent", ".mmcif", ".cif", ".mcif", ".gro", ".sdf", ".mol2"))
             structure_file=myfile
@@ -2228,7 +2229,7 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
         is_metadyn={}
         #Obtain HILLS path, set hills_path=False if not found
         hills_path="/dynadb/files/Dynamics/metadyn/HILLS"
-        if os.path.isdir("/protwis/sites/protwis/mdsrv_static/metadyndiet/") and hills_path:
+        if os.path.isdir("/var/www/html/mdsrv/metadyndiet/") and hills_path:
             metadyn_files_avail=True
             is_metadyn["files_avail"]=metadyn_files_avail
             is_metadyn["hills_path"]=hills_path

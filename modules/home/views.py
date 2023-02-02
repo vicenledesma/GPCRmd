@@ -2,11 +2,12 @@ from django.shortcuts import render
 from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.db.models import F
+from django.http import HttpResponse
+
 from modules.dynadb.models import DyndbDynamics, DyndbFilesDynamics
 from modules.news.models import News
 from modules.common.models import ReleaseNotes, ReleaseStatistics
 from modules.dynadb.views import obtain_domain_url
-from django.http import HttpResponse
 from modules.covid19.models import CovidDynamics
 import pandas as pd
 import json
