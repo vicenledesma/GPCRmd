@@ -264,12 +264,26 @@ def fasta_to_phylip(align_string):
 
 
 #############################################################################################################################################
+def select_align(mode, mat_sco, mis_sco, open_gap, ext_gap):
+	"""
+	The replace of depecrated pairwise2.align.localms, need to use Align.PairwiseAligner from Biopython. 
+	"""
+	aligner= PairwiseAligner()
+	aligner.mode = mode # "local" or "global"
+	aligner.match_score = mat_sco #match_score
+	aligner.mismatch_score = mis_sco #mismatch_score
+	aligner.open_gap_score = open_gap #open gap penalty
+	aligner.extend_gap_score = ext_gap #extend gap penalty
+	return aligner
+
 def align_wt_mut(wtseq,mutseq):
-	bestalig=PairwiseAligner.align.localms(wtseq,mutseq,5,-1,-1.5,-1)[0]
+	aligner = select_align("local", 5, -1, -1.5, -1)
+	bestalig=aligner.align(wtseq,mutseq)[0]  #,5,-1,-1.5,-1
 	return bestalig
 	
 def align_wt_mut_viewer(wtseq,mutseq):
-	bestalig=PairwiseAligner.align.localms(wtseq,mutseq,5,-1,-1.5,-1.5)[0]
+	aligner = select_align("local", 5, -1, -1.5, -1.5)
+	bestalig=aligner.align(wtseq,mutseq)[0]  #,5,-1,-1.5,-1
 	return bestalig
 #############################################################################################################################################
 natural_aa=['TRP', 'PHE', 'ASN', 'GLY', 'MET', 'VAL', 'ARG', 'PRO', 'LYS', 'GLU', 'TYR', 'ALA', 'THR', 'HIS', 'CYS', 'SER', 'LEU', 'GLN', 'ILE', 'ASP']
@@ -280,7 +294,8 @@ def matchpdbfa(sequence,pdbseq,tablepdb,hexflag,start=1):
 	 the changes in the pdb numbering according to the database sequence.'''
 	warningmessage=''
 	try:
-		bestalig=PairwiseAligner.align.localms(sequence, pdbseq,5,-1,-1.5,-5)[0] #select the aligment with the best score.
+		aligner = select_align("local", 5, -1, -1.5, -5)
+		bestalig=aligner.align(sequence,pdbseq)[0]  #select the aligment with the best score.
 		#pairwise2.align.localms(seq1,seq2,score for identical matches, score for mismatches, score for opening a gap, score for extending a gap)
 	except:
 		return 'Incorrect alignment. Make sure you have defined a correct range of sequence and PDB. '
@@ -352,7 +367,9 @@ def matchpdbfa_ngl(sequence,pdbseq,tablepdb,hexflag,start=1):
 	 Do an alignment to check if the resids are corrupted in the pdb. Returns a table showing
 	 the changes in the pdb numbering according to the database sequence.'''
 
-	bestalig=PairwiseAligner.align.localms(sequence, pdbseq,100,-1,-10,-10)[0] #select the aligment with the best score.
+	aligner = select_align("local", 100, -1, -10, -10)
+	bestalig=aligner.align(sequence,pdbseq)[0]  #select the aligment with the best score.
+
 	#pairwise2.align.localms(seq1,seq2,score for identical matches, score for mismatches, score for opening a gap, score for extending a gap)
 	#print(bestalig)
 	biglist=list()
@@ -626,7 +643,9 @@ def searchtop(pdbfile,sequence, start,stop,chain='', segid=''):
 	else:
 		tablepdb,simplified_sequence,hexflag=result
 
-	bestalig=PairwiseAligner.align.localms(sequence, simplified_sequence,5,-1,-5,-5)[0] #select the aligment with the best score.
+	aligner = select_align("local", -5, -1, -5, -5)
+	bestalig=aligner.align(sequence,simplified_sequence)[0]  #select the aligment with the best score.
+
 	print(bestalig)
 	'''
 	The resulting alignment should be like:

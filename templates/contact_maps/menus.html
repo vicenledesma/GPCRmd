@@ -129,11 +129,11 @@
   <div class="dropdown optbar">
     <select name="clusters" id="clusters_dropdown" class="btn btn-sm btn-primary">
       {% for clust in clusrange_all %}
-      {% ifequal clust cluster %}
+      {% if clust == cluster %}
       <option class="clusteropt" value={{clust}} selected=selected> {{clust}} clusters </option>
       {% else %}
       <option class="clusteropt" value={{clust}}> {{clust}} clusters </option>
-      {% endifequal %}
+      {% endif %}
       {% endfor %}
     </select>
   </div>
