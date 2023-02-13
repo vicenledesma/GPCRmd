@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Django settings for protwis project.
+Django settings for GPCRmd project.
 """
 
 #Defaults
@@ -113,8 +113,6 @@ MIDDLEWARE = DEBUG_TOOLBAR_MIDDLEWARE+\
     
 ]
 
-#['protwis.custom_middlewares.MultipleProxyMiddleware']+\'protwis.custom_middlewares.WsgiLogErrors', 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-
 ROOT_URLCONF = 'config.urls'
 
 WSGI_APPLICATION = 'config.wsgi.application'
@@ -143,6 +141,8 @@ MEDIA_URL = '/files/'
 MEDIA_ROOT = '/var/www/GPCRmd/media/files'
 SENDFILE_BACKEND = 'sendfile.backends.xsendfile'
 
+MAIN_ROOT = '/var/www/GPCRmd'
+TEMP_ROOT = '/var/www/GPCRmd/templates'
 #MODULES DIR
 MODULES_ROOT = "/var/www/GPCRmd/modules"
 #Search Engine
@@ -166,7 +166,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             # insert your TEMPLATE_DIRS here
-            '/var/www/GPCRmd/templates/'
+            f'{TEMP_ROOT}/'
         ],
         'APP_DIRS': True,
         'OPTIONS': {
