@@ -159,7 +159,7 @@ class Command(BaseCommand):
             dynfiles=DyndbFilesDynamics.objects.prefetch_related("id_files").filter(id_dynamics=dyn_id)
             traj_list=[]
             traj_name_list=[]
-            p=re.compile("(/protwis/sites/files/)(.*)")
+            p=re.compile(f"({MEDIA_ROOT}/)(.*)")
             p2=re.compile("[\.\w]*$")
             for fileobj in dynfiles:
                 path=fileobj.id_files.filepath

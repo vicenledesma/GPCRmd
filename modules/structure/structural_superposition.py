@@ -12,7 +12,7 @@ from protein.models import Protein
 from structure.models import Structure
 from interaction.models import ResidueFragmentInteraction
 
-logger = logging.getLogger("protwis")
+logger = logging.getLogger("gpcrmd")
 #==============================================================================  
 class ProteinSuperpose(object):
   

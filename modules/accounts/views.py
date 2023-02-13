@@ -47,7 +47,7 @@ def login(request):
             mytemplate='covid19/login_covid.html'
     # if user is already logged in redirect to GET query string 'next' key value or
     # to user main menu
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         if next_url is not None:
             return redirect(next_url)
         else:
@@ -77,11 +77,11 @@ def login(request):
         
         form = AuthenticationForm()
     # add webpage to redirect on login form as a hidden HTML input element for POST requests   
-    return render(mytemplate, {
+    return render(request, mytemplate, {
         'form': form,
         'next_url': next_url,
         "is_covid":is_covid
-    }, context_instance=RequestContext(request))
+    })
 
 
 

@@ -23,7 +23,7 @@ from protein.models import Protein
 from view.assign_generic_numbers_from_DB import obtain_gen_numbering 
 from dynadb.pipe4_6_0 import *
 
-from config.settings import MEDIA_ROOT
+from config.settings import MEDIA_ROOT, MODULES_ROOT
 
 def parse_pdb(pdbfile, chainid_list = [], resname_list = [], resid_list = []):
     """ 
@@ -104,7 +104,7 @@ def obtain_dyn_files(dyn_id):
     traj_name_list=[]
     structure_file = None
     structure_file_name = None
-    p=re.compile("(/protwis/sites/files/)(.*)")
+    p=re.compile(f"({MEDIA_ROOT}/)(.*)")
     p2=re.compile("[\.\w]*$")
     for fileobj in dynfiles:
         path=fileobj.id_files.filepath
@@ -443,7 +443,7 @@ class Command(BaseCommand):
                 else:
                     tail_comand = "\n"
 
-                commands_line += str("python /protwis/sites/protwis/gpcrmd_srv/contact_maps/scripts/get_contacts_dynfreq.py \
+                commands_line += str(f"python {MODULES_ROOT}/contact_maps/scripts/get_contacts_dynfreq.py \
                     --dynid %s \
                     --traj %s \
                     --topology %s \

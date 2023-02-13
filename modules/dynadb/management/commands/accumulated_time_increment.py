@@ -1,10 +1,10 @@
 from dynadb.models import DyndbDynamics, DyndbFilesDynamics
 from django.core.management.base import BaseCommand, CommandError
 import pandas as pd
-
+from config.settings import MEDIA_ROOT
 
 class Command(BaseCommand):
-	help = "Obtains accumulated simulated over time and saves info in file /protwis/sites/files/accumtime_by_month.json"
+	help = "Obtains accumulated simulated over time and saves info in file MEDIA_ROOT accumtime_by_month.json"
 		
 	def handle(self, *args, **options):
 

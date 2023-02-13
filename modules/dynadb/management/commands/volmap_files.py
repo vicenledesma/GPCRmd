@@ -1,4 +1,4 @@
-"""This  script (executed in vagrant) extracts the specified files from the GPCRmd database into a pickle file in the folder /protwis/sites/files/Precomputed used to create the volmaps. 
+"""This  script (executed in vagrant) extracts the specified files from the GPCRmd database into a pickle file in the folder MEDIA_ROOT /Precomputed used to create the volmaps. 
 The pickle file contains the list of pdb and trajectory filepaths (vagrant pahts) of which the volmaps will later be created.
 To create the volmaps, one should execute the script: 'create_volmaps.py' on their LOCAL computer (not in vagrant, VMD can not be run there). 
 The argument --filename is necessary to fill in. So to use the script one would do: python manage.py volmap_files --filename [name of picklefile]

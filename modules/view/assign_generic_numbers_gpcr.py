@@ -10,7 +10,7 @@ from structure.functions import BlastSearch, MappedResidue
 import Bio.PDB.Polypeptide as polypeptide
 import os,logging
 
-logger = logging.getLogger("protwis")
+logger = logging.getLogger("gpcrmd")
 
 #==============================================================================
 #Class for annotating the pdb structures with generic numbers
@@ -20,7 +20,7 @@ class GenericNumbering(object):
     residue_list = ["ARG","ASP","GLU","HIS","ASN","GLN","LYS","SER","THR","HID","PHE","LEU","ILE","TYR","TRP","VAL","MET","PRO","CYS","ALA","GLY"]
   
     def __init__ (self, pdb_file=None, pdb_filename=None, structure=None, blast_path='blastp',
-        blastdb=os.sep.join([settings.STATICFILES_DIRS[0], 'blast', 'protwis_blastdb']),top_results=1):
+        blastdb=os.sep.join([settings.STATICFILES_DIRS[0], 'blast', 'gpcrmd_blastdb']),top_results=1):
     
         # pdb_file can be either a name/path or a handle to an open file
         self.pdb_file = pdb_file

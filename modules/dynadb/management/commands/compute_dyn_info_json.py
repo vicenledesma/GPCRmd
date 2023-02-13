@@ -134,7 +134,7 @@ class Command(BaseCommand):
             traj_name_list=[]
             structure_file = None
             structure_file_name = None
-            p=re.compile("(/protwis/sites/files/)(.*)")
+            p=re.compile(f"({MEDIA_ROOT}/)(.*)")
             p2=re.compile("[\.\w]*$")
             for fileobj in dynfiles:
                 path=fileobj.id_files.filepath

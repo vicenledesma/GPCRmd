@@ -19,7 +19,7 @@ import logging
 import math
 import urllib
 
-logger = logging.getLogger("protwis")
+logger = logging.getLogger("gpcrmd")
 
 ATOM_FORMAT_STRING="%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f%s%6.2f      %4s%2s%2s\n" 
 
@@ -29,7 +29,7 @@ class BlastSearch(object):
     
     
     def __init__ (self, blast_path='blastp',
-        blastdb=os.sep.join([settings.STATICFILES_DIRS[0], 'blast', 'protwis_blastdb']), top_results=1):
+        blastdb=os.sep.join([settings.STATICFILES_DIRS[0], 'blast', 'gpcrmd_blastdb']), top_results=1):
   
         self.blast_path = blast_path
         self.blastdb = blastdb

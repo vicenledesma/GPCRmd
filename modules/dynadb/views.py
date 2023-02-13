@@ -88,7 +88,6 @@ color_label_forms=["blue","red","yellow","green","orange","magenta","brown","pin
 from functools import wraps
 import copy
 
-
 from rdkit.Chem import ForwardSDMolSupplier, AssignAtomChiralTagsFromStructure
 from config.settings import MEDIA_ROOT
 
@@ -3051,6 +3050,7 @@ def query_model(request,model_id):
 def obtain_domain_url(request):
     current_host = request.get_host()
     domain=current_host.rsplit(':',1)[0]
+    domain="84.89.134.155"
     if request.is_secure():
         protocol = 'https'
     else:
@@ -3075,7 +3075,7 @@ def obtain_dyn_files(paths_dict):
     structure_file=""
     structure_name=""
     traj_list=[]
-    p=re.compile("(/protwis/sites/files/)(.*)")
+    p=re.compile(f"({MEDIA_ROOT})(.*)")
     p2=re.compile("[\.\w]*$")
     for f_id , path in paths_dict.items():
         myfile=p.search(path).group(2)
@@ -8387,102 +8387,6 @@ def DYNAMICSview(request, submission_id, model_id=None):
             return render(request,'dynadb/DYNAMICS.html', {'dd':dd,'ddC':ddC, 'qDMT':qDMT, 'qDST':qDST, 'qDMeth':qDMeth,'protlist':protlist, 'qAT':qAT, 'submission_id' : submission_id,'data':data, 'file_types':file_types, 'ModelReuse':ModelReuse, 'qMOD':qMOD })
 ##############################################################################################################
 
-
-
-#       postspl={}
-#       postsplmod={}
-#       dmodinst={}
-#       dinst={}
-#       for key,val in dicpost.items():
-#           if re.search('formc',key):
-#               index=int(key.split("-")[1])
-#               if index not in indexl:
-#                   indexl.append(index)
-#                   postspl[index]={}
-#                   postsplmod[index]={}
-#                   
-#               postspl[index][key]=val
-#               postsplmod[index][key.split("-")[2]]=val
-
-#       if len(indexl)==0:
-#           indexl=[1]
-#           postsplmod[1]={}    
-#           for key,val in dicpost.items():
-#               if key not in ddi.__dict__.keys():
-#                   postsplmod[1][key]=val
-
-
-
-#       print("created by dbengine antes de validar", dd.data['created_by_dbengine'])
-
-#       if dd.is_valid():
-#           # process the data in form.cleaned_data as required
-#           ddi=dd.save(commit=False)
-#           with open('/protwis/sites/protwis/gpcrmd_srv/dynadb/DYNdd.txt', 'wb') as handle:
-#               pickle.dump(ddi, handle)
-
-#           dd.save()
-#           with open('/protwis/sites/protwis/gpcrmd_srv/dynadb/DYNddi.txt', 'wb') as handle:
-#               pickle.dump(ddi, handle)
-#           dynafk=ddi.pk 
-#           print(dynafk)
-#           dicpost=request.POST
-#           postspl={}
-#           postsplmod={}
-#           dmodinst={}
-#           indexl=[]
-#           dinst={}
-#           for key,val in dicpost.items():
-#               if re.search('formc',key):
-#                   index=int(key.split("-")[1])
-#                   if index not in indexl:
-#                       indexl.append(index)
-#                       postspl[index]={}
-#                       postsplmod[index]={}
-#                       
-#                   postspl[index][key]=val
-#                   postsplmod[index][key.split("-")[2]]=val
-
-#           if len(indexl)==0:
-#               indexl=[1]
-#               postsplmod[1]={}    
-#               for key,val in dicpost.items():
-#                   if key not in ddi.__dict__.keys():
-#                       postsplmod[1][key]=val
-#                        
-
-#           print("longitud postspl[1]",len(postsplmod[1]), postsplmod)
-#           print("lista de indices", indexl) 
-#           for val in indexl:
-#               print("componente ", val, " ", postsplmod[val])
-#               postsplmod[val]['id_dynamics']=dynafk
-#               postsplmod[val]['id_molecule']=int(val+1) #este valor debe modificarse se le suma 1 porque si no no lo acepta el html (pide opciones entre uno y 7)
-#               dinst[val]=dyndb_Dynamics_Components(postsplmod[val])
-#               if dinst[val].is_valid():
-#                   dmodinst[val]=dinst[val].save(commit=False)
-#                   dmodinst[val]=dinst[val].save()
-#                   print("diccionario ", val, "  ", dmodinst[val].__dict__) 
-#               else:
-#                   print("Errores de la instancia del form nº",val," ",  dinst[val].errors.as_data())
-
-#         #  ttt=ddi.created_by_dbengine
-#         #  print("created by dbengine despues de grabar", ttt)
-
-#           # redirect to a new URL:
-#           return HttpResponseRedirect('/dynadb/DYNAMICSfilled/')
-#       else:
-#           iii2=dd.errors.as_data()
-#           print("Errores en dynamics: ",iii2)
-
-#   # if a GET (or any other method) we'll create a blank form
-#   else:
-#       dd=dyndb_Dynamics()
-#      # ddT= dyndb_Dynamics_tags()
-#      # ddTL=dyndb_Dynamics_Tags_List()
-
-#       return render(request,'dynadb/DYNAMICS.html', {'dd':dd})
-
-
 @login_required
 @user_passes_test_args(is_submission_owner,redirect_field_name=None)
 @test_if_closed
@@ -12776,9 +12680,8 @@ def reset_permissions(request):
         from django.core.cache import cache
         cache.clear()
         import os
-        #os.system("chmod -R 660 /protwis/sites/files/")
-        os.system('find /protwis/sites/files/ -type d -exec chmod 770 {} \;')
-        os.system('find /protwis/sites/files/ -type f -exec chmod 660 {} \;')
+        os.system(f'find {MEDIA_ROOT}/ -type d -exec chmod 770 '+'{} \;')
+        os.system(f'find {MEDIA_ROOT}/ -type f -exec chmod 660 '+'{} \;')
         #os.system("rm -fr /tmp/django_cache")
     except Exception as e:
         print(str(e))

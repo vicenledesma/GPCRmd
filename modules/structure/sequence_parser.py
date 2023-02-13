@@ -181,7 +181,7 @@ class SequenceParser(object):
         self.mapping = {}
         self.residues = {}
         self.segments = {}
-        self.blast = BlastSearch(blastdb=os.sep.join([settings.STATICFILES_DIRS[0], 'blast', 'protwis_human_blastdb']))
+        self.blast = BlastSearch(blastdb=os.sep.join([settings.STATICFILES_DIRS[0], 'blast', 'gpcrmd_human_blastdb']))
         
 
         if pdb_file is not None:

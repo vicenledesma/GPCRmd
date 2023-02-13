@@ -3,9 +3,11 @@
 #run with /env/bin/python fillDB.py
 #if you have any doubts, contact: alejandrovarelarial@gmail.com
 import os, sys
-proj_path = "/protwis/sites/protwis/gpcrmd_srv/"
+from config.settings import MODULES_ROOT
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "protwis.settings")
+proj_path = MODULES_ROOT
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 sys.path.append(proj_path)
 os.chdir(proj_path)
 
@@ -181,7 +183,7 @@ def newrecord(tablename,fields_values,insert_id=False):
     '''Takes a dictionary with information and saves it into the database '''
     postgresql_name=tablename[0]
     django_name=tablename[1]
-    username='protwis'
+    username='gpcrmd_admin'
     try:
         nextid=django_name.objects.latest('id').id+1
     except:
@@ -749,7 +751,7 @@ def record_complex_in_DB(comple,fromiuphar=False,ec50_id=None):
                     lastid=str(DyndbComplexExp.objects.latest('id').id + 1)
                 except:
                     lastid=1
-                cursor.execute('INSERT INTO dyndb_complex_exp (id,is_published,creation_timestamp,created_by_dbengine,last_update_by_dbengine) VALUES (%s,%s,%s,%s,%s) RETURNING id', (lastid,True, timezone.now(),'protwis','protwis'))
+                cursor.execute('INSERT INTO dyndb_complex_exp (id,is_published,creation_timestamp,created_by_dbengine,last_update_by_dbengine) VALUES (%s,%s,%s,%s,%s) RETURNING id', (lastid,True, timezone.now(),'gpcrmd','gpcrmd'))
                 complex_id=cursor.fetchone()[0]
                 recorded_ids['complexid']=complex_id   
             cmol_id=newrecord(['dyndb_complex_molecule',DyndbComplexMolecule],{'id_complex_exp':complex_id, 'is_published':True},True) 
@@ -1343,13 +1345,13 @@ def fill_db_iuphar(filename):
      containing the csv records in a format available to the record_complex_in_DB function. This file is created after the first use. '''
     records=iuphar_parser(filename)
     try:
-        with open ('/protwis/sites/protwis/gpcrmd_srv/iuphar_useful_complexes_pickle', 'rb') as fp:
+        with open (f'{MODULES_ROOT}/iuphar_useful_complexes_pickle', 'rb') as fp:
             complexes = pickle.load(fp)
         print('Pickle found...this is going to be fast')
     except:
         print('This could take a while...')
         complexes=to_bindingdb_format(records)
-        with open ('/protwis/sites/protwis/gpcrmd_srv/iuphar_useful_complexes_pickle', 'wb') as fp:
+        with open (f'{MODULES_ROOT}/iuphar_useful_complexes_pickle', 'wb') as fp:
             pickle.dump(complexes,fp) 
     print('lets record in DB')
     for comple in complexes:
@@ -1358,7 +1360,7 @@ def fill_db_iuphar(filename):
         except:
             raise
 
-mypath='/protwis/sites/protwis/gpcrmd_srv/dynadb/chunks/chunksBindingDB'
+mypath=f'{MODULES_ROOT}/dynadb/chunks/chunksBindingDB'
 chunks=[os.path.join(mypath, f) for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))][28:]
 fill_db(chunks)
 fill_db_iuphar('./dynadb/interactions.csv')

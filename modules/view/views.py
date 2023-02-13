@@ -3842,48 +3842,7 @@ def grid(request):
         grid=grid.tolist()
         full_results={'grid':grid,'shape':shape,'indexes':atom_indices}
         data = json.dumps(full_results)
-        return HttpResponse(data, content_type='application/json')
-
-#def fplot_test(request, filename):
-#    context={"json_name":filename+".json"}
-#    return render(request, 'view/flare_plot_test.html', context)
-    
-#def fplot_gpcr(request, dyn_id, filename,seg_li):
-#    """
-#    View of flare plot with pv representation of the pdb
-#    """
-#    nameToResiTable={}
-#    if request.session.get('gpcr_pdb', False):
-#        gpcr_pdb=request.session['gpcr_pdb']
-#        nameToResiTable={}
-#        for (gnum,posChain) in gpcr_pdb.items():
-#            gnumOk=gnum[:gnum.find(".")]+gnum[gnum.find("x"):]
-#            nameToResiTable[gnumOk]=[posChain[1]+"."+posChain[0],""]
-#    #seg_li_ok=[seg.split("-") for seg in seg_li.split(",")]
-#    fpdir = get_precomputed_file_path('flare_plot',"hbonds",url=True)
-#    pdbpath=DyndbFiles.objects.filter(dyndbfilesdynamics__id_dynamics=dyn_id, id_file_types__extension="pdb")[0].filepath
-#    pdbpath=pdbpath.replace("/protwis/sites", "/dynadb")
-#    prot_names=obtain_protein_names(dyn_id)
-#    traj_id=int(re.match("^\d+",filename).group())
-#    traj_name=DyndbFiles.objects.get(id=traj_id).filename
-#    
-#    comp=DyndbModelComponents.objects.filter(id_model__dyndbdynamics=dyn_id)
-#    lig_li=[]
-#    for c in comp:
-#        if c.type ==1:
-#            lig_li.append(c.resname)
-#
-#    context={"json_path":fpdir + filename,
-#             "pdb_path": pdbpath,
-#             "prot_names": prot_names,
-#             "traj_name" :traj_name,
-#             "lig_li" : lig_li,
-#             "seg_li":seg_li,
-#             "nameToResiTable":json.dumps(nameToResiTable),
-#             "dyn_id":dyn_id
-#            }
-#    return render(request, 'view/flare_plot.html', context)
-    
+        return HttpResponse(data, content_type='application/json')    
     
 def fplot_gpcr_slide(request, dyn_id, filename,seg_li):
     """
@@ -3954,7 +3913,7 @@ def view_session(request , session_name):
         return redirect(mdsrv_url+redirect_url)
 
 def trim_path_for_mdsrv(path):
-    p=re.compile("(/protwis/sites/files/)(.*)")
+    p=re.compile(f"({MEDIA_ROOT}/)(.*)")
     myfile=p.search(path).group(2)
     return myfile
 
