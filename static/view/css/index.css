@@ -173,7 +173,7 @@
 }
 
 #inner_remaining{
-position: fixed; 
+/* position: fixed;  */
 top: 155px; /*Set top value to HeightOfTopFrameDiv*/
 margin:auto;
 bottom: 0px; /*Set bottom value to HeightOfBottomFrameDiv*/
