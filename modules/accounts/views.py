@@ -119,9 +119,9 @@ def register(request,
     else:
         form = RegistrationForm()
     print(form)        
-    return render('accounts/register.html', {
+    return render(request, 'accounts/register.html', {
         'form': form,
-    }, context_instance=RequestContext(request))
+    })
 
 
 

@@ -4417,6 +4417,7 @@ function getPocketHTMLdata() {
     let trajID = $(".traj_element.tsel").attr("id").replace("traj_id_","");
     let trajName = $(".traj_element.tsel").data("tpath").split("/")[1];
     let smoothingWindowSize = $("#smoothing_window_size").val();
+    let showNearbyResidues = $("#show_nearby_residues").prop('checked');
 
     // Take selection from the DataTable
     let mustPlotEveryPocket = false;
@@ -4440,11 +4441,12 @@ function getPocketHTMLdata() {
     });
 
     return {
-        "dynID":                dynID,
-        "trajID":               trajID,
-        "trajName":             trajName,
+        "dynID"               : dynID,
+        "trajID"              : trajID,
+        "trajName"            : trajName,
         "pocketIDAndColorList": pocketIDAndColorList,
-        "smoothingWindowSize":  smoothingWindowSize,
+        "smoothingWindowSize" : smoothingWindowSize,
+        "showNearbyResidues"  : showNearbyResidues,
     };
 }
 
@@ -4487,6 +4489,7 @@ function requestPocketPlot(htmlData) {
                 {
                     "trajID"               : htmlData["trajID"],
                     "pocketIDAndColorList" : JSON.stringify(htmlData["pocketIDAndColorList"]),
+                    "showNearbyResidues"   : htmlData["showNearbyResidues"],
                 });
         },
         error: function(error){
@@ -4533,7 +4536,7 @@ $("#analysis_pockets").bind('update_pocket_frame', function(e, frame) {
     }
 });
 
-
+// Cleans every pocket related info: plot and viewer
 $("#reset_pocket_plot").on("click", function() {
 
     let trajID = $(".traj_element.tsel").attr("id").replace("traj_id_","");
@@ -4552,8 +4555,8 @@ $("#reset_pocket_plot").on("click", function() {
 
 /**
  * Updates the shown information for the current trajectory. Table is updated
- * with the trajectory's data, plot is reset and the pockets visualization
- * in the viewer are discarded.
+ * with the trajectory's data, plot is reset, pockets visualization
+ * in the viewer are discarded and downlaod link is updated.
  * 
  * This function is mainly called from the viewer iframe: "embed.html".
  */
@@ -4569,6 +4572,7 @@ window.update_pocket_table = function() {
             {
                 "trajID"               : trajID,
                 "pocketIDAndColorList" : JSON.stringify([]), // Empty list = show no pockets
+                "showNearbyResidues"   : htmlData["showNearbyResidues"],
             });
 
         // Redraw the table with the new trajectory data
@@ -4588,13 +4592,28 @@ window.update_pocket_table = function() {
                                        descriptors["average_volume"],
                                        descriptors["average_Polarity_score"],
                                        descriptors["average_hydrophobicity_Density"],
-                                       descriptors["average_hydrophobicity_score"]  ]);
+                                       descriptors["average_hydrophobicity_score"],
+                                       descriptors["perc_druggability"]]);
             }
             pocketsTable.draw();
         }
+
+        // Change download button href
+        download_btn = $("#download_pockets_pdbs");
+            // TODO: relative path
+        download_btn.attr('href',"/dynadb/files/Precomputed/MDpocket/Downloads/" + "pockets_dyn" + dyn_id + "_traj" + trajID + ".zip");
     }
 }
 
+/**
+ * When you change the state of the checkbox "Show nearby residues",
+ * update the viewer.
+ */
+$("#show_nearby_residues").on("change", function() {
+    if (pocketsTable.rows( { selected: true } )[0].length != 0) {
+        $("#pocket_plot_button").trigger("click");
+    }
+});
 
 
 //-------- Buttons --------
@@ -6192,6 +6211,10 @@ window.update_pocket_table = function() {
             opts_sel = "a.input_satom_cs_opt"
         }
         $(aselect_sel).selectpicker('deselectAll');// Deselect all for starters
+        // In second atom selector of 2d we're gonna set up CA as default option (so not to coincide with first atom sleector)
+        $('#input_2datom2_cs').val("CA");
+        $('#input_2datom2_cs').selectpicker('refresh')
+        //Hide or show options in atom selectors according to avaliable atoms in atom_names_u
         $(opts_sel).each(function(){
             opt = $(this)
             aname = opt.find(".text").html();//Extract residue name from option
@@ -6279,6 +6302,10 @@ window.update_pocket_table = function() {
         //Get selected predictor
         pred = $('input[name="cs_pred"]:checked').val();
 
+        //Check if "solution plots" option for 2d-plots is selected
+        soluplots = $('input[name="cs_solution"]:checked').val()
+        console.log(soluplots)
+
         frames_start = "all"; frames_end = "all";
         //If active CS analysis type is "single atom" (the one ressembling an RMSD plot)
         if (atype=="satom"){            
@@ -6359,6 +6386,7 @@ window.update_pocket_table = function() {
                     "atoms":atoms,
                     "frames_start" : frames_start,
                     "frames_end" : frames_end,
+                    "soluplots" : soluplots,
                 },                
                 success: function(cs_result) {
                     cs_repr_resatoms=cs_result["avail_res_atoms"];
