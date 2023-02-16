@@ -5,7 +5,7 @@ class smalmol_entry {
 
       <div class='row smalmol_title'>
         <div class="col-md-11">
-          <h3 id="entry_title${id}">${id}. Small molecule ${resname}</h3>
+          <h3 class="leftText panel-heading" id="entry_title${id}">${id}. Small molecule ${resname}</h3>
         </div>
         <div class="col-md-1">
           <h3 id="remove_smalmol${id}" class="align_right  remove_smalmol" data-resname=${resname} data-id=${id} ><span class="info_icon glyphicon glyphicon-trash" ></h3>

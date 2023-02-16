@@ -466,7 +466,7 @@ ul.dropdown-menu.inner{
   background-color: rgb(242, 242, 242);;
 }
 
-label.ac_option {
+label.ac_option, .nobold {
     font-weight: normal !important;
 }
 

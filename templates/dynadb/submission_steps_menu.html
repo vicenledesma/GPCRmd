@@ -1,5 +1,5 @@
 <!-- Submit and go-back green buttons -->
-<div class="col-md-12"> 
+<div class="col-md-10 col-md-offset-1"> 
   <div class="col-md-12 panel panel-primary">
     <div class="panel-body" id="selection-">
       <div class="panel-body alert alert-danger hidden_sections">
@@ -9,7 +9,7 @@
       </div>
       <div id="loading_submit" class="hidden_sections">
         <h3>Please wait</h3>
-        <h4>Your data is being submitted. This may take a few {% if step == '4' %} minutes, depending on the size of the uploaded files{% else %} seconds{% endif %}... </h4>
+        <h4 class="orangeTit" >Your data is being submitted. This may take a few {% if step == '4' %} minutes, depending on the size of the uploaded files{% else %} seconds{% endif %}... </h4>
         <img id="loading_icon" src="/static/view/images/loading-gear.gif"/>
       </div>
       {% if step == '5' %}
@@ -19,7 +19,7 @@
 
     </div>
     <div class="row" style="text-align:center">
-      <h4>Submission steps: </h4>
+      <h4 class="orangeTit">Submission steps: </h4>
     </div>
     <div class="panel-body" id="selection-">
       {% for i in '12345'|make_list %}
@@ -34,10 +34,5 @@
       </div>
       {% endfor %}
     </div>
-
-    <script type="text/javascript" >
-      $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();
-      });
-    </script>
+  </div>    
 </div>

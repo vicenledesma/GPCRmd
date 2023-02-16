@@ -2,19 +2,26 @@ from django.shortcuts import render
 from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.db.models import F
-from django.http import HttpResponse
-
 from modules.dynadb.models import DyndbDynamics, DyndbFilesDynamics
 from modules.news.models import News
 from modules.common.models import ReleaseNotes, ReleaseStatistics
 from modules.dynadb.views import obtain_domain_url
+from django.http import HttpResponse
 from modules.covid19.models import CovidDynamics
 import pandas as pd
 import json
 import os
 import pickle
+import copy
 
-from config.settings import MEDIA_ROOT
+def search_in_treeData(classifli,myslug):#gpcrclassif_fams,myfam_slug
+    namefound=False
+    for nlevel in range(0,len(classifli)):
+        thisslug= classifli[nlevel]["slug"]
+        if myslug==thisslug:
+            namefound=True
+            return(nlevel)
+    return(False)
 
 def json_dict(path):
     """
@@ -65,25 +72,13 @@ def gpcrmd_home(request):
     context['documentation_url'] = settings.DOCUMENTATION_URL
     context['logo_path'] = 'home/logo/' + settings.SITE_NAME + '/main.png';
     context['logo_text_path'] = 'home/logo/' + settings.SITE_NAME + '/text.png';
-    gpcrmdtree_path=f"{MEDIA_ROOT}/Precomputed/Summary_info/gpcrmdtree.data"
+    gpcrmdtree_path=settings.MEDIA_ROOT + "Precomputed/Summary_info/gpcrmdtree.data"
     with open(gpcrmdtree_path, 'rb') as filehandle:  
         tree_data = pickle.load(filehandle)
     context['tree_data']=json.dumps(tree_data)
-
-#    #latest entry
-#    latest=DyndbDynamics.objects.filter(is_published=True).latest("creation_timestamp")
-#    dynfiles = DyndbFilesDynamics.objects.filter(id_dynamics__id=latest.id)
-#    #dynfiles = dynfiles.annotate(file_name=F("id_files__filename"),file_path=F("id_files__filepath"),file_id=F('id_files__id'))
-#    dynfiles = dynfiles.annotate(file_path=F("id_files__filepath"));
-#    model_path = dynfiles.get(id_files__id_file_types__is_model=True).file_path;
-#    context["model_path"]= model_path[model_path.index("Dynamics"):] 
-#########
     dynall=DyndbDynamics.objects.filter(is_published=True) #all().exclude(id=5) #I think dyn 5 is wrong
 
-    ################ Precompute & import
-    #dynclass=dynall.annotate(is_published=F('is_published'))
-    
-
+    ################ Precompute & import    
     dynclass=dynall.annotate(subm_date=F('creation_timestamp'))
     dynclass=dynclass.annotate(is_traj=F('dyndbfilesdynamics__id_files__id_file_types__is_trajectory'))
     dynclass=dynclass.annotate(file_id=F('dyndbfilesdynamics__id_files__id'))
@@ -92,7 +87,6 @@ def gpcrmd_home(request):
     dynclass=dynclass.annotate(dyn_id=F('id'))
     dynclass = dynclass.annotate(pdb_namechain=F("id_model__pdbid"))
     dynall_values=dynclass.values("dyn_id","subm_date","fam_slug","fam_slug2","is_published","is_traj","file_id","pdb_namechain")
-
 
     dyn_dict = {}
     #fam_d={"001":"A","002":"B1","003":"B2","004":"C","005":"F","006":"Taste 2","007":"Others"}
@@ -129,16 +123,6 @@ def gpcrmd_home(request):
                 dyn_dict[dyn_id]["fam"]=fam
             if dyn["is_traj"]:
                 dyn_dict[dyn_id]["trajs"].add(dyn["file_id"])
-
-
-#    # Submissions by class    
-#    dynall_fam_data=[d["fam"] for d in dyn_dict.values()]
-#    class_li=[]
-#    for gclass in ["A","B1","B2","C","F"]:
-#        class_count=dynall_fam_data.count(gclass)
-#        class_li.append([gclass,class_count])
-#    context["class_data"]=json.dumps(class_li)
-
 
     # Submisisons by date
     date_d={}
@@ -180,9 +164,6 @@ def gpcrmd_home(request):
 
     context["subm_data"] =json.dumps(subm_data)
     ################
-    #gpcrmdtree_path=f'{MEDIA_ROOT}/Precomputed/Summary_info/gpcrmdtree.data'
-    #with open(gpcrmdtree_path, 'rb') as filehandle:  
-        #tree_data = pickle.load(filehandle)
     fam_count=0
     subt_count=0
     pdb_count=0
@@ -238,80 +219,138 @@ def gpcrmd_home(request):
                 ]
     context["pdb_stats"]=json.dumps(pdb_stats)
 
-
-
-#    # Activation state
-#    stats_precomp_file=f"{MEDIA_ROOT}/Precomputed/Summary_info/dyn_stats.data"
-#    exists=os.path.isfile(stats_precomp_file)
-#    act_li=False
-#    if exists:
-#        with open(stats_precomp_file, 'rb') as filehandle:  
-#            act_li = pickle.load(filehandle)
-#    context["act_data"]=json.dumps(act_li)
-
-
-    # Entry of the month
-    entry_month_data = json_dict(f"{MEDIA_ROOT}/entry_month.json")
-    dyn_id=entry_month_data['dynid']
-    context["dyn_id"]=dyn_id
-    dynobj=dynall.filter(id=dyn_id)#.latest("creation_timestamp")
-    t=dynobj.annotate(dyn_id=F('id'))
-    t = t.annotate(comp_resname=F("id_model__dyndbmodelcomponents__resname"))
-    t = t.annotate(comp_type=F("id_model__dyndbmodelcomponents__type"))
-    t = t.annotate(protname=F('id_model__id_complex_molecule__id_complex_exp__dyndbcomplexprotein__id_protein__name'))
-    t = t.annotate(protname2=F('id_model__id_protein__name'))
-    t = t.annotate(uniname=F('id_model__id_protein__uniprotkbac'))
-    t = t.annotate(ligname=F("id_model__dyndbmodelcomponents__id_molecule__id_compound__name"))
-    #t = t.annotate(ligname=F("id_model__id_complex_molecule__dyndbcomplexmoleculemolecule__id_molecule__id_compound__name"))
-    t = t.annotate(pdb_namechain=F("id_model__pdbid"))
-    dyndata=t.values("id","comp_resname","comp_type","protname","protname2","uniname","ligname","pdb_namechain")
-
-    lig_li=[d["comp_resname"].upper() for d in dyndata if d["comp_type"]==1]
-    context["lig_li"]=" or ".join(lig_li)
-    
-    if dyn_id==4:
-        ligname_li=["Ergotamine"]
-    elif dyn_id==203:
-        ligname_li=["Protonated smoothened agonist"]
-    else:
-        ligname_li=[d["ligname"].capitalize() for d in dyndata if d["comp_type"]==1] 
-    context["lig_name"]=" and ".join(ligname_li)
-    
-    prot_name=" and ".join(list({d["protname"] if d["protname"] else (d["protname2"] if d["protname2"] else d["uniname"]) for d in dyndata}))
-    context["prot_name"]=prot_name
-
-    pdb_namechain=dyndata[0]["pdb_namechain"]
-    if dyn_id ==4 and not pdb_namechain:
-        pdb_namechain="4N6H"
-    context["pdb_id"]=pdb_namechain.split(".")[0]
-
-    dynfiles = DyndbFilesDynamics.objects.filter(id_dynamics__id=dyn_id)
-    dynfiles = dynfiles.annotate(file_path=F("id_files__filepath"))
-    dynfiles = dynfiles.annotate(is_model=F("id_files__id_file_types__is_model"))
-    #dynfiles = dynfiles.annotate(is_traj=F("id_files__id_file_types__is_trajectory"));
-    filesdata= dynfiles.values("file_path","is_model")
-    #foundstr=False
-    #foundtraj=False
-    for f in filesdata:
-        if f["is_model"]==True:
-            model_path=f["file_path"]
-            context["top_path"]= entry_month_data['topfile']
-            # context["traj_path"]= entry_month_data['trajfile']
-            break
-#            foundstr=True
-#        if f["is_traj"]==True:
-#            traj_path=f["file_path"]
-#            context["traj_path"]= traj_path[traj_path.index("Dynamics"):] 
-#            foundtraj=True
-#        if (foundtraj and foundstr):
-#            break
-
-    #prot_info = dynfiles.annotate(file_path=F("id_model__name"));
-
     mdsrv_url=obtain_domain_url(request)
-    
-        
     context["mdsrv_url"]=mdsrv_url
+
+    ##### datasets table in search after tool selection
+    consideredgpcrs_path= settings.MEDIA_ROOT + 'Precomputed/Summary_info/considered_gpcrs.data'
+
+    with open(consideredgpcrs_path, 'rb') as filehandle:  
+        gpcrclassif = pickle.load(filehandle)
+
+    others_gpcrclassif=copy.deepcopy(gpcrclassif)
+    dynall=DyndbDynamics.objects.filter(is_published=True) #all().exclude(id=5) #I think dyn 5 is wrong
+    dynprot=dynall.annotate(fam_slug=F('id_model__id_complex_molecule__id_complex_exp__dyndbcomplexprotein__id_protein__receptor_id_protein__family_id__slug'))
+    dynprot=dynprot.annotate(fam_slug2=F('id_model__id_protein__receptor_id_protein__family_id__slug'))
+    dynprot=dynprot.annotate(dyn_id=F('id'))
+    dynprot = dynprot.annotate(pdb_namechain=F("id_model__pdbid"))
+    dynprot=dynprot.annotate(modelname=F('id_model__name'))
+    dynprot=dynprot.annotate(modeltype=F('id_model__type'))
+    dynprot=dynprot.annotate(user_id=F('submission_id__user_id__id'))
+    dynprot=dynprot.annotate(user_fname=F('submission_id__user_id__first_name'))
+    dynprot=dynprot.annotate(user_lname=F('submission_id__user_id__last_name'))
+    dynprot=dynprot.annotate(user_institution=F('submission_id__user_id__institution'))
+    dynall_values=dynprot.values("dyn_id","fam_slug","fam_slug2","pdb_namechain","modelname","modeltype","user_id","user_fname","user_lname","user_institution")
+
+
+    dyn_dict={}
+    for dyn in dynall_values:
+        dyn_id=dyn["dyn_id"]
+        if dyn_id not in dyn_dict:
+            dyn_dict[dyn_id]={}
+        is_hm=False
+        dyn_id=dyn["dyn_id"]
+        pdbid=dyn["pdb_namechain"].split(".")[0]
+        if pdbid:
+            if pdbid == "HOMO":
+                is_hm=True
+        prot_slug=dyn["fam_slug"]
+        if not prot_slug:
+            prot_slug=dyn["fam_slug2"]
+        if prot_slug:
+            fam_slug=prot_slug[:-8]
+            subtype_slug=prot_slug[:-4]
+            class_slug=prot_slug[:3]
+            #fam_nm=slugtofamdata[fam_slug]
+            #subtype_nm=slugtofamdata[subtype_slug]
+            #class_nm=slugtofamdata[class_slug]
+            dyn_dict[dyn_id]["fam_slug"]=fam_slug
+            dyn_dict[dyn_id]["subtype_slug"]=subtype_slug
+            dyn_dict[dyn_id]["class_slug"]=class_slug
+            dyn_dict[dyn_id]["prot_slug"]=prot_slug
+        dyn_dict[dyn_id]["is_hm"]=is_hm
+        dyn_dict[dyn_id]["pdbid"]=pdbid
+        dyn_dict[dyn_id]["modelname"]=dyn["modelname"]
+        if dyn["modeltype"]==0:
+            modeltype="Apoform"
+        else:
+            modeltype="Complex"
+        dyn_dict[dyn_id]["modeltype"]=modeltype
+        user_id=dyn["user_id"]
+        is_gpcrmd=False
+        if int(dyn_id) in range(4,11):
+            author="GPCR drug discovery group (Pompeu Fabra University)"
+        elif user_id in {1, 3, 5, 12, 14}:
+            is_gpcrmd=True
+            author="GPCRmd community"
+        else:
+            author ="%s %s, %s" % (dyn["user_fname"],dyn["user_lname"],dyn["user_institution"])
+        dyn_dict[dyn_id]["is_gpcrmd"]=is_gpcrmd
+        dyn_dict[dyn_id]["author"]=author
+
+
+
+
+    for dyn_id,dyndata in dyn_dict.items():
+        context={}
+        myclass_slug=dyndata["class_slug"]
+        myfam_slug=dyndata["fam_slug"]
+        mysubtype_slug=dyndata["subtype_slug"]
+        myprot_slug=dyndata["prot_slug"]
+        modelname=dyndata["modelname"]
+        modeltype=dyndata["modeltype"]
+        author=dyndata["author"]
+        mymodelname="<b>%s:</b> %s" %(modeltype,modelname)
+        pdbid=dyndata["pdbid"]
+        nclass=search_in_treeData(gpcrclassif,myclass_slug)
+        if nclass is False:
+            continue
+        gpcrclassif_fams=gpcrclassif[nclass]["children"]
+        nfam=search_in_treeData(gpcrclassif_fams,myfam_slug)
+        if nfam is False:
+            continue
+        gpcrclassif_sf=gpcrclassif_fams[nfam]["children"]
+        nsf=search_in_treeData(gpcrclassif_sf,mysubtype_slug)
+        if nsf is False:
+            continue
+        gpcrclassif_prot=gpcrclassif_sf[nsf]["children"]
+        npr=search_in_treeData(gpcrclassif_prot,myprot_slug)
+        if npr is False:
+            continue
+        print(nclass,nfam,nsf,npr)
+        if dyndata["is_gpcrmd"]:
+            gpcrpdbdict=gpcrclassif_prot[npr]["children"]
+            if pdbid not in gpcrpdbdict:
+                gpcrpdbdict[pdbid]=[]
+            gpcrpdbdict[pdbid].append((dyn_id,mymodelname))
+            gpcrclassif[nclass]["has_sim"]=True
+            gpcrclassif_fams[nfam]["has_sim"]=True
+            gpcrclassif_sf[nsf]["has_sim"]=True
+            gpcrclassif_prot[npr]["has_sim"]=True
+        else:
+            o_gpcrclassif_fams=others_gpcrclassif[nclass]["children"]
+            o_gpcrclassif_sf=o_gpcrclassif_fams[nfam]["children"]
+            o_gpcrclassif_prot=o_gpcrclassif_sf[nsf]["children"]
+            o_gpcrpdbdict=o_gpcrclassif_prot[npr]["children"]
+            if pdbid not in o_gpcrpdbdict:
+                o_gpcrpdbdict[pdbid]=[]
+            o_gpcrpdbdict[pdbid].append((dyn_id,mymodelname,author))
+            o_gpcrpdbdict[pdbid]=sorted(o_gpcrpdbdict[pdbid], key=lambda x: x[1])
+            others_gpcrclassif[nclass]["has_sim"]=True
+            o_gpcrclassif_fams[nfam]["has_sim"]=True
+            o_gpcrclassif_sf[nsf]["has_sim"]=True
+            o_gpcrclassif_prot[npr]["has_sim"]=True            
+
+    context["gpcrclassif"]= gpcrclassif
+    context["others_gpcrclassif"]=others_gpcrclassif
+
+    gpcrmdtree_path= settings.MEDIA_ROOT+"Precomputed/Summary_info/gpcrmdtree.data"
+
+    with open(gpcrmdtree_path, 'rb') as filehandle:  
+        tree_data = pickle.load(filehandle)
+
+    context['tree_data']=json.dumps(tree_data)
+    # print(json.dumps(tree_data))
 
     return render(request, 'home/index_gpcrmd.html', context )
 
@@ -325,27 +364,181 @@ def community(request):
 
 def gpcrtree(request):
     context = {}
+    gpcrmdtree_path=settings.MEDIA_ROOT + "Precomputed/Summary_info/gpcrmdtree.data"
+    with open(gpcrmdtree_path, 'rb') as filehandle:  
+        tree_data = pickle.load(filehandle)
+    context['tree_data']=json.dumps(tree_data)
+    dynall=DyndbDynamics.objects.filter(is_published=True) #all().exclude(id=5) #I think dyn 5 is wrong
+
+    ################ Precompute & import
+    dynclass=dynall.annotate(subm_date=F('creation_timestamp'))
+    dynclass=dynclass.annotate(is_traj=F('dyndbfilesdynamics__id_files__id_file_types__is_trajectory'))
+    dynclass=dynclass.annotate(file_id=F('dyndbfilesdynamics__id_files__id'))
+    dynclass=dynclass.annotate(fam_slug=F('id_model__id_complex_molecule__id_complex_exp__dyndbcomplexprotein__id_protein__receptor_id_protein__family_id__slug'))
+    dynclass=dynclass.annotate(fam_slug2=F('id_model__id_protein__receptor_id_protein__family_id__slug'))
+    dynclass=dynclass.annotate(dyn_id=F('id'))
+    dynclass = dynclass.annotate(pdb_namechain=F("id_model__pdbid"))
+    dynall_values=dynclass.values("dyn_id","subm_date","fam_slug","fam_slug2","is_published","is_traj","file_id","pdb_namechain")
+
+
+    dyn_dict = {}
+    #fam_d={"001":"A","002":"B1","003":"B2","004":"C","005":"F","006":"Taste 2","007":"Others"}
+
+    pdb_id_set=set()
+    fam_set=set()
+    subtype_set=set()
+    for dyn in dynall_values:
+        dyn_id=dyn["dyn_id"]
+        pdbid=dyn["pdb_namechain"].split(".")[0]
+        if pdbid:
+            if pdbid != "HOMO":
+                pdb_id_set.add(pdbid)
+        fam_slug=dyn["fam_slug"]
+        if not fam_slug:
+            fam_slug=dyn["fam_slug2"]
+        fam=False
+        if fam_slug:
+            if pdbid != "HOMO":
+                subtype_set.add(fam_slug)
+                fam_set.add(fam_slug[:-4])
+            fam_code=fam_slug.split("_")[0]
+            #fam=fam_d[fam_code]            
+        if dyn_id not in dyn_dict:
+            dyn_dict[dyn_id]={}
+            dyn_dict[dyn_id]["subm_date"]=dyn["subm_date"]
+            dyn_dict[dyn_id]["fam"]=fam
+            if dyn["is_traj"]:
+                dyn_dict[dyn_id]["trajs"]={dyn["file_id"]}
+            else:
+                dyn_dict[dyn_id]["trajs"]=set()
+        else:
+            if not dyn_dict[dyn_id]["fam"]:
+                dyn_dict[dyn_id]["fam"]=fam
+            if dyn["is_traj"]:
+                dyn_dict[dyn_id]["trajs"].add(dyn["file_id"])
+
+    # Submisisons by date
+    date_d={}
+    syst_c=0
+    traj_c=0
+    for d in sorted(dyn_dict.values(),key=lambda x:x["subm_date"]):
+        subm_date_obj=d["subm_date"]
+        subm_date=subm_date_obj.strftime("%b %Y")
+        syst_c+=1
+        traj_c+=len(d["trajs"])
+        if not subm_date in date_d:
+            date_d[subm_date]={}
+        date_d[subm_date]["Systems"]=syst_c
+        date_d[subm_date]["Trajectories"]=traj_c
+        #date_d[subm_date]["Dateobj"]=subm_date_obj
+
+    st=pd.DataFrame.from_dict(date_d,orient="index")
+    st.index=pd.to_datetime(st.index).to_period('m')
+    st = st.reindex(pd.period_range(st.index.min(), st.index.max(), freq='m'), fill_value=0)
+    st.index= [st.strftime("%b %Y") for st in st.index]
+
+    last_s=0
+    last_t=0
+    subm_data=[]
+    for index, row in st.iterrows():
+        sys=row["Systems"]
+        traj=row["Trajectories"]
+        if sys ==0:
+            sys=last_s
+            traj=last_t
+            leg_s=""
+            leg_t=""
+        else:
+            last_s=sys
+            last_t=traj
+            leg_s=str(sys)
+            leg_t=str(traj)
+        subm_data.append([index,int(sys),leg_s,int(traj),leg_t])
+
+    context["subm_data"] =json.dumps(subm_data)
+    ################
+    fam_count=0
+    subt_count=0
+    pdb_count=0
+    for nclasstmp in range(0,len(tree_data["children"])):
+        fam=tree_data["children"][nclasstmp]["children"]
+        len_fam=len(fam)
+        fam_count+=len_fam
+        for nfamtmp in range(0,len_fam):            
+            st=tree_data["children"][nclasstmp]["children"][nfamtmp]["children"]
+            len_st=len(st)
+            subt_count+=len_st
+            for nsubt in range(0,len_st):
+                pdbli=tree_data["children"][nclasstmp]["children"][nfamtmp]["children"][nsubt]["children"]
+                pdb_count+=len(pdbli)
+
+    #Fams sumulated
+    sim_fams=len(fam_set)
+    total_fams=fam_count #missing=["Melatonin",
+                           #"Parathyroid hormone receptors", 
+                           #'Prostanoid receptors' ,"Tachykinin"]
+                   #GPCRdb: 34
+                   #GPCRmd:30
+    missing_fams= total_fams - sim_fams
+    fam_stats= [['Class', 'Num'],
+                ['Simulated', sim_fams],
+                ['Pending',missing_fams]
+                ]
+    context["fam_stats"]=json.dumps(fam_stats)
+
+
+    #Subtypes sumulated
+    sim_subtyppes=len(subtype_set)
+    total_subtyppes=subt_count
+                   #GPCRdb: 64
+                   #GPCRmd: 52
+    missing_subtypes=total_subtyppes - sim_subtyppes
+    subtype_stats= [['Class', 'Num'],
+                ['Simulated', sim_subtyppes],
+                ['Pending',missing_subtypes]
+                ]
+    context["subtype_stats"]=json.dumps(subtype_stats)
+
+
+    #PDB ids sumulated
+    pdb_id_sim=len(pdb_id_set)
+    pdb_id_total=pdb_count
+                   #GPCRdb: 346
+                   #GPCRmd: 270
+    missing_pdb_ids=pdb_id_total - pdb_id_sim
+    pdb_stats= [['Class', 'Num'],
+                ['Simulated', pdb_id_sim],
+                ['Pending',missing_pdb_ids]
+                ]
+    context["pdb_stats"]=json.dumps(pdb_stats)
+    mdsrv_url=obtain_domain_url(request)
+    context["mdsrv_url"]=mdsrv_url
+
     return render(request, 'home/gpcrtree.html', context )
 
-
-def newround(request):
+def news(request):
     context = {}
-    return render(request, 'home/newround.html', context )
+    return render(request, 'home/news.html', context )
+
+def ndround(request):
+    context = {}
+    return render(request, 'home/news/2ndround.html', context )
+
 
 def is_updating(request):
     """
     Check out if a load-all-simulations-after-updating thing is going on
     """
-    print(os.path.exists(f"{MEDIA_ROOT}/Precomputed/WaterMaps/isloading.txt"))
-    isloading = os.path.exists(f"{MEDIA_ROOT}/Precomputed/WaterMaps/isloading.txt")
+    print(os.path.exists(settings.MEDIA_ROOT + "Precomputed/WaterMaps/isloading.txt"))
+    isloading = os.path.exists(settings.MEDIA_ROOT + "Precomputed/WaterMaps/isloading.txt")
     return(HttpResponse(isloading))
 
 def remove_marker(request): 
     """
     Delete the load-all-simulations-after-updating once quickloading is done
     """
-    if os.path.exists(f"{MEDIA_ROOT}/Precomputed/WaterMaps/isloading.txt"):
-        os.remove(f"{MEDIA_ROOT}/Precomputed/WaterMaps/isloading.txt")
+    if os.path.exists(settings.MEDIA_ROOT + "Precomputed/WaterMaps/isloading.txt"):
+        os.remove(settings.MEDIA_ROOT + "Precomputed/WaterMaps/isloading.txt")
     return(HttpResponse())
 
 def quickloadall_both(request):
@@ -355,19 +548,14 @@ def quickloadall_both(request):
     """
 
     # Create uploading file
-    f = open(f'{MEDIA_ROOT}/Precomputed/WaterMaps/isloading.txt','w')
+    f = open(settings.MEDIA_ROOT + 'Precomputed/WaterMaps/isloading.txt','w')
     f.close()
 
     #DyndbFiles.objects.filter(dyndbfilesdynamics__id_dynamics=dyn_id, id_file_types__is_trajectory=True)
     mdsrv_url=obtain_domain_url(request)
-    
-        
     dynobj=DyndbDynamics.objects.all()
     dynfiledata = dynobj.annotate(dyn_id=F('id'))
-    #dynfiledata = dynfiledata.annotate(is_pub=F('is_published'))
-    #dynfiledata = dynfiledata.annotate(sub_id=F('submission_id__id'))
     dynfiledata = dynfiledata.annotate(file_path=F('dyndbfilesdynamics__id_files__filepath'))
-    #dynfiledata = dynfiledata.annotate(file_id=F('dyndbfilesdynamics__id_files__id'))
     dynfiledata = dynfiledata.annotate(file_is_traj=F('dyndbfilesdynamics__id_files__id_file_types__is_trajectory'))
     dynfiledata = dynfiledata.annotate(file_ext=F('dyndbfilesdynamics__id_files__id_file_types__extension'))
     dynfiledata = dynfiledata.values("dyn_id","file_path","file_is_traj","file_ext")
@@ -390,7 +578,6 @@ def quickloadall_both(request):
 
     del dynfiledata
 
-    #DyndbFiles.objects.filter(dyndbfilesdynamics__id_dynamics=dyn_id, id_file_types__is_trajectory=True)
     dynobj=CovidDynamics.objects.filter(is_published=True)
     dynfiledata = dynobj.annotate(dyn_id=F('id'))
     dynfiledata = dynfiledata.annotate(file_path=F('covidfilesdynamics__id_files__filepath'))
@@ -420,3 +607,5 @@ def quickloadall_both(request):
         "filesli":json.dumps(filesli)
             }
     return render(request, 'home/quickloadall.html', context)
+
+

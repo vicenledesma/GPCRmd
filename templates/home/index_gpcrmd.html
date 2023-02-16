@@ -21,20 +21,25 @@
     <img class="bg-image" src="{% static 'home/images/canvas9.png' %}">
 
     <div class="vert_center" style="height:500px;margin:auto;">
-      <h1 id="lema">The GPCR molecular dynamics database</h1>
-      <h2 id="sublema">visulize · inspect · analyze</h2>
+      <h1 id="lema" class="lineUp">The GPCR molecular dynamics database</h1>
+      <h2 id="sublema">visualize · inspect · analyze</h2>
       <div class="row form-outline searchBarDiv">
-        <input type="search" id="searchInput" class="col-xs-3 col-xs-offset-4 searchBar" placeholder="Search your structure" aria-label="Search" />
-        <button id="search_button" type="submit" class="col-xs-1 searchBtn btn btn-primary btn-sm" onclick="search_item(this)">Search</button>
+        <input type="search" id="searchInput" class="col-xs-3 col-xs-offset-4 searchBar"
+          placeholder="Search your structure" aria-label="Search" />
+        <button id="search_button" type="submit" class="col-xs-1 searchBtn btn btn-primary btn-sm"
+          onclick="search_item(this)">Search</button>
       </div>
-      <p class="searchExamples">Examples: <a id="5-hydroxytryptamine receptor 1b" class="aExamples" onclick="search_example(this)">5-hydroxytryptamine receptor 1b</a>, <a id="5ht1b_human"
-          class="aExamples" onclick="search_example(this)">5ht1b_human</a>, <a id="P28222" class="aExamples" onclick="search_example(this)">P28222</a>, <a 
-          id="4IAQ" class="aExamples" onclick="search_example(this)">4IAQ</a></p>
+      <p class="searchExamples">Examples: <a id="5-hydroxytryptamine receptor 1b" class="aExamples"
+          onclick="search_example(this)">5-hydroxytryptamine receptor 1b</a>, <a id="5ht1b_human" class="aExamples"
+          onclick="search_example(this)">5ht1b_human</a>, <a id="P28222" class="aExamples"
+          onclick="search_example(this)">P28222</a>, <a id="4IAQ" class="aExamples"
+          onclick="search_example(this)">4IAQ</a></p>
     </div>
   </div>
 
+  <!-- Presentation text -->
   <div class="subanner jumbotron jumbotron-fluid">
-    <div class="row">
+    <div id="mySubtitle" class="row">
       <p id="subtitle" class="subtitle">Welcome to the online platform with web-based visualization capabilities and a
         comprehensive
         analysis toolbox that allows visualizing, inspecting, and analysing GPCR molecular dynamics.</p>
@@ -43,13 +48,12 @@
 
   <!-- Tools -->
   <div id="tools" class="jumbotron jumbotron-fluid">
-    
+
     <!-- First row -->
-    <div class="toolRow row ">
+    <div id="firstRowTools" class="toolRow row ">
       <div class="tool col-xs-6 col-md-3 ">
-        <button id="analysis_ac_pan-button" class="thumbnail toolBox" onclick="go_to_tool(this)">
-          <img class="toolImg" src="{% static 'home/images/tools/ac.png' %}"
-              alt="AllostericCommunication">
+        <button id="analysis_ac_pan-button" class="thumbnail toolBox active" onclick="openSearch1(this)"> 
+          <img class="toolImg" src="{% static 'home/images/tools/ac.png' %}" alt="AllostericCommunication">
           <div class="caption">
             <h3 class="toolTitle">Allosteric<br>communication</h3>
           </div>
@@ -57,7 +61,7 @@
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_cs_pan-button" class="thumbnail toolBox" onclick="go_to_tool(this)">
+        <button id="analysis_cs_pan-button" class="thumbnail toolBox" onclick="openSearch1(this)">
           <img class="toolImg" src="{% static 'home/images/tools/cs.png' %}" alt="ChemicalShift">
           <div class="caption">
             <h3 class="toolTitle">Chemical<br>shift</h3>
@@ -66,16 +70,16 @@
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_variants_pan-button" class="thumbnail toolBox" onclick="go_to_tool(this)">
-          <img class="toolImg" src="{% static 'home/images/tools/gv.png' %}"alt="GeneticVariants">
+        <button id="analysis_variants_pan-button" class="thumbnail toolBox" onclick="openSearch1(this)">
+          <img class="toolImg" src="{% static 'home/images/tools/gv.png' %}" alt="GeneticVariants">
           <div class="caption">
             <h3 class="toolTitle">Genetic<br>variants</h3>
-          </viv>
+            </viv>
         </button>
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_tunnels_pan-button" class="thumbnail toolBox" onclick="go_to_tool(this)">
+        <button id="analysis_tunnels_pan-button" class="thumbnail toolBox" onclick="openSearch1(this)">
           <img class="toolImg" src="{% static 'home/images/tools/tc.png' %}" alt="TunnelsChannels">
           <div class="caption">
             <h3 class="toolTitle">Tunnels and<br>channels</h3>
@@ -84,7 +88,7 @@
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_pharmacophores_pan-button" class="thumbnail toolBox" onclick="go_to_tool(this)">
+        <button id="analysis_pharmacophores_pan-button" class="thumbnail toolBox" onclick="openSearch1(this)">
           <img class="toolImg" src="{% static 'home/images/tools/dp.png' %}" alt="Pharmacophores">
           <div class="caption">
             <h3 class="toolTitle">Dynamic<br>pharmacophores</h3>
@@ -94,10 +98,47 @@
 
     </div>
 
+    <!-- Search bar1  -->
+    <div id="searchTool1" class="row divHidden" >
+      <div id="searchToolDiv1" class="col-md-12 searchTool">
+        <div class="row">
+          <div class="col-md-1 col-md-offset-11">
+            <span id="searchTool1_close" onclick=closeSrch(this) class="closeSearch glyphicon glyphicon-remove"></span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1 searchBarToolDiv">
+            <div class="panel panel-primary">
+              <h2 class="panel-heading">Select a simulation to see the tool</h2>
+      
+              <div class="search-tabs tab-content restheight100" style="height: 100%">
+                <div id="searchtable" class="height100 tab-pane fade in active test123" style="margin:0px 15px;height: 100%;">
+                  <center class="height100" style="height: 100%">
+      
+                    <span id="loading">
+                      <center><img src="{% static 'view/images/loading-gear.gif' %}"
+                          style="width:50px;height:50px;margin-top:210px;position:absolute;z-index:10;margin-left:-25px" />
+                      </center>
+                    </span>
+      
+                    <iframe class="height100" id="searchIframe1" style="border:none" height=100% width="100%"
+                      src=""> </iframe>
+      
+                  </center>
+                </div>      
+              </div>
+      
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
     <!-- Second row -->
     <div class="toolRow row">
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_watermap_pan-button" class="thumbnail toolBox" onclick="go_to_tool(this)">
+        <button id="analysis_watermap_pan-button" class="thumbnail toolBox" onclick="openSearch2(this)">
           <img class="toolImg" src="{% static 'home/images/tools/wd.png' %}" alt="WaterVolume">
           <div class="caption">
             <h3 class="toolTitle">Water volume<br>distribution</h3>
@@ -106,9 +147,8 @@
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_fplot_pan" class="thumbnail toolBox" onclick="go_to_tool(this)">
-          <img class="toolImg" src="{% static 'home/images/tools/in.png' %}"
-              alt="Interaction network">
+        <button id="analysis_fplot_pan" class="thumbnail toolBox" onclick="openSearch2(this)">
+          <img class="toolImg" src="{% static 'home/images/tools/in.png' %}" alt="Interaction network">
           <div class="caption">
             <h3 class="toolTitle">Interaction<br>network</h3>
           </div>
@@ -116,7 +156,7 @@
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_rmsd_pan-button" class="thumbnail toolBox" onclick="go_to_tool(this)">
+        <button id="analysis_rmsd_pan-button" class="thumbnail toolBox" onclick="openSearch2(this)">
           <img class="toolImg" src="{% static 'home/images/tools/rmsd.png' %}" alt="RMSD">
           <div class="caption">
             <h3 class="toolTitle">RMSD</h3>
@@ -125,9 +165,8 @@
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="interaction_freqs_pan-button" class="thumbnail toolBox" onclick="go_to_tool(this)">
-          <img class="toolImg" src="{% static 'home/images/tools/if.png' %}"
-              alt="InteractionFrequencies">
+        <button id="interaction_freqs_pan-button" class="thumbnail toolBox" onclick="openSearch2(this)">
+          <img class="toolImg" src="{% static 'home/images/tools/if.png' %}" alt="InteractionFrequencies">
           <div class="caption">
             <h3 class="toolTitle">Interaction<br>frequencies</h3>
           </div>
@@ -135,7 +174,7 @@
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_dist_pan-button" class="thumbnail toolBox" onclick="go_to_tool(this)">
+        <button id="analysis_dist_pan-button" class="thumbnail toolBox" onclick="openSearch2(this)">
           <img class="toolImg" src="{% static 'home/images/tools/dist.png' %}" alt="Distance">
           <div class="caption">
             <h3 class="toolTitle">Distance</h3>
@@ -144,24 +183,63 @@
       </div>
     </div>
 
+    <!-- Search bar2  -->
+    <div id="searchTool2" class="row divHidden" >
+      <div id="searchToolDiv2" class="col-md-12 searchTool">
+        <div class="row">
+          <div class="col-md-1 col-md-offset-11">
+            <span id="searchTool2_close" onclick=closeSrch(this) class="closeSearch glyphicon glyphicon-remove"></span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1 searchBarToolDiv">
+            <div class="panel panel-primary">
+              <h2 class="panel-heading">Select a simulation to see the tool</h2>
+      
+              <div class="search-tabs tab-content restheight100" style="height: 100%">
+                <div id="searchtable" class="height100 tab-pane fade in active test123" style="margin:0px 15px;height: 100%;">
+                  <center class="height100" style="height: 100%">
+      
+                    <span id="loading">
+                      <center><img src="{% static 'view/images/loading-gear.gif' %}"
+                          style="width:50px;height:50px;margin-top:210px;position:absolute;z-index:10;margin-left:-25px" />
+                      </center>
+                    </span>
+      
+                    <iframe class="height100" id="searchIframe2" style="border:none" height=100% width="100%"
+                      src=""> </iframe>
+      
+                  </center>
+                </div>      
+              </div>
+      
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 
   <!-- Family tree -->
   <div class="ft jumbotron jumbotron-fluid">
     <div class="row">
-      <div class="famTextDiv col-xs-12 col-md-6 col-md-offset-1 vcenter">
-        <a href="/gpcrtree/">
-          <h2 class="jumbotronTitle famTitle display-4">Check the available simulations</h2>
-        </a>
-        <p class="famText lead">Look into the family tree to find your simulated structure.
-          The family tree helps you find the GPCR you are looking for. The GPCRs are classified by class
-          and family. Finally, the different PDBs corresponding to each protein are displayed. Put your
-          mouse in the PDB you are interested in and find out the different simulations.<br>
-          There are XXX structures available!
-        </p>
-      </div>
-      <div class="famImageDiv col-xs-12 col-md-4 vcenter">
-        <a href="/gpcrtree/"><img class="famImage" src="{% static 'home/images/famTree.png' %}"></a>
+      <div class ="famtree">
+        <div class="famTextDiv col-xs-12 col-md-6 col-md-offset-1 vcenter">
+          <a href="/gpcrtree/">
+            <h2 class="jumbotronTitle famTitle display-4">Check the available simulations</h2>
+          </a>
+          <p class="famText lead ">Look into the family tree to find your simulated structure.
+            The family tree helps you find the GPCR you are looking for. The GPCRs are classified by class
+            and family. Finally, the different PDBs corresponding to each protein are displayed. Put your
+            mouse in the PDB you are interested in and find out the different simulations.<br>
+            There are XXX structures available!
+          </p>
+        </div>
+        <div class="famImageDiv col-xs-12 col-md-4 vcenter">
+          <a href="/gpcrtree/"><img class="famImage" src="{% static 'home/images/famTree.png' %}"></a>
+        </div>
       </div>
     </div>
   </div>
@@ -169,100 +247,190 @@
   <!-- Workbench -->
   <div class="wb jumbotron jumbotron-fluid">
     <div class="row">
-      <div class="workImageDiv col-xs-12 col-md-5 col-md-offset-1 vcenter">
-        <a href="/view/36"><img class="workImage" src="{% static 'home/images/workbench.png' %}"></a>
-      </div>
-      <div class="workTextDiv col-xs-12 col-md-5 vcenter">
-        <a href="/view/36">
-          <h2 class="jumbotronTitle workTitle display-4">Quickly analyse <br>simulations</h2>
-        </a>
-        <p class="workText lead">Visualize and inspect the GPCR molecular simulations in the workbench.
-          The simulation is displayed in the left pannel with different selection options available.
-          In the righ pannel, you could find all the different tools that can be instantaneously applied
-          into the simulation.<br>
-          Apply all the tools available in the workbench to analyze your simulation in depth!
-        </p>
+      <div class="wbench">
+        <div class="workImageDiv col-xs-12 col-md-5 col-md-offset-1 vcenter">
+          <a href="/view/36"><img class="workImage" src="{% static 'home/images/workbench.png' %}"></a>
+        </div>
+        <div class="workTextDiv col-xs-12 col-md-5 vcenter">
+          <a href="/view/36">
+            <h2 class="jumbotronTitle workTitle display-4">Quickly analyse <br>simulations</h2>
+          </a>
+          <p class="workText lead">Visualize and inspect the GPCR molecular simulations in the workbench.
+            The simulation is displayed in the left pannel with different selection options available.
+            In the righ pannel, you could find all the different tools that can be instantaneously applied
+            into the simulation.<br>
+            Apply all the tools available in the workbench to analyze your simulation in depth!
+          </p>
+        </div>
       </div>
     </div>
+  </div>
+
+  <!-- MetaAnalysis -->
+  <div class="ft jumbotron jumbotron-fluid">
+    <div class="row">
+      <div class="metaAnal">
+        <div class="famTextDiv col-xs-12 col-md-6 col-md-offset-1 vcenter">
+          <a href="/contmaps/?itype=hb&cluster=3&prtn=prt&rev=norev&stnd=cmpl">
+            <h2 class="jumbotronTitle famTitle display-4">Receptor meta-analysis</h2>
+          </a>
+          <p class="famText lead">Explore the receptor meta-analysis tool.
+            Visualize the contact frequencies of all receptors of the database in a heatmap. Select different
+            simulations, interaction types and cluster the receptors. In addition, you can visualize in different
+            networks the most frequent interactions of each cluster.<br>
+            Check the tool!
+          </p>
+        </div>
+        <div class="famImageDiv col-xs-12 col-md-4 vcenter">
+          <a href="/contmaps/?itype=hb&cluster=3&prtn=prt&rev=norev&stnd=cmpl"><img class="famImage"
+              src="{% static 'home/images/metaAnalysis_.png' %}"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- News -->
+  <div class="wb jumbotron jumbotron-fluid">
+    <div class="row">
+      <a href="/news/">
+        <h2 class="jumbotronTitle newsTitle display-4">Check out the latest news of the GPCR community</h2>
+      </a>
+      <div id="moreNews" style="display:block;" class="col-xs-2 col-xs-offset-5 newsbuttonDiv">
+        <a class="buttonNews" onclick="showDiv()">Show more</a>
+      </div>
+
+      <!-- Three latest news -->
+      <div id="newsSection" style="display:none;" class="newsblock col-xs-12">
+        <div class="col-xs-12 col-md-4">
+          <div class="subPanelLeft panel panel-primary">
+            <div class="news">
+              <h2 class="newTitle">Ernest meeting 2022</h2>
+              <p>Lorem ipsum dolor sit amet, consectetur
+                adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                commodo consequat...<a id="news1" class="textlink" onclick="go_to_news(this)">Show all</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-12 col-md-4">
+          <div class="subPanelLeft panel panel-primary">
+            <div class="news">
+              <a href="/newsLink1/">
+                <h2 class="newTitle">Second simulation round</h2>
+              </a>
+              <p>After our first successful <a class="textlink"
+                  href="https://www.nature.com/articles/s41592-020-0884-y">publication in Nature
+                  Methods</a>, we are back to increase the data coverage of GPCRmd in a 2nd simulation
+                round....<a id="news2" class="textlink" onclick="go_to_news(this)">Show all</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-12 col-md-4">
+          <div class="subPanelLeft panel panel-primary">
+            <div class="news">
+              <a href="/newsLink1/">
+                <h2 class="newTitle">Nature publication</h2>
+              </a>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                ullamco laboris nisi ut aliquip ex ea commodo consequat...<a id="news3" class="textlink"
+                  onclick="go_to_news(this)">Show all</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div id="goToNews" style="display:block;" class="col-xs-2 col-xs-offset-5 newsbuttonDiv">
+          <a href="/news/" class="buttonNews">Show all</a>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 
   <!-- Datasets -->
   <div class="ds ft jumbotron jumbotron-fluid">
     <div class="row">
+      <div class="dsets">
+        <div class="famTextDiv col-xs-12 col-md-6 col-md-offset-1 vcenter">
+          <a href="/dynadb/datasets/">
+            <h2 class="jumbotronTitle famTitle display-4">Collaborative database</h2>
+          </a>
+          <p class="famText lead">Our simulations have been computed and curated by our research team together
+            with the collaboration of worldwide users that upload their own simulations.<br>
+            Check our <a class="jumbotronTextLink" href="/dynadb/datasets/">dataset</a> or <a class="jumbotronTextLink"
+              href="/accounts/memberpage/">upload your own simulation</a>!</p>
+        </div>
 
-      <div class="famTextDiv col-xs-12 col-md-6 col-md-offset-1 vcenter">
-        <a href="/dynadb/datasets/">
-          <h2 class="jumbotronTitle famTitle display-4">Collaborative database</h2>
-        </a>
-        <p class="famText lead">Our simulations have been computed and curated by our research team together
-          with the collaboration of worldwide users that upload their own simulations.<br>
-          Check our <a class="jumbotronTextLink" href="/dynadb/datasets/">dataset</a> or <a class="jumbotronTextLink"
-            href="/accounts/memberpage/">upload your own simulation</a>!</p>
-      </div>
+        <div class="col-xs-12 col-md-4 vcenter">
+          <div class="panel panel-primary text_col">
+            <h3 class="panel-heading">Statistics</h3>
+            <div class="panel-body">
 
-      <div class="col-xs-12 col-md-4 vcenter">
-        <div class="panel panel-primary text_col">
-          <h3 class="panel-heading">Statistics</h3>
-          <div class="panel-body">
+              <div id="statsCarousel" class="carousel slide" data-interval="false" data-ride="carousel">
 
-            <div id="statsCarousel" class="carousel slide" data-interval="false" data-ride="carousel">
-
-              <!-- Wrapper for slides -->
-              <div class="carousel-inner">
-                <div class="item active" style="padding:15px;">
-                  <h4 class="extrainfo_title">Simulations in GPCRmd</h4>
-                  <div style="overflow-x: auto;overflow-y: hidden">
-                    <div id="stats_subm" data-subm_data="{{subm_data}}" style="width: 100%; height: 100%;margin:auto;">
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">
+                  <div class="item active" style="padding:15px;">
+                    <h4 class="extrainfo_title">Simulations in GPCRmd</h4>
+                    <div style="overflow-x: auto;overflow-y: hidden">
+                      <div id="stats_subm" data-subm_data="{{subm_data}}" style="width: 100%; height: 100%;margin:auto;">
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div class="item" style="padding:15px">
-                  <h4 class="extrainfo_title">Simulated GPCR families with known structure</h4>
-                  <div style="overflow-x: auto;overflow-y: hidden">
-                    <div id="fam_stats" style="width: 300px; height: 400px;margin:auto" data-fam_stats="{{fam_stats}}">
+                  <div class="item" style="padding:15px">
+                    <h4 class="extrainfo_title">Simulated GPCR families with known structure</h4>
+                    <div style="overflow-x: auto;overflow-y: hidden">
+                      <div id="fam_stats" style="width: 300px; height: 400px;margin:auto" data-fam_stats="{{fam_stats}}">
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div class="item" style="padding:15px">
-                  <h4 class="extrainfo_title">Simulated GPCR subtypes with known structure</h4>
-                  <div style="overflow-x: auto;overflow-y: hidden">
-                    <div id="subtype_stats" style="width: 300px; height: 400px;margin:auto"
-                      data-subtype_stats="{{subtype_stats}}"></div>
-                  </div>
-                </div>
-
-                <div class="item" style="padding:15px">
-                  <h4 class="extrainfo_title">Simulated PDB structures with known structure</h4>
-                  <div style="overflow-x: auto;overflow-y: hidden">
-                    <div id="pdb_stats" style="width: 300px; height: 400px;margin:auto" data-pdb_stats="{{pdb_stats}}">
+                  <div class="item" style="padding:15px">
+                    <h4 class="extrainfo_title">Simulated GPCR subtypes with known structure</h4>
+                    <div style="overflow-x: auto;overflow-y: hidden">
+                      <div id="subtype_stats" style="width: 300px; height: 400px;margin:auto"
+                        data-subtype_stats="{{subtype_stats}}"></div>
                     </div>
                   </div>
+
+                  <div class="item" style="padding:15px">
+                    <h4 class="extrainfo_title">Simulated PDB structures with known structure</h4>
+                    <div style="overflow-x: auto;overflow-y: hidden">
+                      <div id="pdb_stats" style="width: 300px; height: 400px;margin:auto" data-pdb_stats="{{pdb_stats}}">
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
+
+                <!-- Left and right controls -->
+                <a class="left carousel-control" href="#statsCarousel" data-slide="prev">
+                  <span class="glyphicon glyphicon-chevron-left"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#statsCarousel" data-slide="next">
+                  <span class="glyphicon glyphicon-chevron-right"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+
+                <!-- Indicators -->
+                <ol id="stats" class="carousel-indicators" style="position: relative;margin-bottom:0;">
+                  <li data-target="#statsCarousel" data-slide-to="0" class="active"></li>
+                  <li data-target="#statsCarousel" data-slide-to="1"></li>
+                  <li data-target="#statsCarousel" data-slide-to="2"></li>
+                  <li data-target="#statsCarousel" data-slide-to="3"></li>
+                </ol>
 
               </div>
 
-              <!-- Left and right controls -->
-              <a class="left carousel-control" href="#statsCarousel" data-slide="prev">
-                <span class="glyphicon glyphicon-chevron-left"></span>
-                <span class="sr-only">Previous</span>
-              </a>
-              <a class="right carousel-control" href="#statsCarousel" data-slide="next">
-                <span class="glyphicon glyphicon-chevron-right"></span>
-                <span class="sr-only">Next</span>
-              </a>
-
-              <!-- Indicators -->
-              <ol id="stats" class="carousel-indicators" style="position: relative;margin-bottom:0;">
-                <li data-target="#statsCarousel" data-slide-to="0" class="active"></li>
-                <li data-target="#statsCarousel" data-slide-to="1"></li>
-                <li data-target="#statsCarousel" data-slide-to="2"></li>
-                <li data-target="#statsCarousel" data-slide-to="3"></li>
-              </ol>
-
             </div>
-
           </div>
         </div>
       </div>
@@ -353,10 +521,68 @@
 
   </div>
 
+
   {% endblock content %}
 
 
   {% block addon_js %}
+  <!-- Open search bar after click on tool button -->
+  <script>
+    function openSearch1(button) {
+      
+      document.getElementById("searchTool1").classList.remove("divHidden");
+      document.getElementById("searchToolDiv1").classList.add("topBottom");
+      document.getElementById("searchToolDiv1").classList.add("addShadow");
+      myButton=button.getAttribute('id');
+      document.getElementById(myButton).classList.add("toolActive");
+      
+      tool=myButton.split('-')
+      console.log(tool)
+      document.getElementById('searchIframe1').src="/dynadb/table_reduced/?"+tool[0]
+      // 
+
+      }
+  </script>
+
+<script>
+  function openSearch2(button) {
+    
+    document.getElementById("searchTool2").classList.remove("divHidden");
+    document.getElementById("searchToolDiv2").classList.add("topBottom");
+    document.getElementById("searchToolDiv2").classList.add("addShadow");
+    myButton=button.getAttribute('id');
+    document.getElementById(myButton).classList.add("toolActive");
+    
+    tool=myButton.split('-')
+    console.log(tool)
+    document.getElementById('searchIframe2').src="/dynadb/table_reduced/?"+tool[0]
+    // 
+
+    }
+</script>
+    
+  
+    
+  <!-- Close search bar -->
+  <script>
+    function closeSrch (spanValue) {//searchTool1_close
+      console.log('aqui')
+      myId=spanValue.getAttribute('id');
+      divIdList=myId.split('_')//searchTool1
+      divId=divIdList[0]
+      divIdDiv=divId+'Div'//searchTool1Div
+      document.getElementById(divId).classList.add("divHidden");
+      // document.getElementById(divIdDiv).classList.remove("topBottom");
+      // document.getElementById(divIdDiv).classList.remove("addShadow");
+
+      myTool= document.getElementsByClassName('toolActive')[0].id
+      console.log(myTool)
+      document.getElementById(myTool).classList.remove("toolActive");
+      
+    }      
+  </script>
+
+
   <!--<script src="https://cdn.jsdelivr.net/npm/pdfkit@0.10.0/js/pdfkit.standalone.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/svg-to-pdfkit@0.1.8/source.js"></script>-->
 
@@ -366,7 +592,7 @@
 
   <!-- Big menu in the homepage -->
   <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
       document.getElementById("topmenu").style.height = "110px";
       document.getElementById("logo").style.height = "81px";
       document.getElementById("navbar").style.marginTop = "1%";
@@ -389,35 +615,89 @@
     } 
   </script>
 
+  <!-- Animation of jumbotrons -->
+  <script>
+    const one = document.querySelector('.famtree')
+    const two = document.querySelector('.wbench')
+    const three = document.querySelector('.dsets')
+    const four = document.querySelector('.metaAnal')
+
+    const divs = [one, two, three, four];
+
+    function animation(entires) {
+      entires.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (entry.target.classList.contains('famtree')) {
+            entry.target.classList.add('leftRight');
+          }
+          if (entry.target.classList.contains('wbench')) {
+            entry.target.classList.add('rightLeft');
+          }
+          if (entry.target.classList.contains('dsets')) {
+            entry.target.classList.add('leftRight');
+          }
+          if (entry.target.classList.contains('metaAnal')) {
+            entry.target.classList.add('leftRight');
+          }
+        }
+      })
+    }
+    const observer = new IntersectionObserver(animation)
+    divs.forEach((div) => observer.observe(div));
+  </script>
+
   <!-- Go to search page with the inputed text in the URL-->
   <script>
-    function search_item(button){
-      var inputext=document.getElementById("searchInput").value;
-      window.location.href = '/dynadb/search/#'+inputext;
+    function search_item(button) {
+      var inputext = document.getElementById("searchInput").value;
+      window.location.href = '/dynadb/search/#' + inputext;
     }
-    $("#searchInput").keyup(function(event) {
+    $("#searchInput").keyup(function (event) {
       if (event.keyCode === 13) {
-          $("#search_button").click();
+        $("#search_button").click();
       }
     });
   </script>
 
   <!-- Go to the search page with the example link selected in the URL  -->
   <script>
-    function search_example(link){
-      var example=link.getAttribute('id');
-      window.location.href = '/dynadb/search/#'+example;
+    function search_example(link) {
+      var example = link.getAttribute('id');
+      window.location.href = '/dynadb/search/#' + example;
     }
   </script>
 
-  <!-- Tools selection, go to view 36 with the corresponding tab visible -->
+  <!-- Go to tools section with the menu button -->
   <script>
-    function go_to_tool(button){
-      var toolid=button.getAttribute('id').split('-');
-      window.location.href = '/view/36/#'+toolid[0];
+    function go_to_tools() {
+      const element = document.getElementById("subtitle");
+      var pos = element.offsetTop;
+      var offset = document.documentElement.scrollHeight * 0.04;
+      window.scrollTo(0, pos + offset);
     }
-   </script>
-   
+  </script>
+
+
+
+
+  <!-- Show news chunks-->
+  <script>
+    function showDiv() {
+      document.getElementById('newsSection').style.display = "block";
+      document.getElementById('goToNews').style.display = "block";
+      document.getElementById('moreNews').style.display = "none";
+    }
+
+  </script>
+
+  <!-- Go to news with the open piece of news -->
+  <script>
+    function go_to_news(button) {
+      var newsid = button.getAttribute('id');
+      window.location.href = '/news/#' + newsid;
+    }
+  </script>
+
   {% endblock %}
 
 

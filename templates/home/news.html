@@ -1,0 +1,199 @@
+<head>
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+    google.load("visualization", "1", { packages: ["corechart"], "language": "en" });
+  </script>
+  <script>document.domain = document.domain;</script>
+  {% extends "home/base.html" %}
+  {% load static %}
+  {% block addon_css %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  {% endblock %}
+</head>
+
+<body>
+
+  {% block content %}
+  <div class="row">
+      <div class="col-sm-10 col-sm-offset-1">
+      <div class="panel panel-primary newsHeading">
+        <div class="panel-body">
+          <h2 class="panel-heading">News</h2>
+        </div>
+      </div>
+
+      <div class="row newsRow">
+        <div class="panelLeft col-xs-12 col-md-8">
+          <!-- First piece of news -->
+          <!-- Remember to use the number in all FOUR ids for the show/hide to work! -->
+          <div id="div_news1" class="subPanelLeft panel panel-primary">
+            <div class="news">
+              <h2 class="newTitle">Ernest meeting 2022</h2>
+              <p id="news1_ab" style="display: block;">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+                sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                est laborum....<a id="news1" class="textlink" onclick="showDiv(this)">Show all</a>
+              </p>
+              <p id="news1_all"  style="display: none;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+                sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                est laborum. <br>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+                sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                est laborum. <a id="hide_news1" class="textlink" onclick="hideDiv(this)">Hide</a><br>
+              </p>
+            </div>
+          </div>
+
+          <!-- Second piece of news; TODO: link of title??-->
+          <div id="div_news2" class="subPanelLeft panel panel-primary">
+            <div class="news">
+              <a href="/news/2ndround/">
+                <h2 class="newTitle">Second simulation round</h2>
+              </a>
+              <p id="news2_ab" style="display: block;">After our first successful <a class="textlink"
+                  href="https://www.nature.com/articles/s41592-020-0884-y">publication in Nature
+                  Methods</a>, we are back to increase the data coverage of GPCRmd in a 2nd simulation 
+                  round....<a id="news2" class="textlink" onclick="showDiv(this)">Show all</a>
+              </p>
+              <p id="news2_all"  style="display: none;">After our first successful <a class="textlink"
+                href="https://www.nature.com/articles/s41592-020-0884-y">publication in Nature
+                Methods</a>, we are back to increase the data coverage of GPCRmd in a 2nd simulation 
+                round.<br>
+                In this round, we will focus on simulating all remaining PDB IDs which correspond to 
+                <strong>GPCRs which are not in complex with G proteins, arrestins, or nanobodies</strong>. 
+                Note that GPCR-G protein/arrestin/nanobody complexes will be addressed in the 3rd simulation 
+                round starting in January 2021.<a id="hide_news2" class="textlink" onclick="hideDiv(this)">
+                Hide</a><br>
+              </p>
+            </div>
+          </div>
+
+          <!-- 3rd piece of news -->
+          <div id="div_news3" class="subPanelLeft panel panel-primary">
+            <div class="news">
+              <a href="/news/2ndround/">
+                <h2 class="newTitle">Nature publication</h2>
+              </a>
+              <p id="news3_ab" style="display: block;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+                sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                est laborum....<a id="news3" class="textlink" onclick="showDiv(this)">Show all</a>
+              </p>
+              <p id="news3_all"  style="display: none;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+                sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                est laborum. <br>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+                sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                est laborum. <a id="hide_news3" class="textlink" onclick="hideDiv(this)">Hide</a><br>
+              </p>
+            </div>
+          </div>
+
+          <!-- 4th piece of news -->
+          <div id="div_news4" class="subPanelLeft panel panel-primary">
+            <div class="news">
+              <a href="/news/2ndround/">
+                <h2 class="newTitle">Nature publication</h2>
+              </a>
+              <p id="news4_ab" style="display: block;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+                sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                est laborum....<a id="news4" class="textlink" onclick="showDiv(this)">Show all</a>
+              </p>
+              <p id="news4_all"  style="display: none;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+                sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                est laborum. <br>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+                sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                est laborum. <a id="hide_news4" class="textlink" onclick="hideDiv(this)">Hide</a><br>
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Twitter section -->
+        <div class="subPanelRight">
+          <div id="twitter_sect" class=" twPanel panel panel-primary text_col col-xs-12 col-md-4">
+            <a class="twitter-timeline" data-height="700" href="https://twitter.com/GPCRmd?ref_src=twsrc%5Etfw">News by
+              GPCRmd</a>
+            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endblock content %}
+
+
+  {% block addon_js %}
+  <!-- Show/hide complete piece of news -->
+  <script>
+    function showDiv(mylink) {
+      var myId = mylink.getAttribute('id');
+      document.getElementById(myId+'_all').style.display = "block"; 
+      document.getElementById(myId+'_ab').style.display = "none";
+      document.getElementById("div_"+myId).classList = "subPanelLeft panel panel-primary selNews";
+    }
+
+    function hideDiv(mylink) {
+      var myIdList = mylink.getAttribute('id').split('_');
+      var myId=myIdList[1]
+      document.getElementById(myId+'_ab').style.display = "block"; 
+      document.getElementById(myId+'_all').style.display = "none";
+      document.getElementById("div_"+myId).classList = "subPanelLeft panel panel-primary";
+    }
+
+  </script>
+
+  <!-- If page reached from the selection of a piece of news from the homepage show it complete -->
+  <script>
+  //Make visible the selected piece of news from the homepage
+    $(document).ready(function() {      
+      var path = window.location.href.split("/");
+      var myId=path.at(-1)//select the last element of the url 
+      if (myId.charAt(0) == '#') { //check if is is an 'id'
+        document.getElementById(myId.slice(1)+'_all').style.display = "block"; 
+        document.getElementById(myId.slice(1)+'_ab').style.display = "none";
+
+        var raw_id = myId.slice(1)
+        var element = document.getElementById("div_"+raw_id);
+        document.getElementById("div_"+raw_id).classList = "subPanelLeft panel panel-primary selNews";
+        
+        // scroll to the correct height
+        var pos= element.offsetTop;
+        var offset = document.documentElement.scrollHeight*0.03;
+        window.scrollTo(0, pos-offset);
+      }
+    })
+  </script>
+  {% endblock %}
+
+
+</body>

@@ -4549,6 +4549,7 @@ $("#reset_pocket_plot").on("click", function() {
         {
             "trajID"               : trajID,
             "pocketIDAndColorList" : JSON.stringify([]), // Empty list = show no pockets
+            "showNearbyResidues"   : false, //Alejandro mirar con el false furula
         });
 });
 
@@ -4572,7 +4573,7 @@ window.update_pocket_table = function() {
             {
                 "trajID"               : trajID,
                 "pocketIDAndColorList" : JSON.stringify([]), // Empty list = show no pockets
-                "showNearbyResidues"   : htmlData["showNearbyResidues"],
+                "showNearbyResidues"   : false,
             });
 
         // Redraw the table with the new trajectory data

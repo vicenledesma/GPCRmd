@@ -15,49 +15,51 @@
 {% endblock %}
 
 {% block content %}
+<div class="regForm row">
 <!--The main submission form tag. All the input tags refering to it will have form="mainform"-->
-<form method="post" id="mainform" onsubmit="return createAllErrors('mainform','loading_submit')" action="/dynadb/step5_submit/{{submission_id}}/" enctype="multipart/form-data">
-  {% csrf_token %}
+  <form class="row" method="post" id="mainform" onsubmit="return createAllErrors('mainform','loading_submit')" action="/dynadb/step5_submit/{{submission_id}}/" enctype="multipart/form-data">
+    {% csrf_token %}
 
-  <div class="col-md-12">
-    <div class="col-md-12 panel panel-primary form_title">   
-      <div class="panel-body">
-        <h2 >Step 5: References and authors</h2>
-     </div> 
-    </div>
-    <!-- Main Files div -->
-    <div id="main_prot_div" action="/dynadb/step4_submit/{{submission_id}}/">
-      <div class='col-md-12 panel panel-primary panel-body'>
-        <h4>Please, introduce the information concerning the authorship, publication and references of this MD simulation. </h4>
+    <div class="col-md-10 col-md-offset-1">
+      <div class="col-md-12 panel regPanel panel-primary">   
+        <div class="panel-body">
+          <h2 class="panel-heading">Step 5: References and authors</h2>
+      </div> 
       </div>
-      <div class='col-md-12 alert-info' id="ref_info">
-        <p><b>IMPORTANT:</b> Should your simulation not be publicated yet, please skip this step. You will still be able to fill it later on.</p>
-      </div>      
-      <div class="col-md-12 panel panel-primary panel-body">    
+      <!-- Main Files div -->
+      <div id="main_prot_div" action="/dynadb/step4_submit/{{submission_id}}/">
+        <div class='col-md-12 panel panel-primary panel-body'>
+          <h4>Please, introduce the information concerning the authorship, publication and references of this MD simulation. </h4>
+        </div>
+        <div class='col-md-12 alert-info' id="ref_info">
+          <p><b>IMPORTANT:</b> Should your simulation not be publicated yet, please skip this step. You will still be able to fill it later on.</p>
+        </div>      
+        <div class="col-md-12 panel panel-primary panel-body">    
 
-        <div class=row id='PRUEBA'>
+          <div class=row id='PRUEBA'>
 
-          <input id="submission_id" maxlength="30" name="submission_id" type="hidden" style="width:180px" placeholder="" value="{{submission_id}}" />
-          {% for field in fdbREFF %}
-          <div class="row">
-            <div class="col-md-3 label_div">
-              <label for="id_name">
-                <p>{{ field.label }}:</p>
-              </label>
+            <input id="submission_id" maxlength="30" name="submission_id" type="hidden" style="width:180px" placeholder="" value="{{submission_id}}" />
+            {% for field in fdbREFF %}
+            <div class="row">
+              <div class="col-md-3 label_div">
+                <label for="id_name">
+                  <p>{{ field.label }}:</p>
+                </label>
+              </div>
+              <div class="col-md-6">
+                {{field.as_widget}}{{field.errors }}
+              </div>
+              <br>
             </div>
-            <div class="col-md-6">
-              {{field.as_widget}}{{field.errors }}
-            </div>
-            <br>
-          </div>
-          {% endfor %}
-          
-        </div>  
-      </div>    
+            {% endfor %}
+            
+          </div>  
+        </div>    
+      </div>
     </div>
-  </div>
-
-</form>
+    {% include "./dynadb/submission_steps_menu.html" %}
+  </form>
+</div>
 
 <script type="text/javascript">
   //To add class format to input fields
@@ -70,7 +72,7 @@
   }
 </script>
 
-{% include "./dynadb/submission_steps_menu.html" %}
+
 
 
 {% endblock content %}

@@ -118,7 +118,7 @@ class prot_entry {
     <div id="prot_entry${id}" data-id=${id} class='col-md-12 panel panel-primary panel_input prot_entry'>
       <div class='row prot_title'>
         <div class="col-md-11">
-          <h3 id="entry_title${id}"  >${id}. Protein entry of chain ${chain}</h3>
+          <h3 id="entry_title${id}" class='leftText panel-heading'>${id}. Protein entry of chain ${chain}</h3>
         </div>
         <div class="col-md-1">
           <h3 id="remove_prot${id}" class="align_right  remove_prot" data-id=${id} ><span class="info_icon glyphicon glyphicon-trash" ></h3>
@@ -231,7 +231,7 @@ class prot_entry {
               Not a GPCR:
             </p>
           </div>
-          <div class='col-md-6'>
+          <div class='col-md-1'>
             <input type="checkbox" id='notaGPCR${id}' ${checkNoGPCR} form="mainform" class='readonly_text input_step input_step${id}' name='notaGPCR${id}' >
           </div>
         </div>
@@ -240,7 +240,7 @@ class prot_entry {
 
         <div id="segment_section">
 
-          <h3>Segments</h3>
+          <h3  class="orangeTit">Segments</h3>
           <p class="initial-text">Please, introduce the coordinates that correspond to this <b>UniprotKb</b> in your simulated system (uploaded in step1). 
           Should this protein be a chimera, create new protein entries for the other UniProtKbs present in this protein chain.</p>
           <div class='row initial-text'>
@@ -277,7 +277,7 @@ class prot_entry {
 
         <br>
 
-        <h3>Mutations</h3>
+        <h3 class="orangeTit segDivv">Mutations</h3>
         <p class="instructions">The following mutations were detected in your system by aligning it to the uploaded UniProt sequence:</p>
         </div>
         <div class="align_div col-md-7">
@@ -352,8 +352,8 @@ class add_prot_btn {
 class seg_entry { 
   constructor(id="", seg="",pdbid="",chain="",segid="", resid_from="", resid_to="", bond="")  {
     this.Template = `
-      <div class="row segentry${id}" data-segnum="${seg}" id="${seg}segentry${id}">
-        <div class="col-md-1 segnum_div label_div">
+      <div class="row  segentry${id}" data-segnum="${seg}" id="${seg}segentry${id}">
+        <div class="col-md-1 col-md-offset-1 segnum_div label_div">
           <p>${seg}. </p>
           <input form="mainform" type="hidden" name="${seg}seg${id}" id="${seg}seg${id}" class="input_coord" value="${seg}">
         </div>

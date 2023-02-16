@@ -26,6 +26,7 @@ import csv
 import pickle
 import math
 from os import path
+import shutil 
 from modules.dynadb.views import  get_precomputed_file_path, get_file_name , get_file_name_dict, get_file_paths
 from django.shortcuts import redirect
 import os
@@ -45,8 +46,6 @@ from bokeh.plotting import figure, output_file, show
 
 import plotly.express as px
 import plotly as pt
-
-from config.settings import MEDIA_ROOT
 
 ############GLOBAL VARIABLES
 
@@ -396,14 +395,13 @@ def obtain_dyn_files(dynfiles,get_framenum=False):
     structure_name=""
     traj_list=[]
     trajidToFramenum={}
-    p=re.compile(f"({MEDIA_ROOT}/)(.*)")
+    p=re.compile("(" + settings.MEDIA_ROOT + ")(.*)")
     p2=re.compile("[\.\w]*$")
     for e in dynfiles:
         f_id=e.id_files.id
         path=e.id_files.filepath
-        print(MEDIA_ROOT+path)
-        myfile=p.search(MEDIA_ROOT+path).group(2)
-        myfile_name=p2.search(path).group()
+        myfile=p.search(settings.MEDIA_ROOT[:-1]+path).group(2)
+        myfile_name=p2.search(settings.MEDIA_ROOT[:-1]+path).group()
         if myfile_name.endswith(".pdb"): #, ".ent", ".mmcif", ".cif", ".mcif", ".gro", ".sdf", ".mol2"))
             structure_file=myfile
             structure_file_id=f_id
@@ -814,7 +812,7 @@ def relate_atomSerial_mdtrajIndex(pdb_path):
 
 
 def distances_notraj(dist_struc,dist_ids):
-    struc_path = f"{MEDIA_ROOT}/"+dist_struc
+    struc_path = settings.MEDIA_ROOT +dist_struc
     try:
         strc=md.load(struc_path)
     except Exception:
@@ -918,8 +916,8 @@ def res_to_atom(seg_to_chain,struc,res, chain, atm):
         return False
 
 def distances_Wtraj(dist_str,struc_path,traj_path,strideVal,seg_to_chain,gpcr_chains):
-    struc_path = f"{MEDIA_ROOT}/"+struc_path
-    traj_path = f"{MEDIA_ROOT}/"+traj_path
+    struc_path = settings.MEDIA_ROOT +struc_path
+    traj_path = settings.MEDIA_ROOT +traj_path
     dist_li=dist_str.split(",")
     #serial_mdInd=relate_atomSerial_mdtrajIndex(struc_path) 
     frames=[]
@@ -1163,7 +1161,7 @@ def get_var_info_datatypes():
 def extract_var_info_file(pdb_vars,gpcr_Gprot,seq_pdb):
     var_info_data=get_var_info_datatypes()
 
-    mypath=f"{MEDIA_ROOT}/Precomputed/muts_vars_info"
+    mypath= settings.MEDIA_ROOT + "Precomputed/muts_vars_info"
     vars_filepath=os.path.join(mypath,"gpcr_vars.json")
     filepath_obj = Path(vars_filepath)
     try:
@@ -1302,6 +1300,21 @@ def get_pocket_and_dyn_data(request) -> dict:
                  "traj_list"         : traj_list,
                  "pocket_data"       : pocket_data }
 
+    # Generate ZIP of pockets' pdbs if it doesn't exist
+    for _, traj_name, traj_id in traj_list:
+
+        # TODO: Change path -> Talk with Recio
+        mdpocket_traj_path = os.path.join(settings.MEDIA_ROOT, "Precomputed/MDpocket/") 
+        pdbs_path = mdpocket_traj_path + str(traj_id) + "_trj_" + str(dyn_id) + ".xtc_mdpocket/" \
+                    + "/DBSCANclustering_coordinates_pdb_" + str(traj_id) \
+                    + "_trj_" + str(dyn_id) + ".xtc/"
+        zip_path  = mdpocket_traj_path + "Downloads/pockets_dyn" + str(dyn_id) \
+                    + "_traj" + str(traj_id) + ".zip"
+        zip_path_no_ext = zip_path[:-4]
+
+        if not path.exists(zip_path):
+            shutil.make_archive(zip_path_no_ext, 'zip', pdbs_path)
+
     return HttpResponse(json.dumps({"dyn_data" : dyn_data}))
 
 
@@ -1311,8 +1324,11 @@ def obtain_pocket_data(dyn_id, traj_list) -> tuple:
     Oriol's function. Obtains pocket data and returns it in a tuple.
     """
 
+    THRESHOLD_DRUGGABILITY = 200
+
     root = settings.MEDIA_ROOT
     pock_path = os.path.join(root,"Precomputed/MDpocket")
+    print(pock_path)
     # 3 level dictionary with: trajectory: pocketID: descriptors
     pockets = {}
     # 3 level dictionary with: trajectory: pocketID: path_to_coordinates_file.pdb
@@ -1348,6 +1364,13 @@ def obtain_pocket_data(dyn_id, traj_list) -> tuple:
             # DESCRIPTORS DICTIONARY
             pocket_data = json.load(f)
 
+            # Obtaining % druggability using volumes
+            for pocket_dict in pocket_data["data"]:
+                n_above_threshold = len([ v for v in pocket_dict["volumes"] if v >= THRESHOLD_DRUGGABILITY ])
+                n_total = len(pocket_dict["volumes"])
+                pocket_dict["perc_druggability"] = round( (n_above_threshold / n_total) * 100)
+
+            # DESCRIPTORS DICTIONARY
             trajectory_pockData = {}
             for descriptors in pocket_data['data']:
                 for key, value in descriptors.items():
@@ -1357,7 +1380,10 @@ def obtain_pocket_data(dyn_id, traj_list) -> tuple:
 
         except FileNotFoundError:
             print("[*] INFO - POCKET DATA: Pockets data not available for trajectory ID: " + str(traj_id))
-
+            print(settings.MEDIA_ROOT)
+            print(root)
+            print(pock_path)
+            print(traj_pock_path)
     return(pockets, traj_pockID_coordfile, traj_isovalueFile)
 
 
@@ -1412,8 +1438,8 @@ def generate_pocket_plot(request, pocket_data) -> json_item:
         corresponding_pocket = None
         for pocket_data in pockets[traj_id]["data"]:
             if int(pocket_data["name"]) == int(pocketID):
-                corresponding_pocket = pocket_data;
-                break;
+                corresponding_pocket = pocket_data
+                break
         if corresponding_pocket == None:
             break # not found, skip
 
@@ -1440,6 +1466,11 @@ def generate_pocket_plot(request, pocket_data) -> json_item:
         span.location = cb_obj.value
     """)
     frame_slider.js_on_change('value', callback)
+
+    # Horizonal line to indicate maximum size for druggability
+    hline = Span(location=200, dimension='width', line_color='#ff2d00',
+                 line_width=2, line_dash='dashed')
+    p.add_layout(hline)
 
     # Remove bokeh tooltips from our plot, and put labels
     hoverlist = [('Pocket ID', '$name'), ('Frame', '@x'), ('Volume', '@y')]
@@ -1881,7 +1912,7 @@ def generate_comparative_cs_plot(cs_df,ignore_HA,res_id_li,atoms_li,return_avail
         return p
 
 
-def generate_2d_cs_plot(data, atom1="CA", atom2="CB", resid_li="", from_frame='all', to_frame='all'):
+def generate_2d_cs_plot(data, atom1="CA", atom2="CB", resid_li="", from_frame='all', to_frame='all', soluplots=False):
     """
     Generate and return two-dimensional chemical shift plot for two types of atoms in a structure
     """
@@ -1894,7 +1925,7 @@ def generate_2d_cs_plot(data, atom1="CA", atom2="CB", resid_li="", from_frame='a
 
     # If frames were selected, drop also all columns were
     if from_frame != 'all':
-        frames = [ str(f) for f in range(int(from_frame), int(to_frame)+1)]+['resname', 'resname_s']
+        frames = ['resname', 'resname_s']+[ str(f) for f in range(int(from_frame), int(to_frame)+1)]
         data = data.filter(frames, axis=1)
 
     # Take all residues if none were submitted
@@ -1910,10 +1941,19 @@ def generate_2d_cs_plot(data, atom1="CA", atom2="CB", resid_li="", from_frame='a
             df1 = data.loc[int(item),atom1] #select atom 1 the row from the dataframe which matches the inputs from the user
             df2 = data.loc[int(item),atom2] #select atom 2 the row from the dataframe which matches the inputs from the user
             resname = data.loc[[int(item),'CA'], 'resname'].unique()[0]
+            # Option to make "Solution NMR predictions": make a distribution out of average and variance of our cs values, and plot it
+            if soluplots:
+                np1=np.array(df1[2:])
+                np2=np.array(df2[2:])
+                dist1 = np.random.normal(np1.mean(), np1.std()/10, len(np1))
+                dist2 = np.random.normal(np2.mean(), np2.std()/10, len(np2))
+                df_e1 = pd.DataFrame(data=dist1, columns=[atom1]) #Build the plotting dataframe
+                df_e2 = pd.DataFrame(data=dist2, columns=[atom2])
+            else:
+                df_e1=df1.to_frame(name=atom1)
+                df_e2=df2.to_frame(name=atom2)
         except Exception as e:
             continue
-        df_e1=df1.to_frame(name=atom1)
-        df_e2=df2.to_frame(name=atom2)
         temp_df = pd.concat([df_e1,df_e2], axis=1, join="inner") #concatenate all the residues dataframe into a bigger one
         temp_df["IDs"]=str(item)+' '+resname #give them different ids to have differnete colors in the plot
         result = result.append(temp_df) #build the final DF
@@ -1958,9 +1998,9 @@ def load_chemshift_data(dyn_id,traj_id):
     Checks if CS data is available and defines the seleciton options
     """
     cs_data_avail = cs_selection_params = False
-    spartafile = f"{MEDIA_ROOT}/Precomputed/chemical_shift/cs_sparta_dyn%s_%s.txt" % (dyn_id,traj_id)
+    spartafile = settings.MEDIA_ROOT + "Precomputed/chemical_shift/cs_sparta_dyn%s_%s.txt" % (dyn_id,traj_id)
     cs_sparta_avail = os.path.exists(spartafile)
-    shiftyfile = f"{MEDIA_ROOT}/Precomputed/chemical_shift/cs_dyn%s_%s.txt" % (dyn_id,traj_id)
+    shiftyfile = settings.MEDIA_ROOT + "Precomputed/chemical_shift/cs_dyn%s_%s.txt" % (dyn_id,traj_id)
     if os.path.isfile(shiftyfile):                        
         cs_data_avail=True
         df=pd.read_csv(shiftyfile,sep="\t")
@@ -2010,8 +2050,6 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
 #        dist_dict=dist_data["dist_dict"]
     request.session.set_expiry(0) 
     mdsrv_url=obtain_domain_url(request)
-    
-        
     delta=DyndbDynamics.objects.get(id=dyn_id).delta
     is_default_page=False
     if network_def or watervol_def or pharmacophore_def or tunnels_channels_def or ligprotint_def:
@@ -2255,7 +2293,7 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
         if occupancy:
             watermaps = True 
 #### ---- PHarmacophores ------------
-        pharma_jsonpath = f"{MEDIA_ROOT}/Precomputed/pharmacophores/dyn"+str(dyn_id)+'/pharmaco_itypes.json'
+        pharma_jsonpath = settings.MEDIA_ROOT + "Precomputed/pharmacophores/dyn" + str(dyn_id) + '/pharmaco_itypes.json'
         if os.path.exists(pharma_jsonpath):
             has_pharmacophores = True
             pharma_json = json_dict(pharma_jsonpath)
@@ -2266,7 +2304,7 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
 #### -----Allosteric communication---
 
         # Check if Allosteric communication data is avaliable for this entry
-        ac_data_avail = os.path.exists(f"{MEDIA_ROOT}/Precomputed/allosteric_com/dyn"+str(dyn_id)) # Example file 
+        ac_data_avail = os.path.exists(settings.MEDIA_ROOT + "Precomputed/allosteric_com/dyn"+str(dyn_id)) # Example file 
 
 
 #### --------------------------------
@@ -2286,7 +2324,7 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
         first_strideval=trajidToFramenum[traj_list[0][2]][1]
         #structure_file="Dynamics/with_prot_lig_multchains_gpcrs.pdb"########################### [!] REMOVE
         #structure_name="with_prot_lig_multchains_gpcrs.pdb" ################################### [!] REMOVE
-        pdb_name = f"{MEDIA_ROOT}/"+structure_file
+        pdb_name = settings.MEDIA_ROOT +structure_file
         chain_name_li=obtain_prot_chains(pdb_name)
         #traj_list=sorted(traj_list,key=lambda x: x[2])
         #(traj_list,fpdir)=get_fplot_path(dyn_id,traj_list)
@@ -2305,7 +2343,7 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
         presel_pos=""
         bind_domain=""
         if sel_pos:
-            cra_path=f"{MEDIA_ROOT}/Precomputed/crossreceptor_analysis_files"
+            cra_path= settings.MEDIA_ROOT + "Precomputed/crossreceptor_analysis_files"
             resli_file_path=path.join(cra_path,"ligres_int.csv")
             resli_file_pathobj = Path(resli_file_path)
             if resli_file_pathobj.is_file():
@@ -2508,7 +2546,7 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
                     (cs_data_avail, cs_sparta_avail, cs_selection_params, cs_resid_names, resid_to_resname)=load_chemshift_data(dyn_id,traj_list[0][2])
 
                     context={
-                        "is_debug":False,
+                        "is_debug":False, #Check
                         "test_cs":test_cs,
                         "aa3to1":json.dumps(d),
                         "resid_to_resname":json.dumps(resid_to_resname),
@@ -2557,8 +2595,8 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
                         "bind_domain":bind_domain,
                         "presel_pos":presel_pos,
                         "pdbid":pdbid,
-                        "pdb_muts":json.dumps(pdb_muts),
-                        "pdb_vars":json.dumps(pdb_vars),
+                        "pdb_muts":json.dumps(pdb_muts), #Check
+                        "pdb_vars":json.dumps(pdb_vars), #Check
                         "pdb_vars_templ":pdb_vars,
                         "var_info_data":var_info_data,
                         "ed_mats":ed_mats,
@@ -2569,7 +2607,7 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
                         "tun_clust_rep_avail":clust_rep_avail,
                         "traj_clust_rad":json.dumps(traj_clust_rad),
                         "test":"HI THERE",
-                        "TMsel_all":sorted(TMsel_all_ok.items(), key=lambda x:int(x[0][-1])),
+                        "TMsel_all":sorted(TMsel_all_ok.items(), key=lambda x:int(x[0][-1])), #Check
                         "warning_load":json.dumps(warning_load),
                         "watermaps" : watermaps,
                         "occupancy" : json.dumps(occupancy),
@@ -2740,9 +2778,9 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
 
 def compute_rmsd(rmsdStr,rmsdTraj,traj_frame_rg,ref_frame,rmsdRefTraj,traj_sel,strideVal,seg_to_chain):
     i=0
-    struc_path = f"{MEDIA_ROOT}/" + rmsdStr
-    traj_path = f"{MEDIA_ROOT}/" + rmsdTraj
-    ref_traj_path = f"{MEDIA_ROOT}/" + rmsdRefTraj
+    struc_path = settings.MEDIA_ROOT  + rmsdStr
+    traj_path = settings.MEDIA_ROOT  + rmsdTraj
+    ref_traj_path = settings.MEDIA_ROOT  + rmsdRefTraj
     small_errors=[]
     set_sel=None
     if traj_sel == "bck":
@@ -2972,11 +3010,11 @@ def update_bokeh(request):
 
         # If Mean CS plot
         if atype=="comp":
-            csinput_path=f"{MEDIA_ROOT}/Precomputed/chemical_shift/cs_%sdyn%s_%s.txt" % (pred,dyn_id, traj_id)
+            csinput_path=settings.MEDIA_ROOT + "Precomputed/chemical_shift/cs_%sdyn%script_css_%s.txt" % (pred,dyn_id, traj_id)
             cs_df=pd.read_csv(csinput_path,sep="\t")
             (p,avail_res_atoms)=generate_comparative_cs_plot(cs_df,ignore_HA=False,res_id_li=res_id_li,atoms_li=atoms_li,return_avail_res_atoms=True)
         else:
-            csinput_path=f"{MEDIA_ROOT}/Precomputed/chemical_shift/cs_%sdyn%s_%s.csv" % (pred,dyn_id, traj_id)
+            csinput_path=settings.MEDIA_ROOT + "Precomputed/chemical_shift/cs_%sdyn%s_%s.csv" % (pred,dyn_id, traj_id)
             cs_df=pd.read_csv(csinput_path, sep=";",index_col=False)
             cs_df = cs_df.loc[:, ~cs_df.columns.str.contains('^Unnamed')]
             # If streaming CS plot
@@ -2984,7 +3022,7 @@ def update_bokeh(request):
                 (p,avail_res_atoms) = generate_singleatom_cs_plot(cs_df,int(res_id_li[0]),atoms_li[0])
             # If two-dimensional CS plot
             elif atype=="2d":
-                (p,avail_res_atoms) = generate_2d_cs_plot(cs_df,atoms_li[0],atoms_li[1], res_id_li, from_frame, to_frame) 
+                (p,avail_res_atoms) = generate_2d_cs_plot(cs_df,atoms_li[0],atoms_li[1], res_id_li, from_frame, to_frame, soluplots) 
 
         # If there was an error in the atom selection process, send an error message
         if 'error' in avail_res_atoms:
@@ -3000,7 +3038,7 @@ def update_bokeh(request):
         else:
             script_cs, div_cs = components(p)
             context={        
-                "script_cs":script_cs,
+                "script_cs":script_cs, #Check
                 "div_cs":div_cs,
                 "avail_res_atoms":avail_res_atoms
             }
@@ -3107,8 +3145,8 @@ def select_prot_chains(structable,seg_to_chain,mytop,chains):
 
 def compute_interaction(res_li,struc_p,traj_p,num_prots,thresh,serial_mdInd,gpcr_chains,dist_scheme,strideVal,seg_to_chain):
 
-    struc_path = f"{MEDIA_ROOT}/"+struc_p
-    traj_path = f"{MEDIA_ROOT}/"+traj_p
+    struc_path = settings.MEDIA_ROOT +struc_p
+    traj_path = settings.MEDIA_ROOT +traj_p
     itertraj=md.iterload(filename=traj_path,chunk=10, top=struc_path, stride=strideVal)
     first=True 
     structable=False
@@ -3293,10 +3331,10 @@ def hbonds(request):
         arrays=request.POST.getlist('frames[]')
         full_results=dict()
         dyn_id=arrays[5]
-        struc_path = f"{MEDIA_ROOT}/"+arrays[4]
+        struc_path = settings.MEDIA_ROOT +arrays[4]
         whole_seg_to_chain=obtain_wholeModel_seg_to_chain(struc_path)
         traj_shortpath=arrays[3]
-        traj_path = f"{MEDIA_ROOT}/"+traj_shortpath
+        traj_path = settings.MEDIA_ROOT +traj_shortpath
         start=int(arrays[0])
         end=int(arrays[1])
         backbone=arrays[6]=='true'
@@ -3483,9 +3521,9 @@ def saltbridges(request):#
 
         arrays=request.POST.getlist('frames[]')
         dyn_id=arrays[5]
-        struc_path = f"{MEDIA_ROOT}/"+arrays[4]
+        struc_path = settings.MEDIA_ROOT +arrays[4]
         traj_shortpath=arrays[3]
-        traj_path = f"{MEDIA_ROOT}/"+traj_shortpath
+        traj_path = settings.MEDIA_ROOT +traj_shortpath
         whole_seg_to_chain=obtain_wholeModel_seg_to_chain(struc_path);
         label = lambda hbond : '%s--%s' % (mytop.atom(hbond[0]), mytop.atom(hbond[2]))
         full_results=dict()
@@ -3622,8 +3660,8 @@ def saltbridges(request):#
 def sasa(request):
     zatoms=[]
     arrays=request.POST.getlist('frames[]')
-    struc_path = f"{MEDIA_ROOT}/"+arrays[4]
-    traj_path = f"{MEDIA_ROOT}/"+arrays[3]
+    struc_path = settings.MEDIA_ROOT +arrays[4]
+    traj_path = settings.MEDIA_ROOT +arrays[3]
     sel=arrays[6]
     residue_indexes=arrays[7].split(',')
     traj_name=traj_path[traj_path.rfind('/'):].replace('.','_')
@@ -3793,8 +3831,8 @@ def grid(request):
     if request.method == 'POST':
         arrays=request.POST.getlist('frames[]')
         percentage_cutoff=int(arrays[2])
-        struc_path = f"{MEDIA_ROOT}/"+arrays[4]
-        traj_path = f"{MEDIA_ROOT}/"+arrays[3]
+        struc_path = settings.MEDIA_ROOT +arrays[4]
+        traj_path = settings.MEDIA_ROOT +arrays[3]
         #t = md.load(traj_path,top=struc_path)
         trajectory = md.load('dynadb/b2ar_isoprot/b2ar.dcd',top='dynadb/b2ar_isoprot/build.pdb')
         trajectory=trajectory[0:10]
@@ -3866,8 +3904,6 @@ def view_reference(request, dyn_id ):
     Now only opens structure & traj of adenosine receptor with colesterol.
     """
     mdsrv_url=obtain_domain_url(request)
-    
-        
     refobj=DyndbReferences.objects.get(dyndbreferencesdynamics__id_dynamics=dyn_id)
     doi=refobj.doi
     authors=refobj.authors
@@ -3902,26 +3938,23 @@ def view_session(request , session_name):
     """
     Now only opens structure & traj of adenosine receptor with colesterol.
     """
-    sessions_path=f"{MEDIA_ROOT}/Sessions"
+    sessions_path=settings.MEDIA_ROOT + "Sessions"
     s_li=os.listdir(sessions_path)
     if session_name+".ngl" in s_li:
+    
         mdsrv_url=obtain_domain_url(request)
-        
-            
         redirect_url='/html/session.html?load=pufa.ngl'
 
         return redirect(mdsrv_url+redirect_url)
 
 def trim_path_for_mdsrv(path):
-    p=re.compile(f"({MEDIA_ROOT}/)(.*)")
+    p=re.compile(settings.MEDIA_ROOT + ")(.*)")
     myfile=p.search(path).group(2)
     return myfile
 
 def quickload(request,dyn_id,trajfile_id):
     #DyndbFiles.objects.filter(dyndbfilesdynamics__id_dynamics=dyn_id, id_file_types__is_trajectory=True)
     mdsrv_url=obtain_domain_url(request)
-    
-        
     modelfile=DyndbFiles.objects.get(dyndbfilesdynamics__id_dynamics=dyn_id, id_file_types__is_model=True)
     trajfile=DyndbFiles.objects.get(id=trajfile_id)
     model_filepath=trim_path_for_mdsrv(modelfile.filepath)
@@ -3937,13 +3970,11 @@ def quickload(request,dyn_id,trajfile_id):
 def quickloadall(request):
 
     # Create uploading file
-    f = open(f'{MEDIA_ROOT}/Precomputed/WaterMaps/isloading.txt','w')
+    f = open(settings.MEDIA_ROOT + 'Precomputed/WaterMaps/isloading.txt','w')
     f.close()
 
     #DyndbFiles.objects.filter(dyndbfilesdynamics__id_dynamics=dyn_id, id_file_types__is_trajectory=True)
     mdsrv_url=obtain_domain_url(request)
-    
-        
     dynobj=DyndbDynamics.objects.all()
     dynfiledata = dynobj.annotate(dyn_id=F('id'))
     #dynfiledata = dynfiledata.annotate(is_pub=F('is_published'))
@@ -4051,7 +4082,7 @@ def ac_load_data(request,dyn_id):
     nedges = request.POST.get('ac_nedges')
 
     # Open file with specified options
-    infile = f'{MEDIA_ROOT}/Precomputed/allosteric_com/dyn%s/%s_%s.csv'%(dyn_id,options,protsel)
+    infile = settings.MEDIA_ROOT + 'Precomputed/allosteric_com/dyn%s/%s_%s.csv'%(dyn_id,options,protsel)
     if os.path.exists(infile):
         df = pd.read_csv(infile)
     else: 
@@ -4139,8 +4170,6 @@ def ac_load_data(request,dyn_id):
 def basicview(request,dyn_id):
     #DyndbFiles.objects.filter(dyndbfilesdynamics__id_dynamics=dyn_id, id_file_types__is_trajectory=True)
     mdsrv_url=obtain_domain_url(request)
-    
-        
     modelfile=DyndbFiles.objects.get(dyndbfilesdynamics__id_dynamics=dyn_id, id_file_types__is_model=True)
     trajfile_li=DyndbFiles.objects.filter(id_file_types__is_trajectory=True,dyndbfilesdynamics__id_dynamics__id=dyn_id)
     traj_filepath_li=[]
@@ -4164,8 +4193,6 @@ def basicview(request,dyn_id):
 
 #def metatest(request):
 #    mdsrv_url=obtain_domain_url(request)
-#    
-#        
 #    hills_path="/dynadb/files/Dynamics/metadyn/HILLS"
 #    structure_file="Dynamics/metadyn/step6.13_nptfree_equilibration.gro"
 #    traj_file="Dynamics/metadyn/step7.1_production.xtc"

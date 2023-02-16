@@ -33,13 +33,14 @@
 }
 </style>
 {% endblock %}
+
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
 <base href="your_domain/" target="_PARENT">
 </head>
 
 <body style="padding:0">
 {% block content %}
-<table id="table_id" class="display" style="display: none;font-size: 13px">
+<table id="table_id" class="display" style="display: none;">
     <thead>
         <tr>
             <th> </th>
@@ -91,7 +92,7 @@
             </td>
             <td class="uniprotid">
                 {% for up in data.uniprot %}
-                    <a href="https://www.uniprot.org/uniprot/{{up}}" >{{up}}</a>
+                    <a target="_blank" href="https://www.uniprot.org/uniprot/{{up}}" alt="Go to Uniprot page">{{up}}</a>
                 {% endfor %}
             </td>
             <td  class="family">{{data.fam_name}}</td>
@@ -99,7 +100,7 @@
             {% if is_hm %}
                 <td  class="pdbid">{{data.pdb_namechain}}</td>
             {% else %}
-                <td class="pdbid"><a href="https://www.rcsb.org/structure/{{data.pdbid}}">{{data.pdb_namechain}}</a></td>
+                <td class="pdbid"><a target="_blank" href="https://www.rcsb.org/structure/{{data.pdbid}}" alt="Go to PDB page">{{data.pdb_namechain}}</a></td>
             {% endif %}
             <td class="state">{{data.state}}</td>
             <td  class="species"><i>{{data.species}}</i></td>

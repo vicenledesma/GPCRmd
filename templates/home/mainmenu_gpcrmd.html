@@ -6,7 +6,7 @@
       <span class="caret"></span></a>
       <ul class="dropdown-menu" data-pointto="Analysis_li">
         <li id="contmaps"><a href="/contmaps/?itype=hb&cluster=3&prtn=prt&rev=norev&stnd=cmpl">Receptor meta-analysis</a></li>
-        <li ><a href="#subtitle">Simulation tools</a></li>
+        <li ><a class= "toolsLink" onclick="go_to_tools()">Simulation tools</a></li>
       </ul> 
     </li>
 
@@ -22,13 +22,8 @@
     </li>
 
     <!-- Submission -->
-    <li class="dropdown" id="Submission_li">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Submission
-        <span class="caret"></span></a>
-        <ul id="submission" class="dropdown-menu" data-pointto="Submission_li">
-            <li id="simbsub"><a href="/accounts/memberpage/">Simulation submission</a></li>
-            <li id="references"><a href="/dynadb/references/">Authorship and references form</a></li>
-        </ul>
+    <li id="Submission_li" >
+      <a class="menuItem" href="/accounts/memberpage/">Submission</a>
     </li>
 
     <!-- Cite us -->
@@ -40,8 +35,9 @@
     <li class="dropdown" id="about">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">More
         <span class="caret"></span></a>
-        <ul class="dropdown-menu" data-pointto="about">            
-            <li id="community"><a href="/community/" >About us </a></li>            
+        <ul class="dropdown-menu" data-pointto="about">           
+            <li id="news"><a href="/news/" >News</a></li>    
+            <li id="community"><a href="/community/" >About us</a></li>            
             <li><a href="{% url 'covid19:home' %} " target="_blank" >Response to COVID-19</a></li>
             <li><a href="https://gpcrmd-docs.readthedocs.io/en/latest/" target="_blank">Documentation</a></li>
             <li id="contact"><a href="/contact/" >Contact</a></li>
@@ -50,11 +46,11 @@
 </ul>
 
 
+<!-- Make active the selected button in navbar -->
 <script>
     function activate_option(id){
       document.getElementById(id).classList += " active";
     }
-    //Make active the selected button in navbar
     var path_list = location.pathname.split("/");
     switch (path_list[1]){
       // Tools
@@ -77,6 +73,9 @@
         activate_option("about");
         break;
       case "community":
+        activate_option("about");
+        break; 
+      case "news":
         activate_option("about");
         break;      
       

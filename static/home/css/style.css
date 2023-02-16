@@ -1,3 +1,7 @@
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     padding-top: 70px;
     background-color: white;
@@ -8,10 +12,25 @@ h2,
 h3,
 h4 {
     margin-top: 0px;
+    word-break: normal;
+
 }
 
 h4 {
     font-size: 21px;
+    word-break: normal;
+}
+
+input{
+    border-radius: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-width: 1px;
+    word-break: normal;
+}
+
+a, span, p, label, select{
+    word-break: normal;
 }
 
 button {
@@ -48,6 +67,7 @@ a.textlink {
 
 a.textlink:hover {
     color: #D96B52;
+    cursor: pointer;
 }
 
 a.textlinkdark {
@@ -74,6 +94,10 @@ a.textlinkdark:hover {
     text-transform: uppercase;
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.toolsLink:hover {
+    cursor: pointer;
 }
 
 .well {
@@ -167,11 +191,17 @@ h4 {
 }
 
 p,
-span {
+span,
+th,
+td,
+select {
     font-family: Arial, Helvetica, sans-serif;
     color: #171010;
     font-size: 20px;
     text-align: justify;
+}
+input{
+    font-size: 20px;
 }
 
 a {
@@ -247,6 +277,23 @@ nav .dropdown-menu {
     width: 103%;
 }
 
+/* banner animation */
+.lineUp {
+    animation-duration: 2s;
+    animation-name: slidein;
+}
+
+@keyframes slidein {
+    from {
+        margin-bottom: 100%;
+        width: 300%;
+    }
+    to {
+        margin-bottom: 0%;
+        width: 100%;
+    }
+}
+
 #lema {
     /* height:40px;
     display:block;
@@ -261,6 +308,9 @@ nav .dropdown-menu {
     /* color: #171010;  */
     color: white;
 }
+
+
+
 
 #sublema {
     font-size: 60px;
@@ -308,7 +358,8 @@ nav .dropdown-menu {
 
 .searchBtn {
     background-color: #CA1616;
-    border-color: #423F3E;;
+    border-color: #423F3E;
+    ;
     font-size: 20px;
     font-weight: bold;
     border-radius: 0 25px 25px 0;
@@ -327,7 +378,6 @@ input.searchBar {
     text-align: center;
     border-radius: 25px 0 0 25px;
     border-color: #423F3E;
-    ;
     height: 45px;
     font-size: 20px;
     background: white;
@@ -467,13 +517,14 @@ p.subtitle {
     margin-bottom: 20px;
 }
 
+
 /* footer */
 
-.footlogo{
+.footlogo {
     width: 40px;
 }
 
-.shortfoot{
+.shortfoot {
     margin-top: 20px;
 }
 
@@ -684,10 +735,112 @@ g text {
     background-color: white;
 }
 
+.divHidden{
+    display: none;
+}
+
+.topBottom {    
+    animation-duration: 1s;
+    animation-name: slideinTop;
+}
+
+@keyframes slideinTop {
+    from {
+        height: 0%;
+    }
+    to {/*review*/
+        height: 100%;
+    }
+}
+
+.searchTool{
+    background-color: #171010;
+    text-align: center;
+    width: 110%;
+    margin-left: -5%;
+    margin-bottom:2%;
+}
+
+.searchBarToolDiv{
+    padding-top:4%;
+    padding-bottom: 3%;
+}
+
+.datasetPanel{
+    padding-top:4%;
+    padding-bottom: 3%;
+}
+
+.datasetPanelBottom{
+    padding-bottom: 3%;
+}
+
+.toolSearchOpt{
+    margin-bottom: 2%;
+}
+
+.toolExamples{
+    margin-bottom: 3%;
+}
+
+.centered{
+    text-align: center;
+}
+
+.toolActive {
+    border-color: #BF3C1F;
+    border-width: 3px;
+    box-shadow: 0px 0px 8px 8px #423F3E;
+    transform: scale(1.05);
+    background-color: white;
+}
+
+.addShadow{
+    box-shadow: 5px 5px 11px 12px rgba(182, 182, 182, 0.75);
+}
+
+.closeSearch{
+    color: white !important;
+    margin-top: 6%;
+}
+
+.closeSearch:hover{
+    cursor: pointer;
+
+}
+
 /*jumbotrons*/
 .jumbotron {
     width: 103%;
     margin-left: -2%;
+}
+
+.leftRight {
+    animation-duration: 1s;
+    animation-name: slideinLeft;
+}
+
+@keyframes slideinLeft {
+    from {
+        width: 300%;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+.rightLeft{
+    animation-duration: 1s;
+    animation-name: slideinRight;
+}
+
+@keyframes slideinRight {
+    from {
+        margin-top: 300%;
+    }
+    to {
+        margin-top: 0%;
+    }
 }
 
 /* famtree */
@@ -717,7 +870,8 @@ g text {
 .famText {
     max-width: 75%;
 }
-.vcenter{
+
+.vcenter {
     display: inline-block;
     vertical-align: middle;
     float: none;
@@ -729,8 +883,9 @@ g text {
     padding-top: 6%;
     padding-bottom: 6%;
 }
-.workTextDiv{
-    margin-left:5%;
+
+.workTextDiv {
+    margin-left: 5%;
 }
 
 .workImage {
@@ -757,6 +912,52 @@ g text {
 
 .jumbotronTextLink:hover {
     color: #BF3C1F;
+}
+
+/* News */
+#newsSection {
+    padding: 0 8%;
+}
+
+.newsTitle {
+    color: white;
+    font-size: 60px;
+    text-align: center;
+}
+
+.newsbuttonDiv {
+    margin-top: 5%;
+}
+
+a.buttonNews {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+
+    text-decoration: none;
+    color: white;
+
+    background-color: #CA1616;
+    border-color: #423F3E;
+    ;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 25px;
+    height: 45px;
+    border-width: 2px;
+    padding: 12px 44px;
+
+}
+
+.buttonNews:hover {
+    font-weight: bolder;
+    background-color: #BF3C1F;
+    border-color: #BF3C1F;
+    cursor: pointer;
+}
+
+.newsblock {
+    margin-top: 3%;
 }
 
 /* Datasets */
@@ -790,7 +991,7 @@ g text {
     border-color: #BF3C1F
 }
 
-.panel ol#stats > li::before{
+.panel ol#stats>li::before {
     font-size: 0px;
 }
 
@@ -1002,11 +1203,11 @@ g text {
 
 /* Search */
 
-.searchDiv{
+.searchDiv {
     margin-top: 5%;
 }
 
-.search-tabs{
+.search-tabs {
     margin-left: 15px;
     margin-right: 15 px;
 }
@@ -1033,7 +1234,6 @@ ajaxresults22 tr {
 }
 
 .paginate_button {
-    background-color: #00e6e6;
     box-sizing: border-box;
     min-width: 1.5em;
     padding: 0.1px 15px;
@@ -1121,9 +1321,7 @@ ajaxresults22 tr {
 
 }
 
-#content {
-    width: 100%;
-}
+
 
 .panel-body {
     word-break: break-all;
@@ -1186,7 +1384,7 @@ kbd {
 }
 
 .howtoparent {
-    float:right;
+    float: right;
 /*position:absolute; */
     right: 45px;
     /* margin-top: -35px; */
@@ -1211,12 +1409,12 @@ kbd {
 
 
 /* Submission */
-label{
+label {
     font-size: 20px;
     color: #171010;
 }
 
-.logIncontent{
+.logIncontent {
     background-color: white;
     margin-top: 3%;
     margin-left: 8%;
@@ -1224,11 +1422,155 @@ label{
     margin-bottom: 3%;
 }
 
-.logInAlert{
+.logInAlert {
     background-color: #efeeee;
     border-color: #D96B52;
 }
 
-.wbtutorial{
-    width:auto;
+.wbtutorial {
+    width: auto;
 }
+
+/* News */
+
+.newsHeading {
+    margin-top: 3%;
+    background-color: #BF3C1F;
+    border-bottom: #BF3C1F;
+}
+
+.newsRow {
+    padding: 15px 15px;
+}
+
+.panelLeft {
+    padding-left: 0px;
+}
+
+.subPanelLeft {
+    padding-right: 15px;
+}
+
+.news {
+    padding: 15px;
+}
+
+.selNews {
+    border-width: 2px;
+}
+
+.newTitle {
+    color: #BF3C1F;
+    font-weight: bold;
+}
+
+.twPanel {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Register */
+.regForm{
+    background-color: white;
+    margin-top: 3%;
+    margin-bottom: 3%;
+}
+
+.regPanel{
+    background-color: #BF3C1F;
+}
+
+.orangeTit{
+    color: #BF3C1F;
+    font-weight: bold;
+}
+
+.newAcc{
+    margin-bottom: 4%;
+    text-align:center
+}
+
+.submitBtn{
+    color:white;
+    font-weight: bold;
+    background-color: #BF3C1F;
+    font-size: 20px;
+    padding: 10px 44px;
+    border-radius: 25px;
+    border-width: 2px;
+    border-color: #BF3C1F;
+}
+
+.submitBtn:hover{
+    background-color: #D96B52;
+    color: #171010;
+}
+
+/* Memberpage */
+.firstBtn{
+    margin-bottom: 2%;
+}
+
+.falseBtn{
+    font-family: Arial, Helvetica, sans-serif;
+    color: #171010;
+    font-size: 20px;
+    text-align: justify;
+    padding: 5px 0;
+}
+
+/* Submissions */
+
+.delete_button{
+    font-weight: normal;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.note{
+    font-size: 16px;
+    font-style: italic;
+    color: white;
+}
+
+/*Submission*/
+.submissionBTn{
+    font-weight: normal;
+    background-color: #D96B52;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+.submissionBTn:hover{
+    background-color: #BF3C1F;
+}
+.buttonTable{
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+.rightTextLabel{
+    text-align: right;
+  }
+
+.summBtn{
+    cursor:pointer;
+    height:50px;
+    margin-bottom:15px;
+    background-color:#D96B52;
+    border-color:#BF3C1F;
+}
+.summBtn:hover{
+    background-color:#BF3C1F;
+}
+
+.butTitle{
+    padding:5px 0px 5px 5px;
+    color:white;
+    text-align:center;
+    margin-top:5px;
+    margin-left:2.5%;
+    margin-right:2.5%;
+    margin-bottom:0px
+  }
+
