@@ -138,7 +138,7 @@ if DEBUG:
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/files/'
-MEDIA_ROOT = '/var/www/GPCRmd/media/files'
+MEDIA_ROOT = '/var/www/GPCRmd/media/files/'
 SENDFILE_BACKEND = 'sendfile.backends.xsendfile'
 
 MAIN_ROOT = '/var/www/GPCRmd'
