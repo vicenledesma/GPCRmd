@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 from dynadb.models import *
 import os 
 import csv
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
@@ -17,7 +17,7 @@ class Command(BaseCommand):
                     if gprot:
                         all_prot.append(dprot)
                 return all_prot[0]
-        out_path=f"{MEDIA_ROOT}/Precomputed/Summary_info/"
+        out_path=settings.MEDIA_ROOT + "Precomputed/Summary_info/"
         if not os.path.isdir(out_path):
             os.makedirs(out_path)
         dynobj=DyndbDynamics.objects.all()

@@ -31,7 +31,7 @@ def memberpage(request):
     context={'username':request.user.username}
     if request.user.has_privilege_covid:
         context["user_covid"]=True
-    return render('accounts/memberpage.html',context,  context_instance=RequestContext(request))
+    return render(request, 'accounts/memberpage.html',context)
 
 def login(request):
     """allows active users to log in and enter to the memberpage"""
@@ -127,7 +127,7 @@ def register(request,
 
 def reg_mail(request):
     """Indicates to the user that they will receive a mail for activation"""
-    return render('accounts/reg_mail.html',  context_instance=RequestContext(request))
+    return render(request, 'accounts/reg_mail.html')
 
 @sensitive_post_parameters()
 @never_cache
@@ -212,7 +212,7 @@ def mail_reset(request,
 
 def mail_done(request):
     """a message informing that the user will receive a mail appears"""
-    return render('accounts/mail/mail_done.html',{'email': request.user.email},  context_instance=RequestContext(request))
+    return render(request, 'accounts/mail/mail_done.html', context={'email': request.user.email})
 
 
 
@@ -291,9 +291,9 @@ def change_data(request):
             return redirect(settings.LOGIN_REDIRECT_URL)
     else:
         form = ChangeForm(initial={'first_name':request.user.first_name,'last_name':request.user.last_name,'username':request.user.username, 'country':request.user.country, 'institution':request.user.institution, 'department':request.user.department, 'lab':request.user.lab})
-    return render('accounts/change_data.html', {
+    return render(request, 'accounts/change_data.html', context={
         'form': form, 'user_mail':request.user.email,
-    }, context_instance=RequestContext(request))
+    })
 
 
 @login_required
@@ -308,9 +308,9 @@ def change_passw(request):
             return redirect(settings.LOGIN_REDIRECT_URL)
     else:
         form = ChangePassw()
-    return render('accounts/change_passw.html', {
+    return render(request, 'accounts/change_passw.html', context={
         'form': form,
-    }, context_instance=RequestContext(request))
+    })
 
 
 ##### Reset password
@@ -374,5 +374,4 @@ def user_submissions(request):
         if request.user.is_superuser:
             row_dict['username'] = subinfo['user_id__username']
         submission_table.append(row_dict)
-    return render(request, 'accounts/user_submissions.html', {'submission_table':submission_table,\
-                 'username':request.user.username,'superuser':request.user.is_superuser})
+    return render(request, 'accounts/user_submissions.html', context={'submission_table':submission_table,'username':request.user.username,'superuser':request.user.is_superuser})

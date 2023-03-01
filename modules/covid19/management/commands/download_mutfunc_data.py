@@ -6,7 +6,7 @@ import urllib
 import pandas as pd
 import re
 import math
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 class Command(BaseCommand):
     help = "Download data from Mutfunc (sars.mutfunc.com) and saves it in the database."
@@ -37,7 +37,7 @@ class Command(BaseCommand):
 
 
 
-        base_path=f"{MEDIA_ROOT}/Precomputed/covid19/tmp_mutfunc/"
+        base_path=settings.MEDIA_ROOT + "Precomputed/covid19/tmp_mutfunc/"
         if not os.path.isdir(base_path):
             os.mkdir(base_path)
         mutfunc_base_url="ftp://ftp.ebi.ac.uk/pub/databases/mutfunc/sars/"

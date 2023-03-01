@@ -7,7 +7,7 @@ import datetime
 import pandas as pd
 from covid19.models import *
 from django.db.models import CharField,TextField as V, F
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 class Command(BaseCommand):
     help = "Transforms newick format to dictionary for the homepage phyl tree."
@@ -16,14 +16,14 @@ class Command(BaseCommand):
            '-i',
             dest='input_nwk',
             action='store',
-            default=f'{MEDIA_ROOT}/Covid19Data/Data/gisaid_timetree.nwk',
+            default=settings.MEDIA_ROOT + 'Covid19Data/Data/gisaid_timetree.nwk',
             help='Path to input file, which is the newick file'
         )
         parser.add_argument(
            '-m',
             dest='input_metadata',
             action='store',
-            default=f'{MEDIA_ROOT}/Covid19Data/Data/gisaid_metadata.tsv',
+            default=settings.MEDIA_ROOT + 'Covid19Data/Data/gisaid_metadata.tsv',
             help='Path to metadata file in TSV format'
         )
 #        parser.add_argument(
@@ -257,7 +257,7 @@ class Command(BaseCommand):
         #TO DO: automatize download of input
 
         phyl_dict=False
-        out_path=f"{MEDIA_ROOT}/Covid19Data/Data/tree.data"
+        out_path=settings.MEDIA_ROOT + "Covid19Data/Data/tree.data"
         #if not options["only_add_mut_data"]:
         input_nwk=options["input_nwk"]
         input_metadata=options["input_metadata"]
@@ -292,7 +292,7 @@ class Command(BaseCommand):
             pickle.dump(phyl_dict,out_fileh)
         self.stdout.write(self.style.NOTICE("File successfully generated."))
 
-        out_path_colors=f"{MEDIA_ROOT}/Covid19Data/Data/colorscales.data"
+        out_path_colors=settings.MEDIA_ROOT + "Covid19Data/Data/colorscales.data"
         print("Saving %s"% out_path_colors)
         with open(out_path_colors,"wb") as out_fileh:
             pickle.dump(colors_dict,out_fileh)
@@ -314,7 +314,7 @@ class Command(BaseCommand):
 
         #Save as dict and load at home, or iterate tree dict to add mutation list to each isolate
 
-#        out_path_genomes=f"{MEDIA_ROOT}/Covid19Data/Data/home_genome_muts.data"
+#        out_path_genomes=settings.MEDIA_ROOT + "Covid19Data/Data/home_genome_muts.data"
 #        with open(out_path_genomes,"wb") as fh:
 #            pickle.dump(genomes_d,fh)
 

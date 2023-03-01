@@ -28,7 +28,7 @@ import statistics
 import datetime
 import numbers
 
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 def extract_table_info(request,mydyn):
     context={}
@@ -176,7 +176,7 @@ def get_fplot_data(dyn_id,traj_id):
     fp_data=[]
     for int_type in int_type_l:
         fpfilename= "%(traj_id)s_trj_%(dyn_id)s_%(int_type)s.json"%{"dyn_id":dyn_id,"traj_id":traj_id,"int_type":int_type}
-        fpdir = f"{MEDIA_ROOT}/Precomputed/covid19/flare_plot/%s" % int_type
+        fpdir = settings.MEDIA_ROOT + "Precomputed/covid19/flare_plot/%s" % int_type
         fppath = os.path.join(fpdir,fpfilename)
         exists=os.path.isfile(fppath)
         if exists:
@@ -475,7 +475,7 @@ def param_long_to_short(param_long):
 
 
 def get_variant_impact_param_weights_fitted_ab_escape(filename):
-    weights_path_pre=f"{MEDIA_ROOT}/Precomputed/covid19/variant_impact/param_weights/"
+    weights_path_pre=settings.MEDIA_ROOT + "Precomputed/covid19/variant_impact/param_weights/"
     weights_path=os.path.join(weights_path_pre,filename)
     params_d=None
     if os.path.isfile(weights_path):
@@ -761,7 +761,7 @@ def get_mutations_in_isolate(sel_genome_id,included_prots,prot_to_finalprot,upse
     return mut_in_sel_isolate,some_mut_in_struc
 
 def load_mutated_isolates_in_finalprot(finprot):
-    finp_iso_path=f"{MEDIA_ROOT}/Precomputed/covid19/finprot_to_isolates"
+    finp_iso_path=settings.MEDIA_ROOT + "Precomputed/covid19/finprot_to_isolates"
     isolates_in_prot=set()
     finprot_nm=finprot.lower().replace(" ","_")
     finp_iso_file=os.path.join(finp_iso_path,"%s.data"%finprot_nm)
@@ -895,7 +895,7 @@ def dynanalysis(request,dyn_id,sel_genome_id=None,variantimpact_def=False):
             traj_id=fileobj.id
             filedata["id"]=traj_id
             filedata["name"]=fileobj.filename
-            filedata["path"]=fileobj.filepath.replace(f"{MEDIA_ROOT}/","")
+            filedata["path"]=fileobj.filepath.replace(settings.MEDIA_ROOT,"")
             (fp_data, fp_avail)=get_fplot_data(dyn_id,traj_id)
             show_fp=show_fp or fp_avail
             filedata["fplot"]=fp_data
@@ -907,7 +907,7 @@ def dynanalysis(request,dyn_id,sel_genome_id=None,variantimpact_def=False):
             filedata={}
             filedata["id"]=fileobj.id
             filedata["name"]=fileobj.filename
-            filedata["path"]=fileobj.filepath.replace(f"{MEDIA_ROOT}/","")
+            filedata["path"]=fileobj.filepath.replace(settings.MEDIA_ROOT,"")
             context["files"]["pdb"]=filedata
     context["trajidToFramenum"]=json.dumps(trajidToFramenum)
     context["show_fp"]=show_fp
@@ -1121,13 +1121,13 @@ def dynanalysis(request,dyn_id,sel_genome_id=None,variantimpact_def=False):
 
     #context["contact_types"]=[("contact_all","All contacts"), ("contact_hb","Hydrogen bond"), ("contact_sb","Salt bridge"), ("contact_hp","Hydrophobic"), ("contact_pc","Pi-cation"), ("contact_ps","Pi-stacking"), ("contact_ts","T-stacking"), ("contact_vdw","Van der Waals"), ("contact_wb","Water bridge"), ("contact_wb2","Extended water bridge")]
     
-#    mut_impact_path=f"{MEDIA_ROOT}/Precomputed/covid19/variant_impact/mut_impact/dyn_%s.data" % dyn_id
+#    mut_impact_path=settings.MEDIA_ROOT + "Precomputed/covid19/variant_impact/mut_impact/dyn_%s.data" % dyn_id
 #    if os.path.isfile(mut_impact_path):
 #        with open(mut_impact_path,"rb") as fh:
 #            mut_impact_d=pickle.load(fh)
         
 
-    impact_per_variant_path_pre=f"{MEDIA_ROOT}/Precomputed/covid19/variant_impact/summary"
+    impact_per_variant_path_pre=settings.MEDIA_ROOT + "Precomputed/covid19/variant_impact/summary"
     impact_per_variant_all={}
     for mytraj in context["files"]["traj"]:
         traj_id =mytraj["id"]
@@ -1371,7 +1371,7 @@ def ajax_variant_impact(request):
         delta= float(request.POST.get("delta"))
         position= request.POST.get("position")
 
-        var_input_res_path=f"{MEDIA_ROOT}/Precomputed/covid19/variant_impact/"
+        var_input_res_path=settings.MEDIA_ROOT + "Precomputed/covid19/variant_impact/"
 
         var_result={}
         for myel in os.listdir(var_input_res_path):
@@ -1401,7 +1401,7 @@ def ajax_variant_impact(request):
 
 def load_timedep_results(dyn_id,traj_id,position,td_param):
     #corrections
-    var_input_res_path=f"{MEDIA_ROOT}/Precomputed/covid19/variant_impact/"
+    var_input_res_path=settings.MEDIA_ROOT + "Precomputed/covid19/variant_impact/"
     delta=CovidDynamics.objects.get(id=dyn_id).delta
     myelpath=os.path.join(var_input_res_path,td_param)
     param_result=False
@@ -1420,7 +1420,7 @@ def load_timedep_results(dyn_id,traj_id,position,td_param):
 
 
 def load_precomp_mutationeffect_results(dyn_id,traj_id,protein=False,position=False,variant=False):
-    impact_per_variant_path_pre=f"{MEDIA_ROOT}/Precomputed/covid19/variant_impact/summary"
+    impact_per_variant_path_pre=settings.MEDIA_ROOT + "Precomputed/covid19/variant_impact/summary"
     impact_per_variant_path=os.path.join(impact_per_variant_path_pre,"dyn_%s_traj_%s.data"%(dyn_id,traj_id))
     if os.path.isfile(impact_per_variant_path):
         with open(impact_per_variant_path,"rb") as fh:
@@ -1516,7 +1516,7 @@ def download_varscores_traj(request,dyn_id,traj_id,position,variant,protein,para
 
 
 def download_varimpact(request,dyn_id,traj_id,position,analysis):
-    var_input_res_path=f"{MEDIA_ROOT}/Precomputed/covid19/variant_impact/%s/" % analysis
+    var_input_res_path=settings.MEDIA_ROOT + "Precomputed/covid19/variant_impact/%s/" % analysis
     if analysis=="rmsf":
         filename="dyn_%s_traj_%s_pos_%s_.data"%(dyn_id,traj_id,position)
         is_pandas=False
@@ -1686,7 +1686,7 @@ def download_custom_descriptors_template(request,dyn_id):
 def obtain_impact_per_variant_all(dyn_id):
     traj_id_li=[e.id for e in CovidFiles.objects.filter(covidfilesdynamics__id_dynamics=dyn_id,covidfilesdynamics__type=2)]
 
-    impact_per_variant_path_pre=f"{MEDIA_ROOT}/Precomputed/covid19/variant_impact/summary"
+    impact_per_variant_path_pre=settings.MEDIA_ROOT + "Precomputed/covid19/variant_impact/summary"
     impact_per_variant_all={}
     for traj_id in traj_id_li:
         impact_per_variant_path=os.path.join(impact_per_variant_path_pre,"dyn_%s_traj_%s.data"%(dyn_id,traj_id))
@@ -1885,8 +1885,8 @@ def compute_rmsf(rmsfStr,rmsfTraj,traj_frame_rg,traj_sel,strideVal):
     #remove reference traj option
     #manage seleciton
     i=0
-    struc_path = f"{MEDIA_ROOT}/" + rmsfStr
-    traj_path = f"{MEDIA_ROOT}/" + rmsfTraj
+    struc_path = settings.MEDIA_ROOT + "" + rmsfStr
+    traj_path = settings.MEDIA_ROOT + "" + rmsfTraj
     small_errors=[]
     atom_sel=None
     if traj_sel == "bck":
@@ -1919,9 +1919,9 @@ def compute_rmsf(rmsfStr,rmsfTraj,traj_frame_rg,traj_sel,strideVal):
 
 def compute_rmsd(rmsdStr,rmsdTraj,traj_frame_rg,ref_frame,rmsdRefTraj,traj_sel,strideVal):
     i=0
-    struc_path = f"{MEDIA_ROOT}/" + rmsdStr
-    traj_path = f"{MEDIA_ROOT}/" + rmsdTraj
-    ref_traj_path = f"{MEDIA_ROOT}/" + rmsdRefTraj
+    struc_path = settings.MEDIA_ROOT + "" + rmsdStr
+    traj_path = settings.MEDIA_ROOT + "" + rmsdTraj
+    ref_traj_path = settings.MEDIA_ROOT + "" + rmsdRefTraj
     small_errors=[]
     set_sel=None
     if traj_sel == "bck":
@@ -2520,14 +2520,14 @@ def sort_list_mod(mylist):
 def home(request):    
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' :
         context={}
-        input_path=f"{MEDIA_ROOT}/Covid19Data/Data/tree.data"
+        input_path=settings.MEDIA_ROOT + "Covid19Data/Data/tree.data"
         if os.path.isfile(input_path):
             with open(input_path, 'rb') as filehandle:  
                 tree_data = pickle.load(filehandle)
         context["tree_data"]=tree_data
 
         genomes_d={}
-#        genome_muts_path=f"{MEDIA_ROOT}/Covid19Data/Data/home_genome_muts.data"
+#        genome_muts_path=settings.MEDIA_ROOT + "Covid19Data/Data/home_genome_muts.data"
 #        with open(genome_muts_path,"rb") as fh:
 #            genomes_d=pickle.load(fh)
         context["genome_mutations"]=genomes_d
@@ -2592,7 +2592,7 @@ def home(request):
     else:
 
         context={}
-        input_path_colors=f"{MEDIA_ROOT}/Covid19Data/Data/colorscales.data"
+        input_path_colors=settings.MEDIA_ROOT + "Covid19Data/Data/colorscales.data"
         if os.path.isfile(input_path_colors):
             with open(input_path_colors, 'rb') as filehandle:  
                 colors_dict = pickle.load(filehandle)
@@ -2647,7 +2647,7 @@ def home(request):
 
 def hometest(request):    
     context={}
-    input_path=f"{MEDIA_ROOT}/Covid19Data/Data/tree.data"
+    input_path=settings.MEDIA_ROOT + "Covid19Data/Data/tree.data"
     if os.path.isfile(input_path):
         with open(input_path, 'rb') as filehandle:  
             tree_data = pickle.load(filehandle)
@@ -2657,7 +2657,7 @@ def hometest(request):
 
 def hometest2(request):    
     context={}
-    input_path=f"{MEDIA_ROOT}/Covid19Data/Data/tree.data"
+    input_path=settings.MEDIA_ROOT + "Covid19Data/Data/tree.data"
     if os.path.isfile(input_path):
         with open(input_path, 'rb') as filehandle:  
             tree_data = pickle.load(filehandle)
@@ -2670,7 +2670,7 @@ def hometest2(request):
 def quickloadall(request):
 
     # Create uploading file
-    f = open(f'{MEDIA_ROOT}/Precomputed/WaterMaps/isloading.txt','w')
+    f = open(settings.MEDIA_ROOT + 'Precomputed/WaterMaps/isloading.txt','w')
     f.close()
 
     #DyndbFiles.objects.filter(dyndbfilesdynamics__id_dynamics=dyn_id, id_file_types__is_trajectory=True)

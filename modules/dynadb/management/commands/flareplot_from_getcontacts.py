@@ -6,7 +6,7 @@ import os
 import mdtraj as md
 from dynadb.views import  get_precomputed_file_path
 import json
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 ######################################
 #dynfiles = DyndbFilesDynamics.objects.filter(id_dynamics__is_published=True)
@@ -77,7 +77,7 @@ class Command(BaseCommand):
         )
     def handle(self, *args, **options):
         def create_pos_to_gnum(dyn_id):
-            gcdata_path=f"{MEDIA_ROOT}/Precomputed/get_contacts_files/dynamic_symlinks/dyn%(dynid)s/dyn%(dynid)s_labels.tsv" % {"dynid" :dyn_id}
+            gcdata_path=settings.MEDIA_ROOT + "Precomputed/get_contacts_files/dynamic_symlinks/dyn%(dynid)s/dyn%(dynid)s_labels.tsv" % {"dynid" :dyn_id}
             if os.path.isfile(gcdata_path):
                 pos_to_gnum={}
                 with open(gcdata_path) as infile:
@@ -163,7 +163,7 @@ class Command(BaseCommand):
                                 }
                                 ]
                 all_int_d[traj["file_id"]]=traj_int_d
-            gcdata_path=f"{MEDIA_ROOT}/Precomputed/get_contacts_files/dynamic_symlinks/dyn%(dynid)s/dyn%(dynid)s_dynamic.tsv" % {"dynid" :dynfiles_traj[0]["dyn_id"]}
+            gcdata_path=settings.MEDIA_ROOT + "Precomputed/get_contacts_files/dynamic_symlinks/dyn%(dynid)s/dyn%(dynid)s_dynamic.tsv" % {"dynid" :dynfiles_traj[0]["dyn_id"]}
 
             traj_rep=0    
             pre_frame=False

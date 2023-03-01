@@ -19,7 +19,7 @@ from bokeh.models import ColumnDataSource,Label,HoverTool, Span, Slope, LabelSet
 from bokeh.layouts import row, column
 from bokeh.plotting import figure, output_file, show
 
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 def robust_pearson(a, b):
     a = np.array(a)
@@ -59,9 +59,9 @@ def main(request):
 		'out' : out
 	}
 	# Load rec-signprot dictionary
-	context['recsigns'] = json_dict(f'{MEDIA_ROOT}/Precomputed/corplots/protdict.json')
+	context['recsigns'] = json_dict(settings.MEDIA_ROOT + 'Precomputed/corplots/protdict.json')
 	# Load correlations from CSV
-	cor_df = pd.read_csv(f'{MEDIA_ROOT}/Precomputed/corplots/cors.csv')
+	cor_df = pd.read_csv(settings.MEDIA_ROOT + 'Precomputed/corplots/cors.csv')
 
 	# Filter out pairs with less than n:6 to start with
 	# cor_df = cor_df[cor_df['n'] >= 6]
@@ -82,7 +82,7 @@ def corplots(out,path):
 	"""
 
 	# Load correlation data
-	df = pd.read_csv(f"{MEDIA_ROOT}/Precomputed/corplots/polypharma_clinical_outcomes.csv")
+	df = pd.read_csv(settings.MEDIA_ROOT + "Precomputed/corplots/polypharma_clinical_outcomes.csv")
 
 	# Check if selected outcome is actually avaliable. If it is not, return "not avaliable" html thingy
 	if not path in df:
@@ -250,7 +250,7 @@ def infoplot(request, out, path):
 	"""
 
 	# Load correlation data
-	df = pd.read_csv(f"{MEDIA_ROOT}/Precomputed/corplots/polypharma_clinical_outcomes.csv")
+	df = pd.read_csv(settings.MEDIA_ROOT + "Precomputed/corplots/polypharma_clinical_outcomes.csv")
 
 	# Select desired columns
 	df_filt = pd.concat([df['Drug'],df[path],df[out]],axis=1)

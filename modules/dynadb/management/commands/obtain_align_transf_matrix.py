@@ -492,7 +492,7 @@ class Command(BaseCommand):
                             pickle.dump([r_angl,final_trans], filehandle)
 
                         #to open:
-        #                    with open(f'{MEDIA_ROOT}/Precomputed/ED_map/dyn_4_transfmatrix.data', 'rb') as filehandle:  
+        #                    with open(settings.MEDIA_ROOT + 'Precomputed/ED_map/dyn_4_transfmatrix.data', 'rb') as filehandle:  
         #                        (r_anglpre,transpre) = pickle.load(filehandle)
 
                         #remove tmp files

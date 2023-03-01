@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.models import F
 from covid19.models import *
 import pickle
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 class Command(BaseCommand):
     help = "Retrieves the transformation matrix corresponding to the alignment between our model PDBs and the x-ray PDBs. This will be used to align the ED map of the x-ray structure to our model and simulation."
@@ -203,7 +203,7 @@ class Command(BaseCommand):
             model_to_seq=get_model_to_seq_var(up_to_finp_pos,var_by_finp_pos,model_file_id)
             dyndata["model_to_seq"]=model_to_seq
 
-        out_file=f"{MEDIA_ROOT}/Precomputed/Summary_info/covid_dyn_dict.data"
+        out_file=settings.MEDIA_ROOT + "Precomputed/Summary_info/covid_dyn_dict.data"
         print("Saving %s" % out_file)
         with open(out_file, 'wb') as filehandle:  
             # store the data as binary data stream

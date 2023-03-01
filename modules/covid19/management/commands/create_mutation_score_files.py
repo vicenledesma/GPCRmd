@@ -7,7 +7,7 @@ import os
 import pickle
 import csv
 import re
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 class Command(BaseCommand):
     help = "For each dyn and traj, creates a file with the parameter values of each variant."
@@ -30,7 +30,7 @@ class Command(BaseCommand):
         )
     def handle(self, *args, **options):
         def load_precomputed_parameters(dyn_id,traj_id):
-            impact_per_variant_path_pre=f"{MEDIA_ROOT}/Precomputed/covid19/variant_impact/summary"
+            impact_per_variant_path_pre=settings.MEDIA_ROOT + "Precomputed/covid19/variant_impact/summary"
             impact_per_variant_path=os.path.join(impact_per_variant_path_pre,"dyn_%s_traj_%s.data"%(dyn_id,traj_id))
             if os.path.isfile(impact_per_variant_path):
                 with open(impact_per_variant_path,"rb") as fh:
@@ -59,7 +59,7 @@ class Command(BaseCommand):
                         except KeyError:
                             pass
 
-            out_path=f"{MEDIA_ROOT}/Precomputed/covid19/impact_scores_result"
+            out_path=settings.MEDIA_ROOT + "Precomputed/covid19/impact_scores_result"
             if not os.path.isdir(out_path):
                 os.mkdir(out_path)
             out_file=os.path.join(out_path,"dyn_%s_traj_%s.csv"%(dyn_id,traj_id))

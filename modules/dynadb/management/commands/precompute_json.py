@@ -10,7 +10,7 @@ from dynadb.models import DyndbSubmissionProtein, DyndbSubmissionMolecule, Dyndb
 from dynadb.views import  get_precomputed_file_path, get_file_name , get_file_name_dict, get_file_paths
 
 from view.create_fplot import *
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 class Command(BaseCommand):
     help = "Creates precomputed JSON files for posterior creation of flare plots. By default, all 'ready for publication' dynamics will be considered. If the json file for a given dynamics trajectory altrady exists, it is not overwritten."
@@ -81,7 +81,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        hb_json_path=f"{MEDIA_ROOT}/Precomputed/flare_plot/hbonds"
+        hb_json_path=settings.MEDIA_ROOT + "Precomputed/flare_plot/hbonds"
         if not os.path.isdir(hb_json_path):
             os.makedirs(hb_json_path)
         if options['ignore_publication']:

@@ -1,7 +1,7 @@
 from dynadb.models import DyndbDynamics, DyndbFilesDynamics
 from django.core.management.base import BaseCommand, CommandError
 import pandas as pd
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 class Command(BaseCommand):
 	help = "Obtains accumulated simulated over time and saves info in file MEDIA_ROOT accumtime_by_month.json"
@@ -29,5 +29,5 @@ class Command(BaseCommand):
 		st.index= [st.strftime("%b %Y") for st in st.index]
 
 		# Save this in a json for future uses
-		outfile = f'{MEDIA_ROOT}/accumtime_by_month.json'
+		outfile = settings.MEDIA_ROOT + 'accumtime_by_month.json'
 		st.to_json(outfile)

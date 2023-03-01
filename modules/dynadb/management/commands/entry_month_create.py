@@ -4,7 +4,7 @@ import random
 import mdtraj as md
 import os
 import json
-from config.settings import MEDIA_ROOT, DEV
+from django.conf import settings, DEV
 
 class Command(BaseCommand):
     help="Set new random entry of the month. To choose among published dynamics."
@@ -14,7 +14,7 @@ class Command(BaseCommand):
         def random_entrymonth():
 
             # Get random published dynamics objects
-            filespath = f"{MEDIA_ROOT}/"
+            filespath = settings.MEDIA_ROOT + ""
             DD = list(DyndbDynamics.objects.filter(is_published=True))
             random_dyn = random.choice(DD)
             dynid = random_dyn.id
@@ -24,9 +24,9 @@ class Command(BaseCommand):
 
             # Get first trajectory file and model PDB file of this thing
             df = DyndbFiles.objects.filter(dyndbfilesdynamics__type=2, dyndbfilesdynamics__id_dynamics=dynid)[0]
-            trajfile = MEDIA_ROOT + df.filepath
+            trajfile = settings.MEDIA_ROOT[:-1] + df.filepath
             fileid = df.id
-            pdbfile = MEDIA_ROOT + DyndbFiles.objects.filter(dyndbfilesdynamics__type=0, dyndbfilesdynamics__id_dynamics=dynid)[0].filepath
+            pdbfile = settings.MEDIA_ROOT[:-1] + DyndbFiles.objects.filter(dyndbfilesdynamics__type=0, dyndbfilesdynamics__id_dynamics=dynid)[0].filepath
 
             # Create filtered trajectory file if not yet exists
             # trajfile_out = "Dynamics/%d_dyn_%d_filtered.dcd"%(fileid,dynid)
@@ -53,7 +53,7 @@ class Command(BaseCommand):
                 traj_reduced.save_pdb(topfile_path)
 
             # Modify entry of the month dictionary 
-            entrymonth = f"{MEDIA_ROOT}/entry_month.json"
+            entrymonth = settings.MEDIA_ROOT + "entry_month.json"
             with open(entrymonth, "w") as out:
                 json.dump(entrymonth_dict, out)
 

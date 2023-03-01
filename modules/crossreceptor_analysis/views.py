@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.conf import settings
 import random
 from bokeh.plotting import figure 
 from bokeh.embed import components
@@ -23,8 +24,6 @@ from modules.dynadb.models import DyndbFiles, DyndbFilesDynamics
 #import matplotlib
 #from matplotlib import pylab as plt
 ##%matplotlib ipympl
-from config.settings import MEDIA_ROOT
-
 
 def seriation(Z,N,cur_index):
     '''
@@ -141,7 +140,7 @@ def ligand_receptor_interaction(request,sel_thresh):
     
         
     sel_thresh=float(sel_thresh)
-    cra_path=f"{MEDIA_ROOT}/Precomputed/crossreceptor_analysis_files"
+    cra_path=settings.MEDIA_ROOT + "Precomputed/crossreceptor_analysis_files"
     resli_file_path=path.join(cra_path,"ligres_int.csv")
     #resli_file_pathobj = Path(resli_file_path)
     #try:
@@ -336,7 +335,7 @@ def obtain_dyn_files(dyn_id):
     dynfiles=DyndbFilesDynamics.objects.prefetch_related("id_files").filter(id_dynamics=dyn_id)
     traj_list=[]
     traj_name_list=[]
-    p=re.compile(f"({MEDIA_ROOT})(.*)")
+    p=re.compile(f"({settings.MEDIA_ROOT})(.*)")
     p2=re.compile("[\.\w]*$")
     for fileobj in dynfiles:
         path=fileobj.id_files.filepath
@@ -351,7 +350,7 @@ def obtain_dyn_files(dyn_id):
     return (structure_file,structure_file_name,traj_list,traj_name_list)
 
 #def molpx_plots(request,dyn_id):
- #    test_datapath=f"{MEDIA_ROOT}/tests/molpx/"
+ #    test_datapath=settings.MEDIA_ROOT + "tests/molpx/"
  #    top = test_datapath+'bpti-c-alpha_centered.pdb'
  #    MD_trajfiles = [test_datapath+'c-alpha_centered.stride.1000.xtc',
  #                   test_datapath+'c-alpha_centered.stride.1000.reversed.xtc',

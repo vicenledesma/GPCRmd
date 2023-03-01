@@ -4989,12 +4989,13 @@ $(document).ready(function(){
                         .append("title").text(d.data.CrystalTransducer);
                   }*/
                   var j=0;
+                  var base_url = window.location.origin;
                   if( (d.data.Apo !== "-") && (d.data.Apo !== "") && (d.data.Apo !== undefined)  ){ 
                     var ApoNum = d.data.Apo.split("|");
                     if (actiontype=="click"){
                           for (j = 0; j < ApoNum.length; j++) { 
                             textblock.append("a")
-                              .attr("xlink:href", ApoNum[j] != "-" ? "https://submission.gpcrmd.org/view/"+ApoNum[j] : null) 
+                              .attr("xlink:href", ApoNum[j] != "-" ? base_url+"/view/"+ApoNum[j] : null) 
                               .attr("target","_blank")
                               .append("text")
                                 .text("Apo simulation: ID " + ApoNum[j])
@@ -5023,7 +5024,7 @@ $(document).ready(function(){
                           var TransducerNum = d.data.Transducer.split("|");
                           for (i = 0; i < ComplexNum.length; i++) { 
                             textblock.append("a")
-                              .attr("xlink:href", ComplexNum[i] != "-" ? "https://submission.gpcrmd.org/view/"+ComplexNum[i] : null) 
+                              .attr("xlink:href", ComplexNum[i] != "-" ? base_url+"/view/"+ComplexNum[i] : null) 
                               .attr("target","_blank")
                               .append("text")
                                 .text(limit_text("Complex simulation: ID " + ComplexNum[i] + (Ligandname[0] != "-" ||  TransducerNum[0] != "-" ? " (" :"") + (Ligandname[i] != "-" ? "lig: "+Ligandname[i] :"") + (TransducerNum[i] !="-" ? "; transducer: "+TransducerNum[i]+";" :"") + (Ligandname[0] != "-" ||  TransducerNum[0] != "-" ? ")" :""),50))

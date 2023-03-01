@@ -99,13 +99,14 @@ $(document).ready(function(){
             .attr("y",  parseInt(40+16*k));
         }
         var j=0;
+        var base_url = window.location.origin;
         if( (d.data.Apo !== "-") && (d.data.Apo !== "") && (d.data.Apo !== undefined)  ){ 
           console.log("hi")
           var ApoNum = d.data.Apo.split("|");
           if (actiontype=="click"){
                 for (j = 0; j < ApoNum.length; j++) { 
                   textblock.append("a")
-                    .attr("xlink:href", ApoNum[j] != "-" ? "https://submission.gpcrmd.org/view/"+ApoNum[j] : null) 
+                    .attr("xlink:href", ApoNum[j] != "-" ? base_url+"/view/"+ApoNum[j] : null) 
                     .append("text")
                       .text("Apo simulation: ID " + ApoNum[j])
                       .attr("y",  parseInt(56+16*(j+k)))
@@ -128,7 +129,7 @@ $(document).ready(function(){
                 var TransducerNum = d.data.Transducer.split("|");
                 for (i = 0; i < ComplexNum.length; i++) { 
                   textblock.append("a")
-                    .attr("xlink:href", ComplexNum[i] != "-" ? "https://submission.gpcrmd.org/view/"+ComplexNum[i] : null) 
+                    .attr("xlink:href", ComplexNum[i] != "-" ? base_url+"/view/"+ComplexNum[i] : null) 
                     .append("text")
                       .text("Ligand/Complex simulation: ID " + ComplexNum[i] + (Ligandname[0] != "-" ||  TransducerNum[0] != "-" ? " (" :"") + (Ligandname[i] != "-" ? "ligand: "+Ligandname[i]+";" :"") + (TransducerNum[i] !="-" ? " transducer: "+TransducerNum[i]+";" :"") + (Ligandname[0] != "-" ||  TransducerNum[0] != "-" ? ")" :""))
                       .attr("y",  parseInt(56+16*(i+j+k)))

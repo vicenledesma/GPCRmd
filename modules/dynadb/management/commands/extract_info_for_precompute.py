@@ -6,7 +6,7 @@ import pickle
 from view.assign_generic_numbers_from_DB import obtain_gen_numbering 
 from view.views import findGPCRclass
 from dynadb.pipe4_6_0 import checkpdb_ngl, matchpdbfa_ngl
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 class Command(BaseCommand):
     help = "Retrieves the transformation matrix corresponding to the alignment between our model PDBs and the x-ray PDBs. This will be used to align the ED map of the x-ray structure to our model and simulation."
@@ -219,7 +219,7 @@ class Command(BaseCommand):
                 dyn_dict[dyn_id]["prot_chains"]=prot_chains
 
 
-        with open(f"{MEDIA_ROOT}/Precomputed/Summary_info/dyn_dict.data", 'wb') as filehandle:  
+        with open(settings.MEDIA_ROOT + "Precomputed/Summary_info/dyn_dict.data", 'wb') as filehandle:  
             # store the data as binary data stream
             pickle.dump(dyn_dict, filehandle)
 

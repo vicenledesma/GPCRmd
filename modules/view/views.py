@@ -20,6 +20,8 @@ from Bio.PDB import *
 from Bio import PDB
 import itertools
 import mdtraj as md 
+import MDAnalysis as mda
+from MDAnalysis.analysis import contacts, distances
 import numpy as np
 import copy
 import csv
@@ -1380,10 +1382,7 @@ def obtain_pocket_data(dyn_id, traj_list) -> tuple:
 
         except FileNotFoundError:
             print("[*] INFO - POCKET DATA: Pockets data not available for trajectory ID: " + str(traj_id))
-            print(settings.MEDIA_ROOT)
-            print(root)
-            print(pock_path)
-            print(traj_pock_path)
+
     return(pockets, traj_pockID_coordfile, traj_isovalueFile)
 
 
@@ -1449,7 +1448,7 @@ def generate_pocket_plot(request, pocket_data) -> json_item:
         for window_end, y in enumerate(y_raw):
             window_start = max(0, window_end - smoothing_window_size)
             # max() used in first volume, to not divide by 0
-            y = sum(y_raw[window_start:window_end]) / max(1, window_end - window_start)
+            y = sum(y_raw[window_start:window_end+1]) / max(1, window_end - window_start)
             y_smooth.append(y)
 
         # Plot the pocket line
@@ -2324,7 +2323,7 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
         first_strideval=trajidToFramenum[traj_list[0][2]][1]
         #structure_file="Dynamics/with_prot_lig_multchains_gpcrs.pdb"########################### [!] REMOVE
         #structure_name="with_prot_lig_multchains_gpcrs.pdb" ################################### [!] REMOVE
-        pdb_name = settings.MEDIA_ROOT +structure_file
+        pdb_name = settings.MEDIA_ROOT + structure_file
         chain_name_li=obtain_prot_chains(pdb_name)
         #traj_list=sorted(traj_list,key=lambda x: x[2])
         #(traj_list,fpdir)=get_fplot_path(dyn_id,traj_list)
@@ -3007,14 +3006,15 @@ def update_bokeh(request):
         pred = request.POST.get('pred')
         dyn_id= request.POST.get("dyn_id")
         traj_id= request.POST.get("traj_id")
+        soluplots = request.POST.get("soluplots")
 
         # If Mean CS plot
         if atype=="comp":
-            csinput_path=settings.MEDIA_ROOT + "Precomputed/chemical_shift/cs_%sdyn%script_css_%s.txt" % (pred,dyn_id, traj_id)
+            csinput_path=settings.MEDIA_ROOT + f"Precomputed/chemical_shift/cs_{pred}dyn{dyn_id}_{traj_id}.txt"
             cs_df=pd.read_csv(csinput_path,sep="\t")
             (p,avail_res_atoms)=generate_comparative_cs_plot(cs_df,ignore_HA=False,res_id_li=res_id_li,atoms_li=atoms_li,return_avail_res_atoms=True)
         else:
-            csinput_path=settings.MEDIA_ROOT + "Precomputed/chemical_shift/cs_%sdyn%s_%s.csv" % (pred,dyn_id, traj_id)
+            csinput_path=settings.MEDIA_ROOT + f"Precomputed/chemical_shift/cs_{pred}dyn{dyn_id}_{traj_id}.csv"
             cs_df=pd.read_csv(csinput_path, sep=";",index_col=False)
             cs_df = cs_df.loc[:, ~cs_df.columns.str.contains('^Unnamed')]
             # If streaming CS plot
@@ -3144,10 +3144,10 @@ def select_prot_chains(structable,seg_to_chain,mytop,chains):
 
 
 def compute_interaction(res_li,struc_p,traj_p,num_prots,thresh,serial_mdInd,gpcr_chains,dist_scheme,strideVal,seg_to_chain):
-
     struc_path = settings.MEDIA_ROOT +struc_p
     traj_path = settings.MEDIA_ROOT +traj_p
     itertraj=md.iterload(filename=traj_path,chunk=10, top=struc_path, stride=strideVal)
+    # itertraj=mda.Universe(struc_path, traj_path, in_memory=True, in_memory_step=strideVal) 
     first=True 
     structable=False
     lig_multiple_res=False
@@ -3155,11 +3155,27 @@ def compute_interaction(res_li,struc_p,traj_p,num_prots,thresh,serial_mdInd,gpcr
         for itraj in itertraj:
             if first:
                 mytop=itraj.topology
+                # ex, b = mytop.to_dataframe()
                 all_lig_res=[]
                 fin_dict={}
+                if gpcr_chains:
+                    if type(structable) == bool:
+                        structable, bonds=mytop.to_dataframe()
+                    gpcr_sel=select_prot_chains(structable,seg_to_chain,mytop,gpcr_chains)
+                    # gpcr_sel = "protein"
+                else:
+                    gpcr_sel=mytop.select("protein") 
+                    # gpcr_sel = "protein"
+                # gpcr_res_tab, gpcr_bonds = itraj.atom_slice(gpcr_sel).topology.to_dataframe()
+                # gpcr_res = gpcr_res_tab["resSeq"].unique().tolist()
+                gpcr_res=[residue.index for residue in itraj.atom_slice(gpcr_sel).topology.residues]
+                #gpcr_res=gpcr_sel.residues.indices
+
                 for res in res_li:
                     if " and " in res:
                         (resname,resseqpos)=res.split(" and ")
+                        # lig_sel = "resname '"+resname+"' and residue "+resseqpos
+                        # lig = itertraj.select_atoms(lig_sel)
                         lig_sel=mytop.select("resname '"+resname+"' and residue "+resseqpos)
                         fin_dict[res]=[]
                     elif ":" in res:
@@ -3171,32 +3187,44 @@ def compute_interaction(res_li,struc_p,traj_p,num_prots,thresh,serial_mdInd,gpcr
                     else:
                         fin_dict[res]=[]
                         lig_sel=mytop.select("resname '"+res+"'")
+                        # lig_sel = "resname " + res
+                        # lig = itertraj.atoms.select_atoms(lig_sel)
                     if len(lig_sel)>0:
-                        lig_res=[residue.index for residue in itraj.atom_slice(lig_sel).topology.residues]
+                        # lig_res=[residue.index for residue in itraj.atom_slice(lig_sel).topology.residues]
+                        lig_res_tab, lig_bonds = itraj.atom_slice(lig_sel).topology.to_dataframe()
+                        lig_res = lig_res_tab["resSeq"].unique().tolist()
+                        # lig_res=lig.residues
                         for myres in lig_res:
-                            all_lig_res.append(myres)
+                            all_lig_res.append(myres+gpcr_res[-1]) #Mdtraj with numpy changes needs the index of the mytop, where ligand is the next of the last residue of the protein
                 if len(all_lig_res)==0:
+                # if len(lig_res)==0:
                     return (False,None, "Error with ligand selection.")
                 elif len(all_lig_res)>1 :
+                # elif len(lig_res)>1: 
                     lig_multiple_res=True
-                if gpcr_chains:
-                    if type(structable) == bool:
-                        structable, bonds=mytop.to_dataframe()
-                    gpcr_sel=select_prot_chains(structable,seg_to_chain,mytop,gpcr_chains)
-
-                else:
-                    gpcr_sel=mytop.select("protein") 
-                gpcr_res=[residue.index for residue in itraj.atom_slice(gpcr_sel).topology.residues]
                 pairs = list(itertools.product(gpcr_res, all_lig_res))
-                
                 (dists,res_p)=md.compute_contacts(itraj, contacts=pairs, scheme=dist_scheme)
+                print(dists)
+                print(res_p)
+                # if dist_scheme == "closest":
+                #     pass
+                # else:
+                #     gpcr_sel += " and backbone"
+                #     lig_sel += " and backbone"
+                # gpcr = itertraj.select_atoms(gpcr_sel)
+                # lig = itertraj.atoms.select_atoms(lig_sel)
+                # dists = contacts.Contacts(itertraj, select=(gpcr_sel,lig_sel), refgroup=(gpcr, lig), radius=thresh)
+                # dists.run()
                 alldists=dists
                 allres_p=res_p
                 first=False
             else:
                 (dists,res_p)=md.compute_contacts(itraj, contacts=pairs, scheme=dist_scheme)
-                alldists=np.append(alldists,dists,axis=0)
-    except Exception:
+                # dists = contacts.Contacts(itertraj, select=(gpcr_sel,lig_sel), refgroup=(gpcr, lig), radius=thresh)
+                alldists = np.append(alldists,dists,axis=0)
+                # alldists.append(dists)
+    except Exception as e:
+        print(e)
         return (False,None, "Error loading input files.")
     contact_freq={}
     for pair in allres_p:
@@ -3223,10 +3251,10 @@ def compute_interaction(res_li,struc_p,traj_p,num_prots,thresh,serial_mdInd,gpcr
     num_frames=len(alldists)
     to_delete=[]
     for allres_p , freq in contact_freq.items():
-         if freq ==0:               
-             to_delete.append(allres_p)
-         else:                    
-             contact_freq[allres_p]=(freq/num_frames)*100
+        if freq ==0:               
+            to_delete.append(allres_p)
+        else:                    
+            contact_freq[allres_p]=(freq/num_frames)*100
     for key in to_delete:
         del contact_freq[key]
     for pair in sorted(contact_freq, key=lambda x: contact_freq[x], reverse=True):
@@ -3239,21 +3267,26 @@ def compute_interaction(res_li,struc_p,traj_p,num_prots,thresh,serial_mdInd,gpcr
         res_pdb=res_topo.resSeq
         res_name=res_topo.name
         res_chain=seg_to_chain[res_topo.segment_id]
+        print(res_topo, res_pdb, res_name, res_chain)
         if lig_ind=="Lig":
             lig_nm=lig_ind
         else:
             lig_topo=mytop.residue(lig_ind)
             lig_nm=lig_topo.name
+            print(lig_topo, lig_nm)
         if lig_nm in fin_dict:
             fin_dict[lig_nm].append((res_pdb,res_chain,res_name,("%.2f" % freq)))
         else:
             lig_topo=mytop.residue(lig_ind)
             lig_pdb=lig_topo.resSeq
             ligres_sel=lig_nm+" and "+str(lig_pdb)
+            print(ligres_sel)
             if (ligres_sel in fin_dict):
                 fin_dict[ligres_sel].append((res_pdb,res_chain,res_name,("%.2f" % freq)))
             else: 
+                print(fin_dict)
                 return (False,None, "Error when parsing results (2).")
+    print(fin_dict)
     return(True,fin_dict,None)
 
 def download_rmsd(request, dyn_id,rmsd_id):

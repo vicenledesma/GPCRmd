@@ -7,7 +7,7 @@ import datetime
 import re
 import csv
 import tqdm
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 class Command(BaseCommand):
     help = "Saves info from GSAID to the database."
@@ -58,7 +58,7 @@ class Command(BaseCommand):
             return var_to_dfrow
 
 
-        gsaid_path=f"{MEDIA_ROOT}/Covid19Data/Data/gisaid/tables"
+        gsaid_path=settings.MEDIA_ROOT + "Covid19Data/Data/gisaid/tables"
         data_toni=False
 
         self.stdout.write(self.style.NOTICE("Loading data..."))

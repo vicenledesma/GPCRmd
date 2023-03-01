@@ -4,7 +4,7 @@
   <script>document.domain=document.domain;</script>
 
   <!--Jquery things-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 
   {% load static %} 
   {{staticfiles}}
@@ -18,16 +18,16 @@
   <link rel="stylesheet" href="{% static 'home/css/jquery-ui.min.css' %}" type="text/css" media="all" />
   <link rel="stylesheet" href="{% static 'home/css/jquery-ui.theme.min.css' %}" type="text/css" media="all" />
   <!--bokeh-->
-  <link href="https://cdn.pydata.org/bokeh/release/bokeh-1.1.0.min.css" rel="stylesheet" type="text/css">
-  <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.1.0.min.css" rel="stylesheet" type="text/css">
+  <link href="https://cdn.pydata.org/bokeh/release/bokeh-3.0.3.min.css" rel="stylesheet" type="text/css">
+  <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-3.0.3.min.css" rel="stylesheet" type="text/css">
   {% endblock %}
 
   {% block addon_js %} 
   <!--Contmaps javascripts -->
   <script src="{% static 'corplots_main.js' %}"></script>
   <!-- Bokeh -->
-  <script src="https://cdn.pydata.org/bokeh/release/bokeh-1.1.0.min.js"></script>
-  <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.1.0.min.js"></script>
+  <script src="https://cdn.pydata.org/bokeh/release/bokeh-3.0.3.min.js"></script>
+  <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-3.0.3.min.js"></script>
 
   {% endblock %}
 

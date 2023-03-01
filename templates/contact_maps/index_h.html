@@ -4,7 +4,7 @@
   <script>document.domain = document.domain;</script>
 
   <!--Jquery things-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 
   {% extends "home/base.html" %}
   {% load static %}
@@ -12,7 +12,7 @@
 
   {% block addon_css %}
   <!--Contmaps styles-->
-  <link rel="stylesheet" type="text/css" href="{% static 'contmaps_main.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'contact_maps/contmaps_main.css' %}" />
   <link rel="stylesheet" type="text/css" href="{% static '../mdsrv/webapp/css/main.css' %}" />
   {% endblock %}
 
@@ -43,11 +43,11 @@
       <div class="panel panel-primary" id="main_plot_body">
         <div class="panel-body">
           <div id="menus" class="container-fluid">
-            {% include './contact_maps/menus.html' %}
-            {% include './contact_maps/menu_customheatmap.html' %}
+            {% include 'contact_maps/menus.html' %}
+            {% include 'contact_maps/menu_customheatmap.html' %}
           </div>
           <!--Heatmap pager -->
-          {% include './contact_maps/pager_colorbar.html' %}
+          {% include 'contact_maps/pager_colorbar.html' %}
           <div id="dendrogram-heatmap" class="row fixedwidth">
             <div id="dendrogram">
               {{dendrogram | safe }}
@@ -83,7 +83,7 @@
     </div>
 
     <!--Here be side-window (the thing that opens up upon clicking on heatmap)-->
-    {% include './contact_maps/side_window.html' %}
+    {% include 'contact_maps/side_window.html' %}
 
     <div class="col-xs-12" id="not_retracting_parts">
 
@@ -334,7 +334,7 @@
         </div>
       </div>
       <!--Load documentation div-->
-      {% include './contact_maps/docs.html' %}
+      {% include 'contact_maps/docs.html' %}
     </div>
 
   </div>
@@ -345,20 +345,20 @@
 
   {% block addon_js %}
   <!--Contmaps javascripts -->
-  <script src="{% static 'contmaps_main.js' %}"></script>
-  <script src="{% static 'emb_crossgpcr.js' %}"></script>
+  <script src="{% static 'contact_maps/contmaps_main.js' %}"></script>
+  <script src="{% static 'contact_maps/emb_crossgpcr.js' %}"></script>
 
   <!--Flareplots -->
-  <link rel="stylesheet" type="text/css" href="{% static 'flareplot-custom.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'contact_maps/flareplot-custom.css' %}" />
   <script src="{% static 'view/fplot2/d3.v3.min.js' %}"></script>
   <script src="{% static 'view/fplot2/docs/js/flareplot-main.js' %}"></script><!-- D:< -->
-  <script src="{% static 'flareplots.js' %}"></script>
+  <script src="{% static 'contact_maps/flareplots.js' %}"></script>
 
   <!-- Bokeh -->
-  <link href="https://cdn.pydata.org/bokeh/release/bokeh-1.1.0.min.css" rel="stylesheet" type="text/css">
-  <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.1.0.min.css" rel="stylesheet" type="text/css">
-  <script src="https://cdn.pydata.org/bokeh/release/bokeh-1.1.0.min.js"></script>
-  <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.1.0.min.js"></script>
+  <link href="https://cdn.pydata.org/bokeh/release/bokeh-1.4.0.min.css" rel="stylesheet" type="text/css">
+  <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.4.0.min.css" rel="stylesheet" type="text/css">
+  <script src="https://cdn.pydata.org/bokeh/release/bokeh-1.4.0.min.js"></script>
+  <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.4.0.min.js"></script>
   {% endblock %}
 
 </body>

@@ -9,7 +9,7 @@ import re
 import csv
 import tqdm
 import gc
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 
 class Command(BaseCommand):
@@ -42,7 +42,7 @@ class Command(BaseCommand):
             ##isolates=pd.read_csv( os.path.join( gsaid_path, "isolates.csv.xz"))
             #isolates_path=os.path.join( gsaid_path, "isolates.csv.xz")
 
-        gsaid_path=f"{MEDIA_ROOT}/Covid19Data/Data/gisaid/tables"
+        gsaid_path=settings.MEDIA_ROOT + "Covid19Data/Data/gisaid/tables"
         
         genes_path=os.path.join( gsaid_path, "genes.csv")
         isolates_path=os.path.join( gsaid_path, "isolates.csv")

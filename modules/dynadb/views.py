@@ -1247,6 +1247,8 @@ def PROTEINview(request, submission_id):
                 print("mutant",mseq)
                 print(wseq)
                 print("mutations",MUTations)
+  
+
         return render(request,'dynadb/PROTEIN.html', {'qPROT':qPROT,'sci_namel':sci_na_codel,'int_id':int_id,'int_id0':int_id0,'alias':alias,'mseq':mseq,'wseq':wseq,'MUTations':MUTations,'submission_id':submission_id, 'saved':saved, 'colorlist':color_label_forms})
 
 @login_required
@@ -1284,7 +1286,7 @@ def count_dynamics(result_id,result_type):
             dynset=dynset.union(dynsets)
     simus = DyndbDynamics.objects.select_related('id_model__id_complex_molecule__id_complex_exp')
     if settings.QUERY_CHECK_PUBLISHED:
-    	simus = simus.filter(is_published=True)
+        simus = simus.filter(is_published=True)
     for simu in simus:
         if result_type=='protein':
             modelobj=DyndbModel.objects.select_related('id_protein').get(pk=simu.id_model.id).id_protein
@@ -1338,13 +1340,13 @@ def get_imagepath(id, type):
         try:
             pk2filesmolecule=DyndbCompound.objects.select_related('std_id_molecule').get(pk=id).std_id_molecule.id
             imagepath=DyndbFilesMolecule.objects.select_related('id_files').filter(id_molecule=pk2filesmolecule).filter(type=2)[0].id_files.filepath
-            imagepath=imagepath.replace("/var/www/","/dynadb/") #this makes it work
+            imagepath=imagepath.replace("/GPCRmd/","/dynadb/") #this makes it work
         except:
             imagepath=''
     else:
         try:
             imagepath=DyndbFilesMolecule.objects.select_related('id_files').filter(id_molecule=id).filter(type=2)[0].id_files.filepath
-            imagepath=imagepath.replace("/var/www/","/dynadb/") #this makes it work
+            imagepath=imagepath.replace("/GPCRmd/","/dynadb/") #this makes it work
         except:
             imagepath=''
     return imagepath
@@ -7225,7 +7227,7 @@ def get_Author_Information(request):
         return render(request,'dynadb/dynadb_Author_Information.html'  )
 
 @login_required
-def db_inputformMAIN(request,submission_id): 
+def db_inputformMAIN(request, submission_id): 
     if submission_id is None:
         dictsubid={}
         disable_3=True
@@ -7243,7 +7245,7 @@ def db_inputformMAIN(request,submission_id):
         disable_5 = (not len(DD))
     else:
         return HttpResponseRedirect(reverse('dynadb:db_inputform'))
-    return render(request,'dynadb/dynadb_inputformMAIN.html', {'submission_id':submission_id, 'disable_3':disable_3 , 'disable_4':disable_4, 'disable_5' : disable_5 } )
+    return render(request,'dynadb/dynadb_inputformMAIN.html', context={'submission_id':submission_id, 'disable_3':disable_3 , 'disable_4':disable_4, 'disable_5' : disable_5 } )
 
 @login_required
 def get_FilesCOMPLETE(request): 
@@ -10382,7 +10384,7 @@ def datasets(request):
     with open(gpcrmdtree_path, 'rb') as filehandle:  
         tree_data = pickle.load(filehandle)
     context['tree_data']=json.dumps(tree_data)
-    print(json.dumps(tree_data))
+    #print(json.dumps(tree_data))
     return render(request, 'dynadb/datasets.html', context)
 
 def searchtable_data(dynobj,nongpcr=True):

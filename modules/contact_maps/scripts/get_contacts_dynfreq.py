@@ -11,7 +11,7 @@ from shutil import copyfile,copyfileobj
 import time
 import MDAnalysis as md
 
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 def json_dict(path):
     """Converts json file to pyhton dict."""
@@ -76,12 +76,12 @@ def create_labelfile(outname, outfolder = "./", ligand = None):
      'A': 'ALA', 'V': 'VAL', 'E': 'GLU', 'Y': 'TYR', 'M': 'MET'}
 
     #Reading dictionary file with the GPCR numeration for this protein sequence
-    compl_data = json_dict(f"{MEDIA_ROOT}/Precomputed/get_contacts_files/compl_info.json")
+    compl_data = json_dict(settings.MEDIA_ROOT + "Precomputed/get_contacts_files/compl_info.json")
     dictfile = compl_data[outname]['gpcr_pdb']
     gpcr_class = compl_data[outname]['class']
 
     #Reading GPCRnomenclatures Json: the json with the equivalences between different GPCR scales (Wooten, Ballesteros, Pi, ...)
-    GPCRnomenclatures = json_dict(f"{MEDIA_ROOT}/Precomputed/get_contacts_files/GPCRnomenclatures_dict.json")
+    GPCRnomenclatures = json_dict(settings.MEDIA_ROOT + "Precomputed/get_contacts_files/GPCRnomenclatures_dict.json")
 
     #Iterate over residues in the dictionary, and extract its corresponding aminoacid type from the PDB
     pattern = re.compile("-\d\d")
@@ -138,7 +138,7 @@ def get_contact_frequencies(get_contacts_path, dyn_contacts_file, itype, labelfi
     """
     Execute script get_contact frequencies for the given parameters
     """
-    os.system(str("python %sget_contact_frequencies.py \
+    os.system(str("/opt/gpcrmdenv/bin/activate;python %sget_contact_frequencies.py \
         --input_files %s \
         --itypes %s \
         --label_file %s \
@@ -225,7 +225,7 @@ def pharmacophores(dynname, path, dyn_contacts_file, trajfile, topfile, mytrajid
         return 
 
     # Take original trajectory fileid from compl_data
-    compl_data = json_dict(f"{MEDIA_ROOT}/Precomputed/get_contacts_files/compl_info.json")
+    compl_data = json_dict(settings.MEDIA_ROOT + "Precomputed/get_contacts_files/compl_info.json")
 
     #Load trajectory into mdAnalysis object
     u = md.Universe(topfile, trajfile)
@@ -454,7 +454,7 @@ ligfile = args.ligfile
 repeat_dynamics = args.repeat_dynamics
 cores = args.cores
 get_contacts_path = "~/bin/"
-basepath = f"{MEDIA_ROOT}/Precomputed/"
+basepath = settings.MEDIA_ROOT + "Precomputed/"
 pharma_path = basepath + "pharmacophores/"
 files_basepath=basepath + "get_contacts_files/"
 files_path = files_basepath + "dynamic_symlinks/" + dynname + "/"
@@ -479,7 +479,7 @@ create_labelfile(dynname, files_path, ligfile)
 dyn_contacts_file = str("%s%s-%s_dynamic.tsv" % (files_path, dynname, mytrajid))
 dyn_contacts_file_merged = str("%s%s_dynamic.tsv" % (files_path, dynname))
 if (not os.path.exists(dyn_contacts_file) and not os.path.exists(dyn_contacts_file_merged)) or repeat_dynamics:
-    os.system(str("python %sget_dynamic_contacts.py         \
+    os.system(str("/opt/gpcrmdenv/bin/activate;python %sget_dynamic_contacts.py         \
     --topology %s  \
     --trajectory %s       \
     --cores %s \

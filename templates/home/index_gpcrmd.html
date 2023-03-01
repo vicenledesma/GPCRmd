@@ -41,8 +41,7 @@
   <div class="subanner jumbotron jumbotron-fluid">
     <div id="mySubtitle" class="row">
       <p id="subtitle" class="subtitle">Welcome to the online platform with web-based visualization capabilities and a
-        comprehensive
-        analysis toolbox that allows visualizing, inspecting, and analysing GPCR molecular dynamics.</p>
+        comprehensive analysis toolbox that allows visualizing, inspecting, and analysing GPCR molecular dynamics.</p>
     </div>
   </div>
 
@@ -52,46 +51,46 @@
     <!-- First row -->
     <div id="firstRowTools" class="toolRow row ">
       <div class="tool col-xs-6 col-md-3 ">
-        <button id="analysis_ac_pan-button" class="thumbnail toolBox active" onclick="openSearch1(this)"> 
+        <button id="analysis_ac_pan-button" class="thumbnail toolBox toolBox_hover active" onclick="openSearch1(this)"> 
           <img class="toolImg" src="{% static 'home/images/tools/ac.png' %}" alt="AllostericCommunication">
           <div class="caption">
-            <h3 class="toolTitle">Allosteric<br>communication</h3>
+            <h3 class="toolTitle toolTitle_hover">Allosteric<br>communication</h3>
           </div>
         </button>
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_cs_pan-button" class="thumbnail toolBox" onclick="openSearch1(this)">
+        <button id="analysis_cs_pan-button" class="thumbnail toolBox toolBox_hover" onclick="openSearch1(this)">
           <img class="toolImg" src="{% static 'home/images/tools/cs.png' %}" alt="ChemicalShift">
           <div class="caption">
-            <h3 class="toolTitle">Chemical<br>shift</h3>
+            <h3 class="toolTitle toolTitle_hover">Chemical<br>shift</h3>
           </div>
         </button>
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_variants_pan-button" class="thumbnail toolBox" onclick="openSearch1(this)">
+        <button id="analysis_variants_pan-button" class="thumbnail toolBox toolBox_hover" onclick="openSearch1(this)">
           <img class="toolImg" src="{% static 'home/images/tools/gv.png' %}" alt="GeneticVariants">
           <div class="caption">
-            <h3 class="toolTitle">Genetic<br>variants</h3>
+            <h3 class="toolTitle toolTitle_hover">Genetic<br>variants</h3>
             </viv>
         </button>
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_tunnels_pan-button" class="thumbnail toolBox" onclick="openSearch1(this)">
+        <button id="analysis_tunnels_pan-button" class="thumbnail toolBox toolBox_hover" onclick="openSearch1(this)">
           <img class="toolImg" src="{% static 'home/images/tools/tc.png' %}" alt="TunnelsChannels">
           <div class="caption">
-            <h3 class="toolTitle">Tunnels and<br>channels</h3>
+            <h3 class="toolTitle toolTitle_hover">Tunnels and<br>channels</h3>
           </div>
         </button>
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_pharmacophores_pan-button" class="thumbnail toolBox" onclick="openSearch1(this)">
+        <button id="analysis_pharmacophores_pan-button" class="thumbnail toolBox toolBox_hover" onclick="openSearch1(this)">
           <img class="toolImg" src="{% static 'home/images/tools/dp.png' %}" alt="Pharmacophores">
           <div class="caption">
-            <h3 class="toolTitle">Dynamic<br>pharmacophores</h3>
+            <h3 class="toolTitle toolTitle_hover">Dynamic<br>pharmacophores</h3>
           </div>
         </button>
       </div>
@@ -110,7 +109,10 @@
           <div class="col-md-10 col-md-offset-1 searchBarToolDiv">
             <div class="panel panel-primary">
               <h2 class="panel-heading">Select a simulation to see the tool</h2>
-      
+              <p class="warningText">Please note that not all the simulations have all the tools avilable. If you want to 
+                view a simulation with all tools check this example:<br> 
+                <a class="textlink" href="/view/36/"> Adenosine receptor A2a in complex with xanthine amine 
+                congener (3REY)</a> </p>
               <div class="search-tabs tab-content restheight100" style="height: 100%">
                 <div id="searchtable" class="height100 tab-pane fade in active test123" style="margin:0px 15px;height: 100%;">
                   <center class="height100" style="height: 100%">
@@ -138,88 +140,50 @@
     <!-- Second row -->
     <div class="toolRow row">
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_watermap_pan-button" class="thumbnail toolBox" onclick="openSearch2(this)">
+        <button id="analysis_watermap_pan-button" class="thumbnail toolBox toolBox_hover" onclick="openSearch1(this)">
           <img class="toolImg" src="{% static 'home/images/tools/wd.png' %}" alt="WaterVolume">
           <div class="caption">
-            <h3 class="toolTitle">Water volume<br>distribution</h3>
+            <h3 class="toolTitle toolTitle_hover">Water volume<br>distribution</h3>
           </div>
         </button>
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_fplot_pan" class="thumbnail toolBox" onclick="openSearch2(this)">
+        <button id="analysis_fplot_pan" class="thumbnail toolBox toolBox_hover" onclick="openSearch1(this)">
           <img class="toolImg" src="{% static 'home/images/tools/in.png' %}" alt="Interaction network">
           <div class="caption">
-            <h3 class="toolTitle">Interaction<br>network</h3>
+            <h3 class="toolTitle toolTitle_hover">Interaction<br>network</h3>
           </div>
         </button>
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_rmsd_pan-button" class="thumbnail toolBox" onclick="openSearch2(this)">
+        <button id="analysis_rmsd_pan-button" class="thumbnail toolBox toolBox_hover" onclick="openSearch1(this)">
           <img class="toolImg" src="{% static 'home/images/tools/rmsd.png' %}" alt="RMSD">
           <div class="caption">
-            <h3 class="toolTitle">RMSD</h3>
+            <h3 class="toolTitle toolTitle_hover">RMSD</h3>
           </div>
         </button>
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="interaction_freqs_pan-button" class="thumbnail toolBox" onclick="openSearch2(this)">
+        <button id="interaction_freqs_pan-button" class="thumbnail toolBox toolBox_hover" onclick="openSearch1(this)">
           <img class="toolImg" src="{% static 'home/images/tools/if.png' %}" alt="InteractionFrequencies">
           <div class="caption">
-            <h3 class="toolTitle">Interaction<br>frequencies</h3>
+            <h3 class="toolTitle toolTitle_hover">Interaction<br>frequencies</h3>
           </div>
         </button>
       </div>
 
       <div class="tool col-xs-6 col-md-3">
-        <button id="analysis_dist_pan-button" class="thumbnail toolBox" onclick="openSearch2(this)">
+        <button id="analysis_dist_pan-button" class="thumbnail toolBox toolBox_hover" onclick="openSearch1(this)">
           <img class="toolImg" src="{% static 'home/images/tools/dist.png' %}" alt="Distance">
           <div class="caption">
-            <h3 class="toolTitle">Distance</h3>
+            <h3 class="toolTitle toolTitle_hover">Distance</h3>
           </div>
         </button>
       </div>
     </div>
-
-    <!-- Search bar2  -->
-    <div id="searchTool2" class="row divHidden" >
-      <div id="searchToolDiv2" class="col-md-12 searchTool">
-        <div class="row">
-          <div class="col-md-1 col-md-offset-11">
-            <span id="searchTool2_close" onclick=closeSrch(this) class="closeSearch glyphicon glyphicon-remove"></span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-10 col-md-offset-1 searchBarToolDiv">
-            <div class="panel panel-primary">
-              <h2 class="panel-heading">Select a simulation to see the tool</h2>
-      
-              <div class="search-tabs tab-content restheight100" style="height: 100%">
-                <div id="searchtable" class="height100 tab-pane fade in active test123" style="margin:0px 15px;height: 100%;">
-                  <center class="height100" style="height: 100%">
-      
-                    <span id="loading">
-                      <center><img src="{% static 'view/images/loading-gear.gif' %}"
-                          style="width:50px;height:50px;margin-top:210px;position:absolute;z-index:10;margin-left:-25px" />
-                      </center>
-                    </span>
-      
-                    <iframe class="height100" id="searchIframe2" style="border:none" height=100% width="100%"
-                      src=""> </iframe>
-      
-                  </center>
-                </div>      
-              </div>
-      
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
   </div>
 
   <!-- Family tree -->
@@ -529,35 +493,33 @@
   <!-- Open search bar after click on tool button -->
   <script>
     function openSearch1(button) {
-      
+      // Check if it other tool is selected
+      var isToolSelected = document.getElementsByClassName('toolActive');
+      if (isToolSelected.length == 0) {// no other tool is selected
+        // Show searchbar
       document.getElementById("searchTool1").classList.remove("divHidden");
       document.getElementById("searchToolDiv1").classList.add("topBottom");
       document.getElementById("searchToolDiv1").classList.add("addShadow");
-      myButton=button.getAttribute('id');
-      document.getElementById(myButton).classList.add("toolActive");
-      
-      tool=myButton.split('-')
-      console.log(tool)
-      document.getElementById('searchIframe1').src="/dynadb/table_reduced/?"+tool[0]
-      // 
-
+        // Delete the hover effect in the rest of the tools divs
+        var myTools = document.getElementsByClassName('toolBox');
+        for (let i = 0; i < myTools.length; i++) {
+          if (myTools[i].getAttribute('id') != button.getAttribute('id')){
+            myTools[i].classList.remove('toolBox_hover');
+            myTools[i].classList.add('toolBox_hover_dis');
       }
-  </script>
+        }
+        // Delete the hover effect from all the tool titles
+        var myToolsTitle = document.getElementsByClassName('toolTitle');
+        for (let i = 0; i < myToolsTitle.length; i++) {
+          myToolsTitle[i].classList.remove('toolTitle_hover');
+        }
 
-<script>
-  function openSearch2(button) {
-    
-    document.getElementById("searchTool2").classList.remove("divHidden");
-    document.getElementById("searchToolDiv2").classList.add("topBottom");
-    document.getElementById("searchToolDiv2").classList.add("addShadow");
+        // Store the name of the tool in the iframe URL
     myButton=button.getAttribute('id');
     document.getElementById(myButton).classList.add("toolActive");
-    
     tool=myButton.split('-')
-    console.log(tool)
-    document.getElementById('searchIframe2').src="/dynadb/table_reduced/?"+tool[0]
-    // 
-
+        document.getElementById('searchIframe1').src="/dynadb/table_reduced/?"+tool[0]
+      }
     }
 </script>
     
@@ -566,18 +528,28 @@
   <!-- Close search bar -->
   <script>
     function closeSrch (spanValue) {//searchTool1_close
-      console.log('aqui')
+
       myId=spanValue.getAttribute('id');
       divIdList=myId.split('_')//searchTool1
       divId=divIdList[0]
       divIdDiv=divId+'Div'//searchTool1Div
       document.getElementById(divId).classList.add("divHidden");
-      // document.getElementById(divIdDiv).classList.remove("topBottom");
-      // document.getElementById(divIdDiv).classList.remove("addShadow");
 
       myTool= document.getElementsByClassName('toolActive')[0].id
-      console.log(myTool)
       document.getElementById(myTool).classList.remove("toolActive");
+      
+      // Add hover classes in tool titles and divs
+      // Add the hover effect in the rest of the tools divs
+      var elems = document.querySelectorAll(".toolBox.toolBox_hover_dis");
+      [].forEach.call(elems, function(el) {
+          el.classList.remove("toolBox_hover_dis");
+          el.classList.add("toolBox_hover");
+      });
+      // Add the hover effect from all the tool titles
+      var myToolsTitle = document.getElementsByClassName('toolTitle');
+        for (let i = 0; i < myToolsTitle.length; i++) {
+          myToolsTitle[i].classList.add('toolTitle_hover');
+        }
       
     }      
   </script>
@@ -613,6 +585,20 @@
         document.getElementById("navbar").style.marginTop = "1%";
       }
     } 
+  </script>
+
+  <!-- Go to tools section is selected the menu button -->
+  <script>
+    $(document).ready(function () {
+      var path_list = window.location.href.split("/");
+      var myTool=path_list.at(-1)//select the last element of the url
+      if (myTool == '#md_tools') {
+        const element = document.getElementById("subtitle");
+        var pos = element.offsetTop;
+        var offset = document.documentElement.scrollHeight * 0.04;
+        window.scrollTo(0, pos + offset);
+      }
+    })
   </script>
 
   <!-- Animation of jumbotrons -->
@@ -666,18 +652,6 @@
       window.location.href = '/dynadb/search/#' + example;
     }
   </script>
-
-  <!-- Go to tools section with the menu button -->
-  <script>
-    function go_to_tools() {
-      const element = document.getElementById("subtitle");
-      var pos = element.offsetTop;
-      var offset = document.documentElement.scrollHeight * 0.04;
-      window.scrollTo(0, pos + offset);
-    }
-  </script>
-
-
 
 
   <!-- Show news chunks-->

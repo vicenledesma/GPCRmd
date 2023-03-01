@@ -15,7 +15,7 @@ if len(sys.argv) == 1:
 itype = sys.argv[1]
 
 #Declaring dictionaries with types
-basepath = "/home/daranda/gpcrmd_vagrant/shared/sites/files/Precomputed/get_contacts_files/"
+basepath = "/GPCRmd/media/files/Precomputed/get_contacts_files/"
 typelist =  {
     'sb' : 'salt bridge',
     "pc" : 'pi-cation',

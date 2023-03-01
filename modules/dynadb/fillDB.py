@@ -3,9 +3,8 @@
 #run with /env/bin/python fillDB.py
 #if you have any doubts, contact: alejandrovarelarial@gmail.com
 import os, sys
-from config.settings import MODULES_ROOT
-
-proj_path = MODULES_ROOT
+from django.conf import settings
+proj_path = settings.MODULES_ROOT
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 sys.path.append(proj_path)
@@ -25,7 +24,6 @@ from uniprotkb_utils_fillDB import retreive_data_uniprot,retreive_protein_names_
 from contextlib import closing
 from django.db import connection
 from django.utils import timezone
-from django.conf import settings
 from rdkit.Chem import MolFromInchi,MolFromSmiles
 from molecule_download_fillDB import retreive_compound_data_pubchem_post_json, retreive_compound_sdf_pubchem, retreive_compound_png_pubchem, CIDS_TYPES, pubchem_errdata_2_response, retreive_molecule_chembl_similarity_json, chembl_get_compound_id_query_result_url,get_chembl_molecule_ids, get_chembl_prefname_synonyms, retreive_molecule_chembl_id_json, retreive_compound_png_chembl, chembl_get_molregno_from_html, retreive_compound_sdf_chembl, chembl_errdata_2_response
 from UniprotCodes import gpcr_uniprot_codes
@@ -1345,13 +1343,13 @@ def fill_db_iuphar(filename):
      containing the csv records in a format available to the record_complex_in_DB function. This file is created after the first use. '''
     records=iuphar_parser(filename)
     try:
-        with open (f'{MODULES_ROOT}/iuphar_useful_complexes_pickle', 'rb') as fp:
+        with open (settings.MODULES_ROOT + '/iuphar_useful_complexes_pickle', 'rb') as fp:
             complexes = pickle.load(fp)
         print('Pickle found...this is going to be fast')
     except:
         print('This could take a while...')
         complexes=to_bindingdb_format(records)
-        with open (f'{MODULES_ROOT}/iuphar_useful_complexes_pickle', 'wb') as fp:
+        with open (settings.MODULES_ROOT + '/iuphar_useful_complexes_pickle', 'wb') as fp:
             pickle.dump(complexes,fp) 
     print('lets record in DB')
     for comple in complexes:
@@ -1360,7 +1358,7 @@ def fill_db_iuphar(filename):
         except:
             raise
 
-mypath=f'{MODULES_ROOT}/dynadb/chunks/chunksBindingDB'
+mypath=settings.MODULES_ROOT + '/dynadb/chunks/chunksBindingDB'
 chunks=[os.path.join(mypath, f) for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))][28:]
 fill_db(chunks)
 fill_db_iuphar('./dynadb/interactions.csv')

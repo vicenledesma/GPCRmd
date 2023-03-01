@@ -1,5 +1,5 @@
 import os
-from config.settings import MEDIA_ROOT, MODULES_ROOT
+from django.conf import settings
 
 
 def mkdir_p(path):
@@ -40,8 +40,8 @@ def prepare_tables(original_table, new_table, itype):
 
 # Set paths
 get_contacts_path="~/bin/"
-scripts_path=f"{MODULES_ROOT}/contact_maps/scripts/"
-files_path=f"{MEDIA_ROOT}/Precomputed/get_contacts_files/"
+scripts_path=settings.MODULES_ROOT + "/contact_maps/scripts/"
+files_path=settings.MEDIA_ROOT + "Precomputed/get_contacts_files/"
 
 # Creating folder, if it doesn't exist
 mkdir_p(str(files_path + "contact_tables"))
@@ -71,7 +71,7 @@ for itype in itypes:
 
 	#Getting fingerprint info by type
 	table_output_provi = str("%scontact_tables/compare_%s_provi.tsv" % (files_path, itype))
-	os.system(str("python %sget_contact_fingerprints.py \
+	os.system(str("/opt/gpcrmdenv/bin/activate;python %sget_contact_fingerprints.py \
 				--input_frequencies %s \
 	            --frequency_cutoff 0.00 \
 	            --column_headers %s \
@@ -82,4 +82,4 @@ for itype in itypes:
 	prepare_tables(table_output_provi, table_output, itype)
 
 # Activate table_to_dataframe
-os.system("python %stable_to_dataframe.py --all" % (scripts_path))
+os.system("/opt/gpcrmdenv/bin/activate;python %stable_to_dataframe.py --all" % (scripts_path))

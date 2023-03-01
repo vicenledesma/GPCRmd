@@ -1,3 +1,7 @@
+.panel-primary {
+  border-color: #BF3C1F;
+}
+
 .tooltip-arrow {
   display:none;
 
@@ -9,6 +13,10 @@
 .popover{
   font-size:12px;
   width:120px;
+}
+
+.boldText{
+  font-weight: bolder;
 }
 
 .slider {
@@ -59,6 +67,7 @@
   opacity: 0.7;
   -webkit-transition: .2s;
   transition: opacity .2s;
+  margin-top: 10px;
 }
 
 .slider_volmap:hover {
@@ -178,7 +187,7 @@ top: 155px; /*Set top value to HeightOfTopFrameDiv*/
 margin:auto;
 bottom: 0px; /*Set bottom value to HeightOfBottomFrameDiv*/
 width: 100%;
-padding-right:60px
+/* padding-right:60px */
 }
 
 #allFPoptions .fp_int_type {
@@ -223,14 +232,15 @@ padding-right:60px
     }
 .fp_int_type_info_p{
   margin-bottom: 0;
-  font-size:13px;
+  font-size:15px;
 }
 
 .howtoparent{
-    /*float:right;
-    position:absolute; */
+  float:right;
+  /*position:absolute; */
     right: 45px;
-    margin-top:-5px
+  margin-top: -47px;
+  margin-bottom: 10px;
 }
 
 .howtobtn{
@@ -273,7 +283,7 @@ padding-right:60px
 
 .remove_icon_btn{
     color:#DC143C;
-    margin-bottom;0;
+    margin-bottom:0;
     padding:0
 }
 
@@ -418,7 +428,7 @@ ul.dropdown-menu.inner{
   cursor:pointer;
   padding:10px 10px 5px 10px;
   background-color:#ffffff;
-  border-bottom:1px solid #337ab7;
+  border-bottom:1px solid #b3b2b2;
   border-radius:0;
 }
 .ac_base_menu {
@@ -466,7 +476,7 @@ ul.dropdown-menu.inner{
   background-color: rgb(242, 242, 242);;
 }
 
-label.ac_option, .nobold {
+label.ac_option {
     font-weight: normal !important;
 }
 
@@ -587,3 +597,66 @@ label.ac_option, .nobold {
   image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming)*/
   -ms-interpolation-mode: nearest-neighbor;   /* IE (non-standard property) */
 }
+
+.glyphicon{
+  top: 4px;
+}
+
+.user_info{
+  cursor:pointer;
+  padding-top: 15px;
+}
+
+.wbpanel{
+  border-color: white;
+}
+
+.playIcon{
+  top:1px;
+}
+
+.wbtitle{
+  font-size: 30px;
+  height: 80px;
+}
+
+.indexBtnSize, .indexOp, button.high_pd{
+  font-size:18px;
+}
+
+
+a.cons_nav{
+  color: #BF3C1F;
+}
+
+a.cons_nav:hover{
+  color: #D96B52;
+  cursor: pointer;
+}
+
+.submenu_btn, .dropdown-header, .dropdown-menu, .tabHeaderVar{
+  font-size: 14px;
+}
+
+.dwData{
+  top: 10px;
+}
+
+.boxText{
+  margin-top: -10px !important;
+}
+
+.cenItems{
+  text-align: center;
+}
+
+.checTun{
+  margin-top:5px;
+}
+
+select.tunForm{
+  height: 28px;
+  font-size: 18px;
+}
+
+

@@ -6,7 +6,7 @@ import pandas as pd
 from json import loads, dump
 from sys import stdout
 from shutil import copyfile,copyfileobj
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 
 def json_dict(path):
@@ -53,7 +53,7 @@ def create_labelfile(outname, outfolder = "./", ligand = None):
      'A': 'ALA', 'V': 'VAL', 'E': 'GLU', 'Y': 'TYR', 'M': 'MET'}
 
     #Reading dictionary file with the Ballesteros numeration for this protein sequence
-    compl_data = json_dict(f"{MEDIA_ROOT}/Precomputed/get_contacts_files/compl_info.json")
+    compl_data = json_dict(settings.MEDIA_ROOT + "Precomputed/get_contacts_files/compl_info.json")
     dictfile = compl_data[outname]['gpcr_pdb']
 
     #open a output label file. It's name will be the same as the pdb, but with a _label.tsv at the end
@@ -133,7 +133,7 @@ def get_contact_frequencies(get_contacts_path, static_contacts_file, itype, labe
     """
     Execute script get_contact frequencies for the given parameters
     """
-    os.system(str("python %sget_contact_frequencies.py \
+    os.system(str("/opt/gpcrmdenv/bin/activate;python %sget_contact_frequencies.py \
         --input_files %s \
         --itypes %s \
         --label_file %s \
@@ -195,7 +195,7 @@ ligfile = args.ligfile
 repeat_static = args.repeat_static
 cores = args.cores
 get_contacts_path = "~/bin/"
-files_path = f"{MEDIA_ROOT}/Precomputed/get_contacts_files/dynamic_symlinks/" + dynname + "/"
+files_path = settings.MEDIA_ROOT + "Precomputed/get_contacts_files/dynamic_symlinks/" + dynname + "/"
 
 #Interaction multi-types dictionary
 multi_itypes = {
@@ -222,7 +222,7 @@ else:
 static_contacts_file = str("%s%s_static.tsv" % (files_path, dynname))
 
 if (not os.path.exists(static_contacts_file)) or repeat_static:
-    os.system(str("python %sget_static_contacts.py         \
+    os.system(str("/opt/gpcrmdenv/bin/activate;python %sget_static_contacts.py         \
     --structure %s  \
     --sele \"protein%s\"  \
     --cores %s \

@@ -172,7 +172,7 @@ select.form-control {
 
 input.form-control {
     width: 250px;
-    font-size: 14px;
+    font-size: 18px;
     display: inline;
 }
 
@@ -713,7 +713,7 @@ g text {
     font-size: 30px;
 }
 
-.toolTitle:hover {
+.toolTitle_hover:hover {
     color: #D96B52;
 }
 
@@ -727,11 +727,17 @@ g text {
     border-radius: 15px;
 }
 
-.toolBox:hover {
+.toolBox_hover:hover {
     border-color: #BF3C1F;
     border-width: 3px;
     box-shadow: 0px 0px 8px 8px #423F3E;
     transform: scale(1.05);
+    background-color: white;
+}
+
+.toolBox_hover_dis:hover{
+    cursor:auto;
+    color: #BF3C1F;
     background-color: white;
 }
 
@@ -793,6 +799,11 @@ g text {
     box-shadow: 0px 0px 8px 8px #423F3E;
     transform: scale(1.05);
     background-color: white;
+    cursor: auto;
+}
+
+.warningText{
+    padding: 1% 2% 0% 2%;
 }
 
 .addShadow{

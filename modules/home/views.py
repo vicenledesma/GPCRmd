@@ -187,6 +187,8 @@ def gpcrmd_home(request):
                    #GPCRdb: 34
                    #GPCRmd:30
     missing_fams= total_fams - sim_fams
+    if missing_fams < 0: 
+        missing_fams = 0
     fam_stats= [['Class', 'Num'],
                 ['Simulated', sim_fams],
                 ['Pending',missing_fams]
@@ -200,6 +202,8 @@ def gpcrmd_home(request):
                    #GPCRdb: 64
                    #GPCRmd: 52
     missing_subtypes=total_subtyppes - sim_subtyppes
+    if missing_subtypes < 0: 
+        missing_subtypes = 0
     subtype_stats= [['Class', 'Num'],
                 ['Simulated', sim_subtyppes],
                 ['Pending',missing_subtypes]
@@ -213,146 +217,22 @@ def gpcrmd_home(request):
                    #GPCRdb: 346
                    #GPCRmd: 270
     missing_pdb_ids=pdb_id_total - pdb_id_sim
+    if missing_pdb_ids < 0: 
+        missing_pdb_ids = 0
     pdb_stats= [['Class', 'Num'],
                 ['Simulated', pdb_id_sim],
                 ['Pending',missing_pdb_ids]
                 ]
     context["pdb_stats"]=json.dumps(pdb_stats)
 
-    mdsrv_url=obtain_domain_url(request)
-    context["mdsrv_url"]=mdsrv_url
 
-    ##### datasets table in search after tool selection
-    consideredgpcrs_path= settings.MEDIA_ROOT + 'Precomputed/Summary_info/considered_gpcrs.data'
-
-    with open(consideredgpcrs_path, 'rb') as filehandle:  
-        gpcrclassif = pickle.load(filehandle)
-
-    others_gpcrclassif=copy.deepcopy(gpcrclassif)
-    dynall=DyndbDynamics.objects.filter(is_published=True) #all().exclude(id=5) #I think dyn 5 is wrong
-    dynprot=dynall.annotate(fam_slug=F('id_model__id_complex_molecule__id_complex_exp__dyndbcomplexprotein__id_protein__receptor_id_protein__family_id__slug'))
-    dynprot=dynprot.annotate(fam_slug2=F('id_model__id_protein__receptor_id_protein__family_id__slug'))
-    dynprot=dynprot.annotate(dyn_id=F('id'))
-    dynprot = dynprot.annotate(pdb_namechain=F("id_model__pdbid"))
-    dynprot=dynprot.annotate(modelname=F('id_model__name'))
-    dynprot=dynprot.annotate(modeltype=F('id_model__type'))
-    dynprot=dynprot.annotate(user_id=F('submission_id__user_id__id'))
-    dynprot=dynprot.annotate(user_fname=F('submission_id__user_id__first_name'))
-    dynprot=dynprot.annotate(user_lname=F('submission_id__user_id__last_name'))
-    dynprot=dynprot.annotate(user_institution=F('submission_id__user_id__institution'))
-    dynall_values=dynprot.values("dyn_id","fam_slug","fam_slug2","pdb_namechain","modelname","modeltype","user_id","user_fname","user_lname","user_institution")
-
-
-    dyn_dict={}
-    for dyn in dynall_values:
-        dyn_id=dyn["dyn_id"]
-        if dyn_id not in dyn_dict:
-            dyn_dict[dyn_id]={}
-        is_hm=False
-        dyn_id=dyn["dyn_id"]
-        pdbid=dyn["pdb_namechain"].split(".")[0]
-        if pdbid:
-            if pdbid == "HOMO":
-                is_hm=True
-        prot_slug=dyn["fam_slug"]
-        if not prot_slug:
-            prot_slug=dyn["fam_slug2"]
-        if prot_slug:
-            fam_slug=prot_slug[:-8]
-            subtype_slug=prot_slug[:-4]
-            class_slug=prot_slug[:3]
-            #fam_nm=slugtofamdata[fam_slug]
-            #subtype_nm=slugtofamdata[subtype_slug]
-            #class_nm=slugtofamdata[class_slug]
-            dyn_dict[dyn_id]["fam_slug"]=fam_slug
-            dyn_dict[dyn_id]["subtype_slug"]=subtype_slug
-            dyn_dict[dyn_id]["class_slug"]=class_slug
-            dyn_dict[dyn_id]["prot_slug"]=prot_slug
-        dyn_dict[dyn_id]["is_hm"]=is_hm
-        dyn_dict[dyn_id]["pdbid"]=pdbid
-        dyn_dict[dyn_id]["modelname"]=dyn["modelname"]
-        if dyn["modeltype"]==0:
-            modeltype="Apoform"
-        else:
-            modeltype="Complex"
-        dyn_dict[dyn_id]["modeltype"]=modeltype
-        user_id=dyn["user_id"]
-        is_gpcrmd=False
-        if int(dyn_id) in range(4,11):
-            author="GPCR drug discovery group (Pompeu Fabra University)"
-        elif user_id in {1, 3, 5, 12, 14}:
-            is_gpcrmd=True
-            author="GPCRmd community"
-        else:
-            author ="%s %s, %s" % (dyn["user_fname"],dyn["user_lname"],dyn["user_institution"])
-        dyn_dict[dyn_id]["is_gpcrmd"]=is_gpcrmd
-        dyn_dict[dyn_id]["author"]=author
-
-
-
-
-    for dyn_id,dyndata in dyn_dict.items():
-        context={}
-        myclass_slug=dyndata["class_slug"]
-        myfam_slug=dyndata["fam_slug"]
-        mysubtype_slug=dyndata["subtype_slug"]
-        myprot_slug=dyndata["prot_slug"]
-        modelname=dyndata["modelname"]
-        modeltype=dyndata["modeltype"]
-        author=dyndata["author"]
-        mymodelname="<b>%s:</b> %s" %(modeltype,modelname)
-        pdbid=dyndata["pdbid"]
-        nclass=search_in_treeData(gpcrclassif,myclass_slug)
-        if nclass is False:
-            continue
-        gpcrclassif_fams=gpcrclassif[nclass]["children"]
-        nfam=search_in_treeData(gpcrclassif_fams,myfam_slug)
-        if nfam is False:
-            continue
-        gpcrclassif_sf=gpcrclassif_fams[nfam]["children"]
-        nsf=search_in_treeData(gpcrclassif_sf,mysubtype_slug)
-        if nsf is False:
-            continue
-        gpcrclassif_prot=gpcrclassif_sf[nsf]["children"]
-        npr=search_in_treeData(gpcrclassif_prot,myprot_slug)
-        if npr is False:
-            continue
-        print(nclass,nfam,nsf,npr)
-        if dyndata["is_gpcrmd"]:
-            gpcrpdbdict=gpcrclassif_prot[npr]["children"]
-            if pdbid not in gpcrpdbdict:
-                gpcrpdbdict[pdbid]=[]
-            gpcrpdbdict[pdbid].append((dyn_id,mymodelname))
-            gpcrclassif[nclass]["has_sim"]=True
-            gpcrclassif_fams[nfam]["has_sim"]=True
-            gpcrclassif_sf[nsf]["has_sim"]=True
-            gpcrclassif_prot[npr]["has_sim"]=True
-        else:
-            o_gpcrclassif_fams=others_gpcrclassif[nclass]["children"]
-            o_gpcrclassif_sf=o_gpcrclassif_fams[nfam]["children"]
-            o_gpcrclassif_prot=o_gpcrclassif_sf[nsf]["children"]
-            o_gpcrpdbdict=o_gpcrclassif_prot[npr]["children"]
-            if pdbid not in o_gpcrpdbdict:
-                o_gpcrpdbdict[pdbid]=[]
-            o_gpcrpdbdict[pdbid].append((dyn_id,mymodelname,author))
-            o_gpcrpdbdict[pdbid]=sorted(o_gpcrpdbdict[pdbid], key=lambda x: x[1])
-            others_gpcrclassif[nclass]["has_sim"]=True
-            o_gpcrclassif_fams[nfam]["has_sim"]=True
-            o_gpcrclassif_sf[nsf]["has_sim"]=True
-            o_gpcrclassif_prot[npr]["has_sim"]=True            
-
-    context["gpcrclassif"]= gpcrclassif
-    context["others_gpcrclassif"]=others_gpcrclassif
 
     gpcrmdtree_path= settings.MEDIA_ROOT+"Precomputed/Summary_info/gpcrmdtree.data"
 
-    with open(gpcrmdtree_path, 'rb') as filehandle:  
-        tree_data = pickle.load(filehandle)
+    mdsrv_url=obtain_domain_url(request)
+    context["mdsrv_url"]=mdsrv_url
 
-    context['tree_data']=json.dumps(tree_data)
-    # print(json.dumps(tree_data))
-
-    return render(request, 'home/index_gpcrmd.html', context )
+    return render(request, 'home/index_gpcrmd.html', context)
 
 def contact(request):
     context = {}
@@ -480,6 +360,8 @@ def gpcrtree(request):
                    #GPCRdb: 34
                    #GPCRmd:30
     missing_fams= total_fams - sim_fams
+    if missing_fams < 0: # Error with negative numbers
+        missing_fams = 0
     fam_stats= [['Class', 'Num'],
                 ['Simulated', sim_fams],
                 ['Pending',missing_fams]
@@ -506,6 +388,8 @@ def gpcrtree(request):
                    #GPCRdb: 346
                    #GPCRmd: 270
     missing_pdb_ids=pdb_id_total - pdb_id_sim
+    if missing_pdb_ids < 0: 
+        missing_pdb_ids = 0
     pdb_stats= [['Class', 'Num'],
                 ['Simulated', pdb_id_sim],
                 ['Pending',missing_pdb_ids]
@@ -514,7 +398,7 @@ def gpcrtree(request):
     mdsrv_url=obtain_domain_url(request)
     context["mdsrv_url"]=mdsrv_url
 
-    return render(request, 'home/gpcrtree.html', context )
+    return render(request, 'home/gpcrtree.html', context)
 
 def news(request):
     context = {}

@@ -567,9 +567,9 @@ $(document).ready(function(){
     $("#show_hide_info").click(function(){
 
         if ($("#more_info").attr("aria-expanded")=="true"){
-            $("#show_hide_info_text").text("Show info");
+            $("#show_hide_info_text").text("Help");
         } else {
-            $("#show_hide_info_text").text("Hide info");
+            $("#show_hide_info_text").text("Hide");
         }
     });
     
@@ -2646,7 +2646,7 @@ $(document).ready(function(){
                                                             <div class='dist_frame' id='"+newgraph_sel+"f'></div>\
                                                             <div class='settings' style='margin:5px'>\
                                                                 <div class='plot_dist_by_sel_cont' style='font-size:12px;margin-left:5px'>\
-                                                                  Plot distance by\
+                                                                  <p>Plot distance by</p>\
                                                                     <span >\
                                                                         <select class='plot_dist_by_sel' name='frame_time'>\
                                                                             <option class='plot_dist_by' selected value='time'>time</option>\
@@ -2678,7 +2678,7 @@ $(document).ready(function(){
                                                             <div class='dist_frame' id='"+newgraph_sel+"f'></div>\
                                                             <div class='settings' style='margin:5px'>\
                                                                 <div class='plot_dist_by_sel_cont' style='font-size:12px;margin-left:5px'>\
-                                                                  Plot distance by\
+                                                                  <p>Plot distance by</p>\
                                                                     <span >\
                                                                         <select  name='frame_time' class='plot_dist_by_sel'>\
                                                                             <option class='plot_dist_by' selected value='time'>time</option>\
@@ -3404,7 +3404,7 @@ $(document).ready(function(){
                         var regex = /\d+/g;
                         var table='<div class="hbond_openchose_click" data-toggle="collapse" data-target="#protprot_tablecont" style="font-size:14px; cursor:pointer;border-bottom:1px solid lightgray;background-color:f2f2f2;height:30px;border-radius:5px 0;">\
                                         <div style="padding:5px 10px">\
-                                            Protein-protein hydrogen bonds\
+                                            <p>Protein-protein hydrogen bonds</p>\
                                             <span style="float:right;margin-right:5px;" class="glyphicon arrow glyphicon-chevron-down hbond_openchose_arrow"></span>\
                                         </div>\
                                      </div>\
@@ -3481,7 +3481,7 @@ $(document).ready(function(){
 
                         var tablenp='<div class="hbond_openchose_click" data-toggle="collapse" data-target="#protlip_tablecont" style="font-size:14px; cursor:pointer;border-bottom:1px solid lightgray;background-color:f2f2f2;height:30px;border-radius:5px 0;">\
                                         <div style="padding:5px 10px">\
-                                            Protein-lipid hydrogen bonds and other\
+                                            <p>Protein-lipid hydrogen bonds and other</p>\
                                             <span style="float:right;margin-right:5px;" class="glyphicon arrow glyphicon-chevron-down hbond_openchose_arrow"></span>\
                                         </div>\
                                      </div>\
@@ -4091,7 +4091,7 @@ $(document).ready(function(){
                                                     <div class='rmsd_frame' id='"+newRMSDgraph_sel+"f'></div>\
                                                     <div class='rmsd_settings' id='opt_"+newRMSDgraph_sel+"' style='margin:5px'>\
                                                         <div class='plot_rmsd_by_sel_cont' style='font-size:12px;margin-left:5px'>\
-                                                          Plot RMSD by\
+                                                          <p>Plot RMSD by</p>\
                                                             <span >\
                                                                 <select class='plot_rmsd_by_sel' name='frame_time'>\
                                                                     <option class='plot_rmsd_by' selected value='time'>time</option>\
@@ -4120,7 +4120,7 @@ $(document).ready(function(){
                                                     <div class='rmsd_frame' id='"+newRMSDgraph_sel+"f'></div>\
                                                     <div id='opt_"+newRMSDgraph_sel+"' class='rmsd_settings' style='margin:5px'>\
                                                         <div class='plot_rmsd_by_sel_cont' style='font-size:12px;margin-left:5px'>\
-                                                          Plot RMSD by\
+                                                          <p>Plot RMSD by</p>\
                                                             <span >\
                                                                 <select class='plot_rmsd_by_sel' name='frame_time'>\
                                                                     <option class='plot_rmsd_by' selected value='time'>time</option>\
@@ -4383,6 +4383,8 @@ var pocketsTable = $('#analysis_pockets_table').DataTable(
         'selectAll',
         'selectNone',
     ],
+    //Don't give option to sort or search by column 1 (color)
+    "columnDefs": [ { "orderable": false, "searchable": false, "targets": 1  }],   
     "select": {
         style: 'multi'
     },
@@ -4544,13 +4546,19 @@ $("#reset_pocket_plot").on("click", function() {
     // Clear the plot
     $("#pocket_plot").html("");
 
+    // Uncheck the "show nearby residues" button
+    $( "#show_nearby_residues" ).prop( "checked", false );
+
     // Clear the pockets from the viewer
     $('#embed_mdsrv')[0].contentWindow.triggerEmbededCustomEvent("pocket_trigger",
         {
             "trajID"               : trajID,
             "pocketIDAndColorList" : JSON.stringify([]), // Empty list = show no pockets
-            "showNearbyResidues"   : false, //Alejandro mirar con el false furula
+            "showNearbyResidues"   : false,
         });
+
+    // Deselect all rows
+    pocketsTable.rows().deselect();
 });
 
 
@@ -4664,6 +4672,8 @@ $("#show_nearby_residues").on("change", function() {
     );
 
     $('#analysis_variants_table').css("display","table");
+    $('#analysis_variants_table').css("width","100%");
+
 
     $("body").on("click",".zoom_to_nglsel",function(){
         var mysel=$(this).data("nglsel")
@@ -4702,7 +4712,10 @@ $("#show_nearby_residues").on("change", function() {
     });
 
     $("#filter_functional_site").on("change", function() {
-        variants_table.column(9).search(this.value, true).draw();
+        // Don't use regular expressions, smart search and be case sensitive
+        // This is a fix to avoid "Binding site" selection showing
+        // "Intracellular binding site" variants as well
+        variants_table.column(9).search(this.value, false, false, false).draw();
     });
 
     $("#filter_predicted_impact").on("change", function() {

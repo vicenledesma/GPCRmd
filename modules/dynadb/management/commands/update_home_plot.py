@@ -3,7 +3,7 @@ from django.db.models import F
 from dynadb.models import DyndbDynamics
 import pickle
 import requests
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 class Command(BaseCommand):
     help = "Retrieves info from the database to complete the dicitonary used to create the GPCRmd tree (tree_data)."
@@ -18,7 +18,7 @@ class Command(BaseCommand):
         parser.add_argument(
            '-i',
             dest='gpcrmdtree_path',
-            default=f"{MEDIA_ROOT}/Precomputed/Summary_info/gpcrmdtree.data",
+            default=settings.MEDIA_ROOT + "Precomputed/Summary_info/gpcrmdtree.data",
             action='store',
             type=str,
             help='Path to the input file,'
@@ -26,7 +26,7 @@ class Command(BaseCommand):
         parser.add_argument(
            '-o',
             dest='gpcrmdtree_path_out',
-            default=f"{MEDIA_ROOT}/Precomputed/Summary_info/gpcrmdtree.data",
+            default=settings.MEDIA_ROOT + "Precomputed/Summary_info/gpcrmdtree.data",
             action='store',
             type=str,
             help='Path to the output file.'

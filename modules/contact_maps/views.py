@@ -11,7 +11,7 @@ from modules.contact_maps.scripts.customized_heatmap import *
 from django.views.decorators.csrf import csrf_protect
 import csv
 
-from config.settings import MEDIA_ROOT
+from django.conf import settings
 
 def json_dict(path):
 	"""Converts json file to pyhton dict."""
@@ -42,7 +42,7 @@ def get_contacts_plots(request):
 	mdsrv_url=obtain_domain_url(request)
 	
 		
-	basepath = f"{MEDIA_ROOT}/Precomputed/get_contacts_files/"
+	basepath = settings.MEDIA_ROOT + "Precomputed/get_contacts_files/"
 	basedir = "%scontmaps_inputs/%s/%s/%s/" % (basepath,itype,stnd,ligandonly)
 
 	#Path to json
@@ -63,7 +63,7 @@ def get_contacts_plots(request):
 	}
 
 	#Creating and downloading CSV file from df
-	csv_name = f"{MEDIA_ROOT}/Precomputed/get_contacts_files/contmaps_inputs/%s/%s/%s/dataframe.csv" % (itype, stnd, ligandonly)
+	csv_name = settings.MEDIA_ROOT + "Precomputed/get_contacts_files/contmaps_inputs/%s/%s/%s/dataframe.csv" % (itype, stnd, ligandonly)
 	csv_data_list = open(csv_name, 'r').readlines()
 	csv_data = ''.join(csv_data_list)
 
@@ -154,9 +154,9 @@ def customized_heatmap(request, foo):
 	code = request.GET.get('code')
 
 	#Paths
-	basepath = f"{MEDIA_ROOT}/Precomputed/get_contacts_files/"
+	basepath = settings.MEDIA_ROOT + "Precomputed/get_contacts_files/"
 	options_path = "%scontmaps_inputs/%s/%s/%s/" %(basepath, itype, stnd, ligandonly)
-	heatmap_path_jupyter = f"{MEDIA_ROOT}/Precomputed/get_contacts_files/contmaps_inputs/%s/%s/%s/heatmaps/%s/" % (itype,stnd,ligandonly,rev)
+	heatmap_path_jupyter = settings.MEDIA_ROOT + "Precomputed/get_contacts_files/contmaps_inputs/%s/%s/%s/heatmaps/%s/" % (itype,stnd,ligandonly,rev)
 	heatmap_path = "%sheatmaps/%s/" % (options_path,rev)
 	custom_path = "%scustom_heatmaps_temp/" % (basepath)
 
@@ -232,7 +232,7 @@ def customized_heatmap(request, foo):
 	mdsrv_url=obtain_domain_url(request)
 	
 		
-	basepath = f"{MEDIA_ROOT}/Precomputed/get_contacts_files/"
+	basepath = settings.MEDIA_ROOT + "Precomputed/get_contacts_files/"
 	basedir = "%scontmaps_inputs/%s/%s/%s/" % (basepath,itype,stnd,ligandonly)
 
 	#Path to json
