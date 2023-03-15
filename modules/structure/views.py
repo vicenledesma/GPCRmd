@@ -7,14 +7,14 @@ from django import forms
 from django.core.cache import cache
 from django.views.decorators.cache import cache_page
 
-from protein.models import Gene, ProteinSegment
+from modules.dynadb.models import Gene, ProteinSegment
 from structure.models import Structure
 from structure.functions import CASelector, SelectionParser, GenericNumbersSelector, SubstructureSelector, check_gn
 from structure.assign_generic_numbers_gpcr import GenericNumbering
 from structure.structural_superposition import ProteinSuperpose,FragmentSuperpose
 from structure.forms import *
 from interaction.models import ResidueFragmentInteraction,StructureLigandInteraction
-from protein.models import Protein, ProteinFamily
+from modules.protein.models import Protein, ProteinFamily
 from construct.models import Construct
 from construct.functions import convert_ordered_to_disordered_annotation,add_construct
 from common.views import AbsSegmentSelection,AbsReferenceSelection

@@ -216,7 +216,7 @@
                   <div id='allfiles'>
                     {% for dyn in answer.files.struc_files %}
                     <!--<a href=/dynadb/files/Dynamics/dyn{{answer.nglviewer_id}}/{{dyn.1}}><button class="btn btn-primary" type="button">Download {{dyn.1}}</button></a><br>-->
-                    <a href={{dyn.0}}><button style="width:250px;text-align: center; margin-bottom:2%;" class="btn btn-primary"
+                    <a href=/dynadb/files{{dyn.0}}><button style="width:250px;text-align: center; margin-bottom:2%;" class="btn btn-primary"
                         type="button">{{dyn.2}}</button></a><br>
                     {% endfor %}
                   </div>
@@ -234,7 +234,7 @@
                 <div class="techinfo_content">
                   <div id='paramfiles'>
                     {% for fil in answer.files.param_files %}
-                    <a href={{fil.0}}><button style="width:250px;text-align: center; margin-bottom:2%;" class="btn btn-primary"
+                    <a href=/dynadb/files{{fil.0}}><button style="width:250px;text-align: center; margin-bottom:2%;" class="btn btn-primary"
                         type="button">{{fil.2}}</button></a><br>
                     {% endfor %}
                   </div>
@@ -300,7 +300,7 @@
                           <p>
                           ({{url.4}})
                       </p>
-                      <img src="{{url.1}}" height="270" width="270"
+                      <img src="/dynadb/files{{url.1}}" height="270" width="270"
                         style="margin-bottom:15px;padding:7px;margin-top:15px" /> </a><br>
 
                       {% endfor %}
@@ -318,7 +318,7 @@
                           <p>
                           ({{url.4}})
                       </p>
-                      <img src="{{url.1}}" height="270" width="270"
+                      <img src="/dynadb/files{{url.1}}" height="270" width="270"
                         style="margin-bottom: :15px;padding:7px;margin-top:15px" /> </a><br>
                       {% endfor %}
                       {% endif %}
@@ -510,7 +510,7 @@
                     </center>
                     <center>
                       {% if url.4 %}
-                      <img style="border:solid #e6e6e6 1px;border-radius:6px;margin-top:10px" src="{{url.1}}"
+                      <img style="border:solid #e6e6e6 1px;border-radius:6px;margin-top:10px" src="/dynadb/files{{url.1}}"
                         height="200" width="200" />
                       {% else %}
                       <div

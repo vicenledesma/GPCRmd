@@ -2,7 +2,7 @@ import os
 import re
 import io
 import sys
-from dynadb.customized_errors import ParsingError,MultipleMoleculesinSDF,InvalidMoleculeFileExtension
+from modules.dynadb.customized_errors import ParsingError,MultipleMoleculesinSDF,InvalidMoleculeFileExtension
 from django.conf import settings
 from subprocess import Popen, PIPE
 from rdkit.Chem import ForwardSDMolSupplier, AssignAtomChiralTagsFromStructure, MolToSmiles, InchiToInchiKey, GetFormalCharge, RemoveHs, MolFromInchi, MolFromSmiles, SDWriter

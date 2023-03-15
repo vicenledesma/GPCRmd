@@ -1,4 +1,4 @@
-from dynadb.models import DyndbSubmission, DyndbModel
+from modules.dynadb.models import DyndbSubmission, DyndbModel
 from django.core.management.base import BaseCommand, CommandError
 
 

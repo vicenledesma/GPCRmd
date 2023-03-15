@@ -1123,7 +1123,7 @@
     
                           <!-- edSel -->
                           {% if ed_mats and pdbid %}
-                            <div id="edSel" style="margin-bottom:5px" data-r_angl="{{ed_align_matrix.0}}"
+                            <div id="edSel" style="margin-bottom:5px" data-r_angl="{{ed_mats.0}}"
                               data-trajmat_dict="{{ed_mats}}">
                               <div class="row" style="margin-top:15px;">
                                 <div class="section_pan"
@@ -3357,7 +3357,7 @@
                                 </div>
                                 
                                 <div id="analysis_cs" class="row collapse" data-aa3to1="{{aa3to1}}"
-                                  data-resid_to_resname="{{resid_to_resname}}" data-residnames="{{cs_resid_name}}">
+                                  data-resid_to_resname="{{resid_to_resname}}" data-residnames="{{cs_resid_names}}">
                                   <div style="margin-top:10px;margin-bottom:15px;margin-left:5px">
                                     <p class="cs_title">Predictor</p>
                                     <label for="cs_shifty" class="cs_option">

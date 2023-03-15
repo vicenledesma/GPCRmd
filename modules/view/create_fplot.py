@@ -1,9 +1,9 @@
-from dynadb.models import DyndbFiles, DyndbFilesDynamics, DyndbModelComponents, DyndbCompound, DyndbDynamicsComponents,DyndbDynamics, DyndbModel, DyndbProtein,DyndbProteinSequence, DyndbModeledResidues
-from view.assign_generic_numbers_from_DB import obtain_gen_numbering 
-from view.traj2flare_modified_wn import * #[!] Now it's the wn version (new version that uses MDtraj wernet_nilsson function)
-from view.views import findGPCRclass, obtain_all_chains, obtain_DyndbProtein_id_list, obtain_seq_pos_info
-from dynadb.pipe4_6_0 import *
-from view.data import *
+from modules.dynadb.models import DyndbFiles, DyndbFilesDynamics, DyndbModelComponents, DyndbCompound, DyndbDynamicsComponents,DyndbDynamics, DyndbModel, DyndbProtein,DyndbProteinSequence, DyndbModeledResidues
+from modules.view.assign_generic_numbers_from_DB import obtain_gen_numbering 
+from modules.view.traj2flare_modified_wn import * #[!] Now it's the wn version (new version that uses MDtraj wernet_nilsson function)
+from modules.view.views import findGPCRclass, obtain_all_chains, obtain_DyndbProtein_id_list, obtain_seq_pos_info
+from modules.dynadb.pipe4_6_0 import *
+from modules.view.data import *
 import re
 import json
 from Bio.PDB import *

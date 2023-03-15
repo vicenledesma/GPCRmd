@@ -6,7 +6,7 @@ import Bio.PDB.Polypeptide as polypeptide
 from django.conf import settings
 from common.selection import SimpleSelection
 from common.alignment import Alignment
-from protein.models import ProteinSegment
+from modules.dynadb.models import ProteinSegment
 from residue.models import Residue
 from structure.models import Structure
 

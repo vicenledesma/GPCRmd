@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from residue.models import Residue
-from protein.models import Protein, ProteinSegment
+from modules.protein.models import Protein, ProteinSegment
 from structure.models import Structure
 from structure.functions import BlastSearch, BlastSearchOnline
 

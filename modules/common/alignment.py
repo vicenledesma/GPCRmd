@@ -2,7 +2,7 @@ from django.conf import settings
 
 from common.selection import Selection
 from common.definitions import *
-from protein.models import Protein, ProteinConformation, ProteinState, ProteinSegment, ProteinFusionProtein
+from modules.protein.models import Protein, ProteinConformation, ProteinState, ProteinSegment, ProteinFusionProtein
 from residue.models import Residue
 from residue.models import ResidueGenericNumber, ResidueGenericNumberEquivalent
 from residue.models import ResidueNumberingScheme

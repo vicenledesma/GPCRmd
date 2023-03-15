@@ -1,5 +1,5 @@
 import requests
-from dynadb.models import DyndbDynamics
+from modules.dynadb.models import DyndbDynamics
 from django.db.models import F
 import pickle
 from django.core.management.base import BaseCommand, CommandError

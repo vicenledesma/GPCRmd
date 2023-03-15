@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.core.cache import cache
 from django.views.decorators.cache import cache_page
 
-from protein.models import Protein, ProteinConformation, ProteinAlias, ProteinFamily, Gene,ProteinGProteinPair
+from modules.protein.models import Protein, ProteinConformation, ProteinAlias, ProteinFamily, Gene,ProteinGProteinPair
 from residue.models import Residue
 from structure.models import Structure
 from mutation.models import MutationExperiment

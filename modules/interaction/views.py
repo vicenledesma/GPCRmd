@@ -15,7 +15,7 @@ from ligand.models import LigandRole, LigandProperities
 from structure.models import Structure, PdbData, Rotamer, Fragment
 from structure.functions import BlastSearch
 from structure.assign_generic_numbers_gpcr import GenericNumbering
-from protein.models import ProteinConformation, Protein, ProteinSegment
+from modules.dynadb.models import ProteinConformation, Protein, ProteinSegment
 from residue.models import Residue, ResidueGenericNumber, ResidueGenericNumberEquivalent, ResidueNumberingScheme
 from common.models import WebResource
 from common.models import WebLink
@@ -24,7 +24,7 @@ from common.selection import SimpleSelection, Selection, SelectionItem
 from common import definitions
 from common.views import AbsTargetSelection
 from common.alignment import Alignment
-from protein.models import Protein, ProteinFamily, ProteinGProtein, ProteinGProteinPair
+from modules.protein.models import Protein, ProteinFamily, ProteinGProtein, ProteinGProteinPair
 
 import os
 from os import listdir, devnull, makedirs

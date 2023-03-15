@@ -2,10 +2,10 @@ from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 from django.conf import settings
 
-from dynadb.molecule_properties_tools import open_molecule_file,generate_inchi,generate_smiles,generate_inchikey,generate_png
-from dynadb.molecule_download import retreive_compound_sdf_pubchem
+from modules.dynadb.molecule_properties_tools import open_molecule_file,generate_inchi,generate_smiles,generate_inchikey,generate_png
+from modules.dynadb.molecule_download import retreive_compound_sdf_pubchem
 
-from dynadb.models import DyndbMolecule, DyndbCompound
+from modules.dynadb.models import DyndbMolecule, DyndbCompound
 from django.db.models import F
 
 import re

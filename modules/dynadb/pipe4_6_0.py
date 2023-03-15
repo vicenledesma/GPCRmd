@@ -1,3 +1,4 @@
+from django.conf import settings
 from Bio.Align import PairwiseAligner
 #from Bio.pairwise2 import format_alignment
 #from Bio.Alphabet import generic_protein
@@ -13,7 +14,10 @@ d={'CYSF': 'C', 'OLS': 'S', 'HE6': 'H', 'HEX': 'H', 'CCY0': 'C', 'TRP': 'W', 'TY
 		
 def checkpdb_ngl(name_of_file,segid,start,stop,chain):
 	'''Get sequence from a PDB file in a given interval defined by a combination of Segment Identifier (segid), starting residue number (start), end residue number (stop), chain identifier (chain). All can be left in blank. Returns 1) a list of minilist: each minilist has the resid and the aminoacid code. 2) a string with the sequence.'''
-	fpdb=open(name_of_file,'r')
+	if settings.MEDIA_ROOT[:-1] in name_of_file: 
+		fpdb=open(name_of_file,'r')
+	else:
+		fpdb=open(settings.MEDIA_ROOT[:-1] + name_of_file,'r')
 	cpos=0 #current residue position
 	ppos=0 #previous residue position
 	ppos2='0' #previous position after converting hexadecimals to decimals
@@ -368,8 +372,8 @@ def matchpdbfa_ngl(sequence,pdbseq,tablepdb,hexflag,start=1):
 	 the changes in the pdb numbering according to the database sequence.'''
 
 	aligner = select_align("local", 100, -1, -10, -10)
-	bestalig=aligner.align(sequence,pdbseq)[0]  #select the aligment with the best score.
-
+	bestalig=aligner.align(sequence.upper(),pdbseq.upper())[0]  #select the aligment with the best score.
+	print(bestalig)
 	#pairwise2.align.localms(seq1,seq2,score for identical matches, score for mismatches, score for opening a gap, score for extending a gap)
 	#print(bestalig)
 	biglist=list()
@@ -400,6 +404,7 @@ def matchpdbfa_ngl(sequence,pdbseq,tablepdb,hexflag,start=1):
 			minilist=[tablepdb[i],[fastalig[i],newpos]]
 			duos.append(minilist)
 		i=i+1
+		print(minilist)
 
 	if len(mismatchlist)>0:
 		return ('One or more missmatches were found, this is not allowed. ',mismatchlist)

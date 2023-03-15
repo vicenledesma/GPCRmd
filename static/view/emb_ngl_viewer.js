@@ -166,6 +166,7 @@ $(document).ready(function(){
     var sel = "";
     var sel_enc = sel;
     var fpsegStr=$("#view_screen").data("seg_li");
+    console.log(fpsegStr);
     var pg_framenum=0;
     var is_network_default=$("#view_screen").data("network_default")
     var is_ligprotint_default=$("#view_screen").data("ligprotint_default")

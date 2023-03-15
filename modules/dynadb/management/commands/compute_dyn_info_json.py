@@ -6,14 +6,14 @@ import pandas as pd
 import json
 import datetime
 import re
-from view.obtain_gpcr_numbering import generate_gpcr_pdb
-from view.views import compute_interaction, obtain_all_chains, relate_atomSerial_mdtrajIndex
-from view.data import change_lig_name
-from dynadb.models import DyndbProtein, DyndbFilesDynamics, DyndbSubmissionMolecule, DyndbDynamicsComponents,DyndbModeledResidues, DyndbDynamics
-from protein.models import Protein
-from view.assign_generic_numbers_from_DB import obtain_gen_numbering 
-from dynadb.pipe4_6_0 import *
-from view.views import obtain_prot_chains , obtain_DyndbProtein_id_list, obtain_seq_pos_info, findGPCRclass, obtain_rel_dicts, translate_all_poslists_to_ourclass_numb,obtain_predef_positions_lists,find_missing_positions
+from modules.view.obtain_gpcr_numbering import generate_gpcr_pdb
+from modules.view.views import compute_interaction, obtain_all_chains, relate_atomSerial_mdtrajIndex
+from modules.view.data import change_lig_name
+from modules.dynadb.models import DyndbProtein, DyndbFilesDynamics, DyndbSubmissionMolecule, DyndbDynamicsComponents,DyndbModeledResidues, DyndbDynamics
+from modules.protein.models import Protein
+from modules.view.assign_generic_numbers_from_DB import obtain_gen_numbering 
+from modules.dynadb.pipe4_6_0 import *
+from modules.view.views import obtain_prot_chains , obtain_DyndbProtein_id_list, obtain_seq_pos_info, findGPCRclass, obtain_rel_dicts, translate_all_poslists_to_ourclass_numb,obtain_predef_positions_lists,find_missing_positions
 import copy
 import operator
 from django.db.models import CharField,TextField, Case, When, Value as V, F, Q, Count, Prefetch

@@ -59,7 +59,7 @@
           <div id='leftdiv' class="col-sm-6">
             <center><button style="display:none;" type="button" class="btn btn-primary ortoligand" id={{answer.myid}}>
                 See 3D </button></center><br>
-            <center><img src="{{answer.imagelink}}" /></center>
+            <center><img src="/dynadb/files{{answer.imagelink}}" /></center>
           </div>
           <div id='rightdiv' class="col-sm-6">
             <div id="container-01" class="mol-container"></div>
@@ -93,7 +93,7 @@
           <td align="center"><a class="btn btn-primary" role='button' href=/dynadb/molecule/id/{{url.0}}> Specific
               State ID: {{url.0}}</a> </td> {% endfor %} </tr> <tr>
               {% for url in answer.related_mol_images %}
-          <td align="center"><a href= /dynadb/molecule/id/{{url.0}}> <img src={{url.1}}> </a></td>
+          <td align="center"><a href= /dynadb/molecule/id/{{url.0}}> <img src=/dynadb/files{{url.1}}> </a></td>
           {% endfor %}
 
         </tr>

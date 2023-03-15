@@ -6,13 +6,13 @@ import pandas as pd
 import json
 import datetime
 import re
-from view.views import compute_interaction, obtain_all_chains, relate_atomSerial_mdtrajIndex
-from view.data import change_lig_name
-from dynadb.models import DyndbProtein, DyndbFilesDynamics, DyndbSubmissionMolecule, DyndbDynamicsComponents,DyndbModeledResidues, DyndbDynamics
-from protein.models import Protein
-from view.assign_generic_numbers_from_DB import obtain_gen_numbering 
-from dynadb.pipe4_6_0 import *
-from view.views import obtain_prot_chains , obtain_DyndbProtein_id_list, obtain_seq_pos_info, findGPCRclass, obtain_rel_dicts, traduce_all_poslists_to_ourclass_numb,obtain_predef_positions_lists,find_missing_positions
+from modules.view.views import compute_interaction, obtain_all_chains, relate_atomSerial_mdtrajIndex
+from modules.view.data import change_lig_name
+from modules.dynadb.models import DyndbProtein, DyndbFilesDynamics, DyndbSubmissionMolecule, DyndbDynamicsComponents,DyndbModeledResidues, DyndbDynamics
+from modules.protein.models import Protein
+from modules.view.assign_generic_numbers_from_DB import obtain_gen_numbering 
+from modules.dynadb.pipe4_6_0 import *
+from modules.view.views import obtain_prot_chains , obtain_DyndbProtein_id_list, obtain_seq_pos_info, findGPCRclass, obtain_rel_dicts, traduce_all_poslists_to_ourclass_numb,obtain_predef_positions_lists,find_missing_positions
 import copy
 import operator
 from django.conf import settings
@@ -159,7 +159,7 @@ class Command(BaseCommand):
             dynfiles=DyndbFilesDynamics.objects.prefetch_related("id_files").filter(id_dynamics=dyn_id)
             traj_list=[]
             traj_name_list=[]
-            p=re.compile(f"({settings.MEDIA_ROOT}/)(.*)")
+            p=re.compile(f"({settings.MEDIA_ROOT})(.*)")
             p2=re.compile("[\.\w]*$")
             for fileobj in dynfiles:
                 path=fileobj.id_files.filepath

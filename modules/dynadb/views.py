@@ -89,7 +89,7 @@ from rdkit.Chem import ForwardSDMolSupplier, AssignAtomChiralTagsFromStructure
 
 def obtain_prot_chains(pdb_name):
     chain_name_s=set()
-    fpdb=open(pdb_name,'r')
+    fpdb=open(settings.MEDIA_ROOT[:-1] + pdb_name,'r')
     for line in fpdb:
         if useline2(line):
             chain_name_s.add(line[21])
@@ -2389,7 +2389,7 @@ def search_molecule(molecule_id):
     for match in DyndbModelComponents.objects.filter(id_molecule=molecule_id):
         molec_dic['inmodels'].append(match.id_model.id)
     for molfile in DyndbFilesMolecule.objects.select_related('id_files').filter(id_molecule=molecule_id).filter(type=0):
-        intext=open(molfile.id_files.filepath,'r')
+        intext=open(settings.MEDIA_ROOT[:-1] + molfile.id_files.filepath,'r')
         string=intext.read()
         molec_dic['sdf']=string
     for match in DyndbReferencesMolecule.objects.select_related('id_references').filter(id_molecule=molecule_id):
@@ -2670,11 +2670,11 @@ def obtain_dyn_files(paths_dict):
     structure_file=""
     structure_name=""
     traj_list=[]
-    compString='('+ settings.MEDIA_ROOT +')(.*)'
+    compString='('+ settings.MEDIA_ROOT[:-1] +')(.*)'
     p=re.compile(compString)
     p2=re.compile("[\.\w]*$")
     for f_id , path in paths_dict.items():
-        myfile=p.search(path).group(2)
+        myfile=p.search(settings.MEDIA_ROOT[:-1] + path).group(2)
         myfile_name=p2.search(path).group()
         if myfile_name.endswith(".pdb"): #, ".ent", ".mmcif", ".cif", ".mcif", ".gro", ".sdf", ".mol2"))
             structure_file=myfile
@@ -2887,7 +2887,7 @@ def query_dynamics(request,dynamics_id):
         traj_displayed=traj_list[0][0]
     dyna_dic=dict()
     try:
-        dynaobj=DyndbDynamics.objects.select_related('id_dynamics_solvent_types__type_name','id_dynamics_membrane_types__type_name').get(pk=dynamics_id)
+        dynaobj=DyndbDynamics.objects.select_related('id_dynamics_solvent_types','id_dynamics_membrane_types').get(pk=dynamics_id)
     except ObjectDoesNotExist:
         raise Http404('Oops. That dynamics does not exist')
     except:
@@ -2985,7 +2985,7 @@ def query_dynamics(request,dynamics_id):
 
     dynmodel_obj=dynaobj.id_model
     
-    pdb_name=os.path.join(settings.MEDIA_ROOT,structure_file)
+    pdb_name=os.path.join(settings.MEDIA_ROOT[:-1],structure_file)
     pdb_chain_li=obtain_prot_chains(pdb_name)
     seq_pdb={}
     # check if it is apomorfic
@@ -7227,7 +7227,7 @@ def get_Author_Information(request):
         return render(request,'dynadb/dynadb_Author_Information.html'  )
 
 @login_required
-def db_inputformMAIN(request, submission_id): 
+def db_inputformMAIN(request, submission_id=None): 
     if submission_id is None:
         dictsubid={}
         disable_3=True
@@ -8163,7 +8163,7 @@ def get_file_paths(objecttype,url=False,submission_id=None,return_main_submissio
     
 def file_url_to_file_path(url):
     url_root = normpath(get_file_url_root())
-    file_root = normpath(settings.MEDIA_ROOT)
+    file_root = normpath(settings.MEDIA_ROOT[:-1])
     nurl = normpath(url)
     if nurl.find(url_root) == 0:
         relative_url = nurl[len(url_root)+1:]
@@ -9658,7 +9658,8 @@ def submission_summaryiew(request,submission_id):
             dctype=DyndbDynamicsComponents.MOLECULE_TYPE[l.type][1]
             dctypel.append(dctype)
             d=d+1
-            qName=DyndbCompound.objects.filter(id=DyndbMolecule.objects.filter(id=l.id_molecule_id).values_list('id_compound',flat=True)).values_list('name',flat=True)[0]
+            id_t = DyndbMolecule.objects.filter(id=l.id_molecule_id).values_list('id_compound',flat=True)[0]
+            qName=DyndbCompound.objects.filter(id=id_t).values_list('name',flat=True)[0]
             lcompname.append(qName)
             l_ord_mol.append(d)
     dd=dyndb_Dynamics()
@@ -10272,7 +10273,7 @@ def search_in_treeData(classifli,myslug):#gpcrclassif_fams,myfam_slug
     return(False)
 
 def datasets(request):
-    consideredgpcrs_path= settings.MEDIA_ROOT +'/Precomputed/Summary_info/considered_gpcrs.data'
+    consideredgpcrs_path= settings.MEDIA_ROOT +'Precomputed/Summary_info/considered_gpcrs.data'
     with open(consideredgpcrs_path, 'rb') as filehandle:  
         gpcrclassif = pickle.load(filehandle)
     others_gpcrclassif=copy.deepcopy(gpcrclassif)

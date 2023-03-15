@@ -19,7 +19,7 @@ To rebuilt the indexes run:
 
 import datetime
 from haystack import indexes
-from dynadb.models import DyndbProtein,DyndbMolecule,DyndbComplexProtein,DyndbCompound,DyndbOtherProteinNames,DyndbComplexCompound,DyndbComplexMoleculeMolecule, DyndbOtherCompoundNames,DyndbOtherProteinNames
+from modules.dynadb.models import DyndbProtein,DyndbMolecule,DyndbComplexProtein,DyndbCompound,DyndbOtherProteinNames,DyndbComplexCompound,DyndbComplexMoleculeMolecule, DyndbOtherCompoundNames,DyndbOtherProteinNames
 from django.utils import timezone
 
 

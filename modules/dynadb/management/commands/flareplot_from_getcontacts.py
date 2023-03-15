@@ -1,10 +1,10 @@
-from dynadb.models import DyndbDynamics, DyndbFilesDynamics
+from modules.dynadb.models import DyndbDynamics, DyndbFilesDynamics
 from django.db.models import F
 from django.core.management.base import BaseCommand, CommandError
 import gc
 import os
 import mdtraj as md
-from dynadb.views import  get_precomputed_file_path
+from modules.dynadb.views import  get_precomputed_file_path
 import json
 from django.conf import settings
 

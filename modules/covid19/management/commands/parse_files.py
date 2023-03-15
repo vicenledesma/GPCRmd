@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.models import F
 from covid19.models import *
 import mdtraj as md
-from dynadb.pipe4_6_0 import useline
+from modules.dynadb.pipe4_6_0 import useline
 
 class Command(BaseCommand):
     help = "Extracts info from the submitted structure and trajectory."

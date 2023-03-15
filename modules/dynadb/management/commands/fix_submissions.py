@@ -1,5 +1,5 @@
 from django.db.models import Count
-from dynadb.models import *
+from modules.dynadb.models import *
 from django.core.management.base import BaseCommand, CommandError
 
 

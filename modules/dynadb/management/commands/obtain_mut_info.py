@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 import requests
-from dynadb.models import DyndbDynamics
-from view.views import obtain_DyndbProtein_id_list
+from modules.dynadb.models import DyndbDynamics
+from modules.view.views import obtain_DyndbProtein_id_list
 from bioservices import UniProt
 import os
 from pathlib import Path
@@ -9,7 +9,7 @@ import pandas as pd
 import json
 import urllib
 import re
-from dynadb.pipe4_6_0 import d as aa_short
+from modules.dynadb.pipe4_6_0 import d as aa_short
 from django.db.models import F
 from django.conf import settings
 

@@ -1,4 +1,4 @@
-from dynadb.models import DyndbDynamics, DyndbFilesDynamics
+from modules.dynadb.models import DyndbDynamics, DyndbFilesDynamics
 from django.core.management.base import BaseCommand, CommandError
 import pandas as pd
 from django.conf import settings

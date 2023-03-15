@@ -5,7 +5,7 @@ import os
 import mdtraj as md
 
 from covid19.models import *
-from dynadb.models import DyndbFileTypes
+from modules.dynadb.models import DyndbFileTypes
 from django.conf import settings
 
 def get_prot_from_pdb(pdbid):

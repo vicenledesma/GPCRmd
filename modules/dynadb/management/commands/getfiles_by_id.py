@@ -7,9 +7,9 @@ import os
 import shutil
 import csv
 from django.conf import settings
-from view.obtain_gpcr_numbering import generate_gpcr_pdb
-from view.data import change_lig_name
-from view.views import obtain_compounds, sort_by_myorderlist, obtain_prot_chains, obtain_DyndbProtein_id_list, obtain_rel_dicts, obtain_seq_pos_info, compute_interaction, obtain_all_chains, relate_atomSerial_mdtrajIndex
+from modules.view.obtain_gpcr_numbering import generate_gpcr_pdb
+from modules.view.data import change_lig_name
+from modules.view.views import obtain_compounds, sort_by_myorderlist, obtain_prot_chains, obtain_DyndbProtein_id_list, obtain_rel_dicts, obtain_seq_pos_info, compute_interaction, obtain_all_chains, relate_atomSerial_mdtrajIndex
 from django.db import models
 from django.forms import ModelForm, Textarea
 from django.core.management.base import BaseCommand, CommandError
@@ -18,10 +18,10 @@ from pathlib import Path
 import pandas as pd
 import json
 import datetime
-from dynadb.models import DyndbModel, DyndbProtein, DyndbFilesDynamics, DyndbSubmissionMolecule, DyndbDynamicsComponents,DyndbModeledResidues, DyndbDynamics
-from protein.models import Protein
-from view.assign_generic_numbers_from_DB import obtain_gen_numbering 
-from dynadb.pipe4_6_0 import *
+from modules.dynadb.models import DyndbModel, DyndbProtein, DyndbFilesDynamics, DyndbSubmissionMolecule, DyndbDynamicsComponents,DyndbModeledResidues, DyndbDynamics
+from modules.protein.models import Protein
+from modules.view.assign_generic_numbers_from_DB import obtain_gen_numbering 
+from modules.dynadb.pipe4_6_0 import *
 
 from django.conf import settings
 
@@ -104,7 +104,7 @@ def obtain_dyn_files(dyn_id):
     traj_name_list=[]
     structure_file = None
     structure_file_name = None
-    p=re.compile(f"({settings.MEDIA_ROOT}/)(.*)")
+    p=re.compile(f"({settings.MEDIA_ROOT})(.*)")
     p2=re.compile("[\.\w]*$")
     for fileobj in dynfiles:
         path=fileobj.id_files.filepath
@@ -398,7 +398,7 @@ class Command(BaseCommand):
                 os.makedirs(directory,exist_ok=True)
 
             #Inside this folder, create symbolic links to desired files (and delete any previous with same name)
-            basepath = settings.MEDIA_ROOT
+            basepath = settings.MEDIA_ROOT[:-1]
             pdbpath = os.path.join(basepath,structure_file)
             
             #TO DO: idenfity structure files with an "struc" suffix, not only by extension

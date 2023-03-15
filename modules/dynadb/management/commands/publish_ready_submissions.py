@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
-from dynadb.models import DyndbSubmission, DyndbProtein, DyndbCompound, DyndbDynamics, DyndbMolecule,  DyndbComplexExp, DyndbComplexMolecule, DyndbModel
-from dynadb.models import DyndbSubmissionProtein, DyndbSubmissionMolecule, DyndbSubmissionModel, DyndbFilesMolecule, DyndbFilesModel , DyndbFilesDynamics, DyndbFiles
-from dynadb.views import get_file_name, get_file_name_dict, get_file_paths
+from modules.dynadb.models import DyndbSubmission, DyndbProtein, DyndbCompound, DyndbDynamics, DyndbMolecule,  DyndbComplexExp, DyndbComplexMolecule, DyndbModel
+from modules.dynadb.models import DyndbSubmissionProtein, DyndbSubmissionMolecule, DyndbSubmissionModel, DyndbFilesMolecule, DyndbFilesModel , DyndbFilesDynamics, DyndbFiles
+from modules.dynadb.views import get_file_name, get_file_name_dict, get_file_paths
 from django.db.models import Count, F, Value as V, SmallIntegerField
 import re
 from os import path, rename as os_rename

@@ -99,8 +99,6 @@ def obtain_gen_numbering(dyn_id, dprot_gpcr, gprot_gpcr):
     num_scheme_obj=Protein.objects.get(pk=prot_id).residue_numbering_scheme
     num_scheme=num_scheme_obj.slug
     num_scheme_name=num_scheme_obj.name
-
-
     
     # Only ABCF classes have generic numbering
     gpcr_class_pre=re.search("Class ([ABCF])", num_scheme_name)
@@ -116,6 +114,7 @@ def obtain_gen_numbering(dyn_id, dprot_gpcr, gprot_gpcr):
     rs = Residue.objects.prefetch_related('display_generic_number').filter(protein_conformation__protein=prot_id)
     sorted_rs=sorted(rs, key=lambda r: r.sequence_number)
     (res_gpcr_li, num_scheme,  rgn_ids)=obtain_gpcr_num_of_cannonical(num_scheme,sorted_rs,gpcr_class) 
+
     if not res_gpcr_li:
         return ("(2)Error: GPCR generic numbering cannot be used.",seq_db)
     all_num_schemes={}
@@ -174,7 +173,7 @@ def obtain_gen_numbering(dyn_id, dprot_gpcr, gprot_gpcr):
                 #res_mut=result[1]
                 seq_n=0
                 align_n=1
-                align_seq={}
+                align_seq={} #WARNING!!!
                 while align_n <= len(res_wt):
                     res_from=res_wt[align_n-1]
                     if res_from != "-":
@@ -183,7 +182,6 @@ def obtain_gen_numbering(dyn_id, dprot_gpcr, gprot_gpcr):
                     else:
                         align_seq[align_n]=(res_from, None, "-")
                     align_n+=1
-
                 for (res_position, res_info) in mut_dict.items():
                 #for mut in mutations_s:
                     #res_position =mut.resid 

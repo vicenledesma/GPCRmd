@@ -2,8 +2,8 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.models import F
 from django.conf import settings
 
-from dynadb.models import DyndbModel, DyndbDynamics, DyndbFiles, DyndbModelComponents
-from dynadb.pipe4_6_0 import useline2, d
+from modules.dynadb.models import DyndbModel, DyndbDynamics, DyndbFiles, DyndbModelComponents
+from modules.dynadb.pipe4_6_0 import useline2, d
 
 import re
 import os

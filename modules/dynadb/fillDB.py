@@ -17,9 +17,9 @@ application = get_wsgi_application()
 import pickle
 import requests
 import time
-from dynadb.customized_errors import StreamSizeLimitError, StreamTimeoutError, ParsingError
+from modules.dynadb.customized_errors import StreamSizeLimitError, StreamTimeoutError, ParsingError
 from django.db.models import F
-from protein.models import Protein
+from modules.protein.models import Protein
 from uniprotkb_utils_fillDB import retreive_data_uniprot,retreive_protein_names_uniprot,valid_uniprotkbac, retreive_data_uniprot, retreive_protein_names_uniprot, get_other_names, retreive_fasta_seq_uniprot, retreive_isoform_data_uniprot
 from contextlib import closing
 from django.db import connection
@@ -28,12 +28,12 @@ from rdkit.Chem import MolFromInchi,MolFromSmiles
 from molecule_download_fillDB import retreive_compound_data_pubchem_post_json, retreive_compound_sdf_pubchem, retreive_compound_png_pubchem, CIDS_TYPES, pubchem_errdata_2_response, retreive_molecule_chembl_similarity_json, chembl_get_compound_id_query_result_url,get_chembl_molecule_ids, get_chembl_prefname_synonyms, retreive_molecule_chembl_id_json, retreive_compound_png_chembl, chembl_get_molregno_from_html, retreive_compound_sdf_chembl, chembl_errdata_2_response
 from UniprotCodes import gpcr_uniprot_codes
 from django.db.models import Q
-from dynadb.models import DyndbBinding,DyndbEfficacy,DyndbReferencesExpInteractionData,DyndbExpInteractionData,DyndbReferences, DyndbProteinCannonicalProtein, DyndbProtein, DyndbProteinSequence, DyndbUniprotSpecies, DyndbUniprotSpeciesAliases, DyndbOtherProteinNames, DyndbProteinActivity, DyndbFileTypes, DyndbCompound, DyndbMolecule, DyndbFilesMolecule,DyndbFiles,DyndbOtherCompoundNames, DyndbCannonicalProteins,DyndbComplexProtein,DyndbReferencesProtein,DyndbComplexMoleculeMolecule,DyndbComplexMolecule,DyndbComplexCompound,DyndbReferencesMolecule,DyndbReferencesCompound,DyndbComplexExp
-from dynadb.models import DyndbProteinMutations,DyndbProteinCannonicalProtein, DyndbProtein, DyndbProteinSequence, DyndbUniprotSpecies, DyndbUniprotSpeciesAliases, DyndbOtherProteinNames, DyndbFileTypes, DyndbCompound, DyndbMolecule, DyndbFilesMolecule,DyndbFiles,DyndbOtherCompoundNames,DyndbInhibition
-from dynadb.pipe4_6_0 import *
+from modules.dynadb.models import DyndbBinding,DyndbEfficacy,DyndbReferencesExpInteractionData,DyndbExpInteractionData,DyndbReferences, DyndbProteinCannonicalProtein, DyndbProtein, DyndbProteinSequence, DyndbUniprotSpecies, DyndbUniprotSpeciesAliases, DyndbOtherProteinNames, DyndbProteinActivity, DyndbFileTypes, DyndbCompound, DyndbMolecule, DyndbFilesMolecule,DyndbFiles,DyndbOtherCompoundNames, DyndbCannonicalProteins,DyndbComplexProtein,DyndbReferencesProtein,DyndbComplexMoleculeMolecule,DyndbComplexMolecule,DyndbComplexCompound,DyndbReferencesMolecule,DyndbReferencesCompound,DyndbComplexExp
+from modules.dynadb.models import DyndbProteinMutations,DyndbProteinCannonicalProtein, DyndbProtein, DyndbProteinSequence, DyndbUniprotSpecies, DyndbUniprotSpeciesAliases, DyndbOtherProteinNames, DyndbFileTypes, DyndbCompound, DyndbMolecule, DyndbFilesMolecule,DyndbFiles,DyndbOtherCompoundNames,DyndbInhibition
+from modules.dynadb.pipe4_6_0 import *
 from Bio import Entrez
 from Bio.Entrez import efetch
-from dynadb.views import dealwithquery,do_boolean,prepare_to_boolean,get_uniprot_species_id_and_screen_name, get_file_name,get_file_paths, generate_molecule_properties_BindingDB
+from modules.dynadb.views import dealwithquery,do_boolean,prepare_to_boolean,get_uniprot_species_id_and_screen_name, get_file_name,get_file_paths, generate_molecule_properties_BindingDB
 Entrez.email = 'alejandrovarelarial@yahoo.es'
 
 def complexmatch_complex_exp(result_id,querylist):

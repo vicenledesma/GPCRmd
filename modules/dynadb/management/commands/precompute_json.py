@@ -5,11 +5,11 @@ import gc
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import F
 
-from dynadb.models import DyndbSubmission, DyndbDynamics
-from dynadb.models import DyndbSubmissionProtein, DyndbSubmissionMolecule, DyndbSubmissionModel, DyndbFilesMolecule, DyndbFilesModel , DyndbFilesDynamics, DyndbFiles
-from dynadb.views import  get_precomputed_file_path, get_file_name , get_file_name_dict, get_file_paths
+from modules.dynadb.models import DyndbSubmission, DyndbDynamics
+from modules.dynadb.models import DyndbSubmissionProtein, DyndbSubmissionMolecule, DyndbSubmissionModel, DyndbFilesMolecule, DyndbFilesModel , DyndbFilesDynamics, DyndbFiles
+from modules.dynadb.views import  get_precomputed_file_path, get_file_name , get_file_name_dict, get_file_paths
 
-from view.create_fplot import *
+from modules.view.create_fplot import *
 from django.conf import settings
 
 class Command(BaseCommand):

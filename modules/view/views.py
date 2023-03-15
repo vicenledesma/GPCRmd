@@ -477,7 +477,7 @@ def obtain_seq_pos_info(result,seq_pos,seq_pos_n,chain_name,multiple_chains):
             seq_pos_n+=1
     return (seq_pos,seq_pos_n)
 
-def obtain_rel_dicts(result,numbers,chain_name,current_class,seq_pos,seq_pos_n,gpcr_pdb,gpcr_aa,gnum_classes_rel,multiple_chains,simplified=False,add_aa=False,seq_pdb=False,all_struc_num=False):
+def obtain_rel_dicts(result,numbers,chain_name,current_class,seq_pos,seq_pos_n,gpcr_pdb,gpcr_aa,gnum_classes_rel,multiple_chains, pdbid, simplified=False,add_aa=False,seq_pdb=False,all_struc_num=False):
     """Creates a series of dictionaries that will be useful for relating the pdb position with the gpcr number (pos_gnum) or AA (pos_gnum); and the gpcr number for the different classes (in case the user wants to compare)"""
     chain_nm_seq_pos=""
     rs_by_seg={1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [], 13: [], 14: [], 15: [], 16: [], 17: []}
@@ -512,8 +512,9 @@ def obtain_rel_dicts(result,numbers,chain_name,current_class,seq_pos,seq_pos_n,g
                 seq_pos[seq_pos_n][2]=gnum_or_nth
                 seq_pos_n+=1
     #######
+    print(pdbid) # Use OPM to get segments 3REY.A
     seg_li=[]
-    for seg in range(2,17):
+    for seg in range(2,17): #2,17
         slen=len(rs_by_seg[seg])
         if slen==0:
             seg_li.append([])
@@ -521,6 +522,7 @@ def obtain_rel_dicts(result,numbers,chain_name,current_class,seq_pos,seq_pos_n,g
             seg_li.append([rs_by_seg[seg][0]])
         else:
             seg_li.append([rs_by_seg[seg][0],rs_by_seg[seg][-1]])
+    print(seg_li)
     #######
     other_classes=list({"A","B","C","F"} - set(current_class))
     other_classes_ok=[]
@@ -1291,7 +1293,6 @@ def get_pocket_and_dyn_data(request) -> dict:
     # Get dynamic related data
     dynfiles = DyndbFilesDynamics.objects.prefetch_related("id_files").filter(id_dynamics=dyn_id)
     (structure_file, structure_file_id, structure_name, traj_list) = obtain_dyn_files(dynfiles)
-
     # Get pockets' descriptors 
     pocket_data = obtain_pocket_data(dyn_id, traj_list)
 
@@ -1556,6 +1557,10 @@ def obtain_tunnel_data(dyn_id,traj_list):
                         radius_atoms=[line[i:i+n] for i in range(0, len(line), n)]
                         frame_radius.append(radius_atoms)
                 radius_d[cluster_num]=frame_radius
+                if 6 in radius_d.keys():
+                    print(radius_d[6])
+                elif "6" in radius_d.keys():
+                    print(radius_d["6"])
         if os.path.isdir(traj_rep):
             for filenm in os.listdir(traj_rep):
                 cluster_num=int(filenm.split("_")[2])
@@ -2259,18 +2264,18 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
             warning_load[warning_type]=False;
             request.session['warning_load']=warning_load
     
-    
+    # Metadynviewer
     is_metadyn=False
     metadyn_files_avail=False
     if int(dyn_id)==176:
         is_metadyn={}
         #Obtain HILLS path, set hills_path=False if not found
-        hills_path="/dynadb/files/Dynamics/metadyn/HILLS"
+        hills_path="/mdsrv/file/_DB/Dynamics/metadyn/HILLS"
         if os.path.isdir("/var/www/html/mdsrv/metadyndiet/") and hills_path:
             metadyn_files_avail=True
             is_metadyn["files_avail"]=metadyn_files_avail
             is_metadyn["hills_path"]=hills_path
-
+            
             
     predef_int_data=None
     if ligprotint_def:
@@ -2320,14 +2325,22 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
         light_sel_s.add("protein")
         light_sel=" or ".join(light_sel_s)
         (structure_file,structure_file_id,structure_name, traj_list,trajidToFramenum)=obtain_dyn_files(dynfiles,True)
+        print(traj_list)
+        if int(dyn_id)==176:
+            structure_file="Dynamics/11661_metadyn_176.pdb"
+            structure_name="11661_metadyn_176.pdb"
         first_strideval=trajidToFramenum[traj_list[0][2]][1]
+
         #structure_file="Dynamics/with_prot_lig_multchains_gpcrs.pdb"########################### [!] REMOVE
         #structure_name="with_prot_lig_multchains_gpcrs.pdb" ################################### [!] REMOVE
         pdb_name = settings.MEDIA_ROOT + structure_file
         chain_name_li=obtain_prot_chains(pdb_name)
         #traj_list=sorted(traj_list,key=lambda x: x[2])
         #(traj_list,fpdir)=get_fplot_path(dyn_id,traj_list)
-        (traj_list, show_fp)=get_fplot_data(dyn_id,traj_list)
+        if not int(dyn_id)==176:
+            (traj_list, show_fp)=get_fplot_data(dyn_id,traj_list)
+        else:
+            show_fp = False
         ed_mats=obtain_ed_align_matrix(dyn_id,traj_list)
         ############
         (tunnels,clust_rep_avail,traj_clust_rad)=obtain_tunnel_data(dyn_id,traj_list)
@@ -2390,7 +2403,7 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
                     checkpdb_res=checkpdb_ngl(pdb_name, segid="",start=-1,stop=9999999999999999999, chain=chain_name)
                     if isinstance(checkpdb_res, tuple) and len(checkpdb_res)>1:
                         tablepdb,pdb_sequence,hexflag=checkpdb_res
-                        result=matchpdbfa_ngl(prot_seq,pdb_sequence, tablepdb, hexflag)
+                        result=matchpdbfa_ngl(prot_seq,pdb_sequence, tablepdb, hexflag, start=tablepdb[0][2]) #Renumbering to 1 is a problem
                         if isinstance(result, list):
                             #chain_results[chain_name]=result
                             if chain_name not in chains_taken:
@@ -2404,6 +2417,7 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
                                 else:
                                     non_gpcr_chains.append(chain_name)
                 prot_seq_pos[prot_id]=(prot_name,seq_pos)
+            print(dprot_chains)
             keys_to_rm=set()
             for key, val in dprot_chains.items():
                 if val==([],[]):
@@ -2456,7 +2470,8 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
                     dprot_name=gpcr_Dprot.name
                     try:
                         gen_num_res=obtain_gen_numbering(dyn_id, gpcr_Dprot,gpcr_Gprot)  #warning!! the problem is here
-                    except:
+                    except Exception as e:
+                        print(e)
                         gen_num_res = None
                         break
                     if len(gen_num_res) > 2:
@@ -2481,7 +2496,7 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
                             motname_li=["PIF","DRY","NPxxY","Sodium binding site","Ionic lock","Rotamer toggle switch"]
                             motifs_dict_mod=copy.deepcopy(motifs_dict)
                             for chain_name, result in dprot_chain_li:
-                                (gpcr_pdb,gpcr_aa,gnum_classes_rel,other_classes_ok,dprot_seq,seq_pos_index,seg_li,seq_pdb)=obtain_rel_dicts(result,numbers,chain_name,current_class,dprot_seq,seq_pos_index, gpcr_pdb,gpcr_aa,gnum_classes_rel,multiple_chains,seq_pdb=seq_pdb)
+                                (gpcr_pdb,gpcr_aa,gnum_classes_rel,other_classes_ok,dprot_seq,seq_pos_index,seg_li,seq_pdb)=obtain_rel_dicts(result,numbers,chain_name,current_class,dprot_seq,seq_pos_index, gpcr_pdb,gpcr_aa,gnum_classes_rel,multiple_chains, pdbid, seq_pdb=seq_pdb)
                                 (show_class,current_poslists,current_motif,other_classes_ok)=translate_all_poslists_to_ourclass_numb(motifs_dict_mod,gnum_classes_rel,cons_pos_dict_mod,current_class,other_classes_ok)
                                 obtain_predef_positions_lists(dyn_id,current_poslists,current_motif,other_classes_ok,current_class,cons_pos_dict_mod, motifs_mod,gpcr_pdb,gpcr_aa,gnum_classes_rel,multiple_chains,chain_name,motifs_dict_mod)
                             prot_seq_pos[dprot_id]=(dprot_name, dprot_seq)
@@ -2612,7 +2627,9 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
                         "occupancy" : json.dumps(occupancy),
                         "is_metadyn":is_metadyn,
                         "has_pharmacophores" : has_pharmacophores,
-                        "pharma_json" : json.dumps(pharma_json)
+                        "pharma_json" : json.dumps(pharma_json),
+                        "script_cs":False,
+                        "google_analytics":False,
                          }
                     return render(request, 'view/index.html', context)
                 else:
@@ -2665,7 +2682,9 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
                         "occupancy" : json.dumps(occupancy),
                         "is_metadyn":is_metadyn,
                         "has_pharmacophores" : has_pharmacophores,
-                        "pharma_json" : json.dumps(pharma_json)                        
+                        "pharma_json" : json.dumps(pharma_json),
+                        "script_cs":False, 
+                        "google_analytics":False,                      
                         }
                     return render(request, 'view/index.html', context)
             else: #No checkpdb and matchpdb
@@ -2716,7 +2735,9 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
                         "occupancy" : json.dumps(occupancy),
                         "is_metadyn":is_metadyn,
                         "has_pharmacophores" : has_pharmacophores,
-                        "pharma_json" : json.dumps(pharma_json)
+                        "pharma_json" : json.dumps(pharma_json),
+                        "script_cs":False,
+                        "google_analytics":False,
                         }
                 return render(request, 'view/index.html', context)
         else: #len(chain_name_li) <= 0
@@ -2765,7 +2786,9 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
                     "occupancy" : json.dumps(occupancy),
                     "is_metadyn":is_metadyn,
                     "has_pharmacophores" : has_pharmacophores,
-                    "pharma_json" : json.dumps(pharma_json)
+                    "pharma_json" : json.dumps(pharma_json),
+                    "script_cs":False,
+                    "google_analytics":False,
                     }
             return render(request, 'view/index.html', context)
 
@@ -3032,7 +3055,7 @@ def update_bokeh(request):
         if (atype=="2d"):
             context={        
                 "divscript_cs":p,
-                "avail_res_atoms":avail_res_atoms
+                "avail_res_atoms":avail_res_atoms,
             }
 
         else:
@@ -3204,8 +3227,6 @@ def compute_interaction(res_li,struc_p,traj_p,num_prots,thresh,serial_mdInd,gpcr
                     lig_multiple_res=True
                 pairs = list(itertools.product(gpcr_res, all_lig_res))
                 (dists,res_p)=md.compute_contacts(itraj, contacts=pairs, scheme=dist_scheme)
-                print(dists)
-                print(res_p)
                 # if dist_scheme == "closest":
                 #     pass
                 # else:
@@ -3267,26 +3288,21 @@ def compute_interaction(res_li,struc_p,traj_p,num_prots,thresh,serial_mdInd,gpcr
         res_pdb=res_topo.resSeq
         res_name=res_topo.name
         res_chain=seg_to_chain[res_topo.segment_id]
-        print(res_topo, res_pdb, res_name, res_chain)
         if lig_ind=="Lig":
             lig_nm=lig_ind
         else:
             lig_topo=mytop.residue(lig_ind)
             lig_nm=lig_topo.name
-            print(lig_topo, lig_nm)
         if lig_nm in fin_dict:
             fin_dict[lig_nm].append((res_pdb,res_chain,res_name,("%.2f" % freq)))
         else:
             lig_topo=mytop.residue(lig_ind)
             lig_pdb=lig_topo.resSeq
             ligres_sel=lig_nm+" and "+str(lig_pdb)
-            print(ligres_sel)
             if (ligres_sel in fin_dict):
                 fin_dict[ligres_sel].append((res_pdb,res_chain,res_name,("%.2f" % freq)))
             else: 
-                print(fin_dict)
                 return (False,None, "Error when parsing results (2).")
-    print(fin_dict)
     return(True,fin_dict,None)
 
 def download_rmsd(request, dyn_id,rmsd_id):

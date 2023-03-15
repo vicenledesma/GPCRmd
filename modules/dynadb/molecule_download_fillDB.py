@@ -4,13 +4,13 @@ import sys
 import time
 import urllib
 import certifi
-from dynadb.customized_errors import StreamSizeLimitError, StreamTimeoutError, ParsingError
+from modules.dynadb.customized_errors import StreamSizeLimitError, StreamTimeoutError, ParsingError
 from requests.exceptions import HTTPError,ConnectionError,Timeout,TooManyRedirects
 from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponse, JsonResponse, StreamingHttpResponse, HttpResponseForbidden
 from defusedxml.ElementTree import DefusedXMLParser as xmlparser
 from io import BytesIO
-from dynadb.molecule_properties_tools_fillDB import open_molecule_file
+from modules.dynadb.molecule_properties_tools_fillDB import open_molecule_file
 from html.parser import HTMLParser
 
 

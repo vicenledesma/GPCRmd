@@ -6,7 +6,7 @@ Created on Mon Apr 25 15:50:57 2016
 """
 from django.core.management.base import BaseCommand
 
-from protein.models import Protein
+from modules.protein.models import Protein
 
 import urllib
 import re

@@ -8,7 +8,7 @@ django.setup()
 from django import db
 from django.contrib import auth
 from accounts.user_functions import is_submission_owner
-from dynadb.views import is_allowed_directory
+from modules.dynadb.views import is_allowed_directory
 UserModel = auth.get_user_model()
 
 def check_password(environ, username, password):

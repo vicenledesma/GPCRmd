@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 
 from common.views import AbsTargetSelection
 from common.selection import Selection
-from protein.models import ProteinSegment, Protein
+from modules.dynadb.models import ProteinSegment, Protein
 from residue.models import Residue,ResidueNumberingScheme
 
 from collections import OrderedDict

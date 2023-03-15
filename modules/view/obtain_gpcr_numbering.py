@@ -1,6 +1,6 @@
-from view.views import *
-from dynadb.pipe4_6_0 import *
-from dynadb.models import DyndbDynamics
+from modules.view.views import *
+from modules.dynadb.pipe4_6_0 import *
+from modules.dynadb.models import DyndbDynamics
 from django.db.models import F
 
 def generate_gpcr_pdb (dyn_id, structure_file, retrieve_rel_dict=False):

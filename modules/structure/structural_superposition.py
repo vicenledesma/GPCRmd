@@ -8,7 +8,7 @@ from Bio.PDB import *
 from Bio.Seq import Seq
 from structure.functions import *
 from structure.assign_generic_numbers_gpcr import GenericNumbering
-from protein.models import Protein
+from modules.protein.models import Protein
 from structure.models import Structure
 from interaction.models import ResidueFragmentInteraction
 

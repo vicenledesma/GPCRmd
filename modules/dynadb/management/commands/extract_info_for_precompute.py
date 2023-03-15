@@ -1,11 +1,11 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import F
-from dynadb.models import DyndbDynamics,DyndbProtein
-from protein.models import Protein
+from modules.dynadb.models import DyndbDynamics,DyndbProtein
+from modules.protein.models import Protein
 import pickle
-from view.assign_generic_numbers_from_DB import obtain_gen_numbering 
-from view.views import findGPCRclass
-from dynadb.pipe4_6_0 import checkpdb_ngl, matchpdbfa_ngl
+from modules.view.assign_generic_numbers_from_DB import obtain_gen_numbering 
+from modules.view.views import findGPCRclass
+from modules.dynadb.pipe4_6_0 import checkpdb_ngl, matchpdbfa_ngl
 from django.conf import settings
 
 class Command(BaseCommand):

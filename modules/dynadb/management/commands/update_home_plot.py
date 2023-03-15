@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import F
-from dynadb.models import DyndbDynamics
+from modules.dynadb.models import DyndbDynamics
 import pickle
 import requests
 from django.conf import settings

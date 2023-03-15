@@ -13,7 +13,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.models import F
 import numpy as np
 
-from dynadb.models import *
+from modules.dynadb.models import *
 from django.conf import settings
 
 

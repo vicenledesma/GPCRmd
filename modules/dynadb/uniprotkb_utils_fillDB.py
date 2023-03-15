@@ -1,7 +1,7 @@
 import re
 import time
 import requests
-from dynadb.customized_errors import StreamSizeLimitError, StreamTimeoutError, ParsingError
+from modules.dynadb.customized_errors import StreamSizeLimitError, StreamTimeoutError, ParsingError
 #from customized_errors import StreamSizeLimitError, StreamTimeoutError, ParsingError
 from requests.exceptions import HTTPError,ConnectionError,Timeout,TooManyRedirects
 from django.conf import settings

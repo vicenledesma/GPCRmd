@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from dynadb.models import *
+from modules.dynadb.models import *
 import os 
 import csv
 from django.conf import settings

@@ -108,7 +108,7 @@ if False:
     import numpy as np
     import mdtraj as md   
     t=md.load('dynadb/b2ar_isoprot/b2ar.dcd',top='dynadb/b2ar_isoprot/build.pdb')
-    from dynadb import psf_parser as psf
+    from modules.dynadb import psf_parser as psf
     atoms=psf.parser('dynadb/b2ar_isoprot/b2ar.psf')
     b=psf.compute_interaction(t[:5],0,1,atoms,contact_threshold=0,fpt=0.1)
     frametime=(t[:4].time).reshape(len(t[:4].time),1)

@@ -7,7 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
 #from ligand.models import Ligand
-#from protein.models import Protein
+#from modules.protein.models import Protein
 #from structure.models import StructureModel
 
 from django.db import models
