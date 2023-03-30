@@ -483,7 +483,7 @@ def check_chembl_up():
     if data["status"] == "UP":
         return True
     else:
-        print("ChEMBL REST service not avaliable. Status: "+data["status"],sys.stderr)
+        print("ChEMBL REST service not avaliable. Status: "+data["status"],sys.__stderr__)
         return False
         
 

@@ -142,7 +142,7 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS("%s %s: SDF downloaded at %s.") % (id_name,str(in_id),sdf_path))
             #recompute inchi, inchikey and smiles
             with open(sdf_path,'rb') as f:
-                mol = open_molecule_file(f,logfile=sys.stderr,filetype='sdf')
+                mol = open_molecule_file(f,logfile=sys.__stderr__,filetype='sdf')
             inchi,code,msg = generate_inchi(mol,FixedH=True)
             if code < 2:
                 self.stdout.write(self.style.WARNING("%s %s SDF to InChI: %s") % (id_name,str(in_id),msg))
@@ -151,7 +151,7 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.NOTICE("%s %s SDF to InChI: cannot generate InChI. Skipping.") % (id_name,str(in_id)))
                     continue
             inchikey = generate_inchikey(inchi)
-            smiles = generate_smiles(mol,logfile=sys.stderr)
+            smiles = generate_smiles(mol,logfile=sys.__stderr__)
             #save molecule
             q_mol = DyndbMolecule.objects.filter(pk=mol_id)
             q_mol.update(inchi=inchi,inchikey=inchikey,smiles=smiles,update_timestamp=timezone.now(),last_update_by_dbengine=settings.DATABASES['default']['USER'])

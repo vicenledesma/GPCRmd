@@ -89,7 +89,9 @@ from rdkit.Chem import ForwardSDMolSupplier, AssignAtomChiralTagsFromStructure
 
 def obtain_prot_chains(pdb_name):
     chain_name_s=set()
-    fpdb=open(settings.MEDIA_ROOT[:-1] + pdb_name,'r')
+    if not settings.MEDIA_ROOT[:-1] in pdb_name: 
+        pdb_name = settings.MEDIA_ROOT[:-1] + pdb_name
+    fpdb=open(pdb_name,'r')
     for line in fpdb:
         if useline2(line):
             chain_name_s.add(line[21])
@@ -2389,9 +2391,12 @@ def search_molecule(molecule_id):
     for match in DyndbModelComponents.objects.filter(id_molecule=molecule_id):
         molec_dic['inmodels'].append(match.id_model.id)
     for molfile in DyndbFilesMolecule.objects.select_related('id_files').filter(id_molecule=molecule_id).filter(type=0):
-        intext=open(settings.MEDIA_ROOT[:-1] + molfile.id_files.filepath,'r')
-        string=intext.read()
-        molec_dic['sdf']=string
+        if os.path.isfile(settings.MEDIA_ROOT[:-1] + molfile.id_files.filepath): #Sometimes molecule files is not created
+            intext=open(settings.MEDIA_ROOT[:-1] + molfile.id_files.filepath,'r')
+            string=intext.read()
+            molec_dic['sdf']=string
+        else: # To avoid error of file not found
+            molec_dic['sdf']=""
     for match in DyndbReferencesMolecule.objects.select_related('id_references').filter(id_molecule=molecule_id):
         ref={'doi':match.id_references.doi,'title':match.id_references.title,'authors':match.id_references.authors,'url':match.id_references.url,'journal':match.id_references.journal_press,'issue':match.id_references.issue,'pub_year':match.id_references.pub_year,'volume':match.id_references.volume}
         counter=0
@@ -3066,6 +3071,9 @@ def query_dynamics(request,dynamics_id):
             if "prm" in myfilename:
             #if typeobj.is_parameter:
                 btn_txt="Parameters file (ID: %s)" % match.id_files.id
+            if "prt" in myfilename:
+            #if typeobj.is_parameter:
+                btn_txt="Protocol file (ID: %s)" % match.id_files.id
             else:
                 btn_txt="Others file (ID: %s)" % match.id_files.id
             dyna_dic['files']["param_files"].append( ( match.id_files.filepath.replace("/var/www/","/dynadb/") , match.id_files.filename , btn_txt) ) 
@@ -3398,28 +3406,31 @@ def submitpost_view(request,submission_id,model_id=1):
 
 @textonly_500_handler  
 def get_mutations_view(request):
-  if request.method == 'POST':
-    try:
-      fasta = request.POST['alignment']
-      refseq = request.POST['sequence']
-      if check_fasta(fasta,allow_stop=False):
-        return JsonResponse(get_mutations(fasta,refseq),safe=False)
-      elif check_fasta(fasta,allow_stop=True):
-        raise ParsingError('Translation stop character (*) is not allowed. Please truncate sequence until first stop.')
-      else:
-        raise ParsingError('Invalid fasta format.')
-    except ParsingError as e:
-      response = HttpResponse('Parsing error: '+str(e),status=422,reason='Unprocessable Entity',content_type='text/plain; charset=UTF-8')
-      return response
-    except:
-      raise
+    if request.method == 'POST':
+        try:
+            fasta = request.POST['alignment']
+            print(fasta)
+            refseq = request.POST['sequence']
+            print(refseq)
+            if check_fasta(fasta,allow_stop=False):
+                return JsonResponse(get_mutations(fasta,refseq),safe=False)
+            elif check_fasta(fasta,allow_stop=True):
+                raise ParsingError('Translation stop character (*) is not allowed. Please truncate sequence until first stop.')
+            else:
+                raise ParsingError('Invalid fasta format.')
+        except ParsingError as e:
+            print(e)
+            response = HttpResponse('Parsing error: '+str(e),status=422,reason='Unprocessable Entity',content_type='text/plain; charset=UTF-8')
+            return response
+        except:
+            raise
         
 
 def obtain_res_coords(pdb_path,res1,res2,pair, pair2): 
     '''res1 is last residue of previous segment, res2 is start of current segment. PAIR is [A,B], pair2 is [PROA,PROB]'''
     res1_coords=[]
     res2_coords=[]
-    readpdb=open(pdb_path,'r')
+    readpdb=open(settings.MEDIA_ROOT + pdb_path,'r')
     for line in readpdb:
         if line.startswith('ATOM') or line.startswith('HETATM'):
             if ( (pair==None) or (line[21:22].strip()==pair[0]) ) and ((pair2==None) or (line[72:76].strip()==pair2[0]) ):
@@ -6333,7 +6344,7 @@ def get_dynamics_files_reference_atomnum(submission_id,file_type):
     Gets a reference num of atoms with a priorized reference dynamics file 
     """
     file_types = ['coor','traj']
-    filetype_dbtypestext_dict = {'coor':'coor','top':'top','traj':'traj','parm':'param','other':'other'}
+    filetype_dbtypestext_dict = {'coor':'coor','top':'top','traj':'traj','parm':'param','other':'other', 'prt':'prt'}
     if file_type not in file_types:
         raise ValueError('Invalid file_type argument: "'+str(file_type)+'"')
     #remove file_type from reference file type files
@@ -6417,21 +6428,26 @@ def get_dynamics_file_types():
     file_types['traj'] = dict()
     file_types['parm'] = dict()
     file_types['other'] = dict()
+    file_types['prt'] = dict()
     file_types['coor']['db'] = ["is_model"]
     file_types['top']['db'] = ["is_topology"]
     file_types['traj']['db'] = ["is_trajectory"]
     file_types['parm']['db'] = ["is_parameter","is_anytype"]
     file_types['other']['db'] = ["is_anytype"]
+    file_types['prt']['db'] = ["is_anytype"]
     file_types['coor']['long_name'] = "Coordinate file"
     file_types['top']['long_name'] = "Topology file"
     file_types['traj']['long_name'] = "Trajectory files"
     file_types['parm']['long_name'] = "Simulation parameters"
     file_types['other']['long_name'] = "Other files"
+    file_types['prt']['long_name'] = "Simulation protocol"
     file_types['coor']['description'] = "Upload the initial coordinates file of the system in PDB format (.pdb) max 50 MB."
     file_types['top']['description'] = "Upload the file describing the topology of your system. Top (.psf, .prmtop, .top, other) max 50 MB."
     file_types['traj']['description'] = "Upload the files containing the evolution of the system coordinates with time. Traj (.dcd, .xtc) max. 2 GB."
     file_types['parm']['description'] = "Upload the file containing the force field parameters. Param (.tar.gz,.tgz) max 50 MB."
     file_types['other']['description'] = "Additional files needed for rerunning the simulation. Include here individual topology files and parameters that are not published elsewhere (e.g. resulting from optimitzation). max 50 MB."
+    file_types['prt']['description'] = "Upload the file containing the simulation protocol (.zip, .tar.gz,.tgz) max 50 MB."
+
     fields = dict()
     fields_extension = dict()
     q = DyndbFileTypes.objects.filter(is_accepted=True)
@@ -6474,9 +6490,9 @@ def _upload_dynamics_files(request,submission_id,trajectory=None,trajectory_max_
     new_window = '0'
     no_js = '1'
     error = ''
-    filetype_complete_names = {'coor':'coordinate','top':'topology','traj':'trajectory','parm':'parameter','other':'other'}
-    filetype_subtypes_dict = {'coor':'pdb','top':'topology','traj':'trajectory','parm':'parameters','other':'other'}
-    filetype_dbtypestext_dict = {'coor':'coor','top':'top','traj':'traj','parm':'param','other':'other'}
+    filetype_complete_names = {'coor':'coordinate','top':'topology','traj':'trajectory','parm':'parameter','other':'other', 'prt':'protocol'}
+    filetype_subtypes_dict = {'coor':'pdb','top':'topology','traj':'trajectory','parm':'parameters','other':'other', 'prt':'protocol'}
+    filetype_dbtypestext_dict = {'coor':'coor','top':'top','traj':'traj','parm':'param','other':'other', 'prt':'prt'}
     atomnum_check_file_types = {'coor','traj'}
     if 'new_window' in request.GET:
         new_window = request.GET['new_window']
@@ -6688,7 +6704,7 @@ def DYNAMICSview(request, submission_id, model_id=None):
         fdbF={}
         fdbFobj={}
         qft=DyndbFileTypes.objects.all().values()
-        ext_to_descr={'pdb': "pdb simulation coordinates file", 'psf':'psf simulation topology file', 'prm':"prm simulation parameters file", 'dcd':"dcd simulation trajectory file", 'xtc':"xtc simulation trajectory file", 'tar.gz':'parameters or other simulation files' }  
+        ext_to_descr={'pdb': "pdb simulation coordinates file", 'psf':'psf simulation topology file', 'prm':"prm simulation parameters file", 'dcd':"dcd simulation trajectory file", 'xtc':"xtc simulation trajectory file", 'tar.gz':'parameters, protocol or other simulation files', 'zip':'parameters, protocol or other simulation files'}  
        #####  
         ft=DyndbFileTypes.objects.all()
         dict_ext_id={}
@@ -6807,7 +6823,7 @@ def DYNAMICSview(request, submission_id, model_id=None):
         print("JJJJJJJJ")
         # Defining a dictionary "d_fdyn_t" containing choices in the table dyndb_files_dynamics (field 'type')
 
-        d_fdyn_t={'coor':'0','top':'1','traj':'2','parm':'3','other':'3'}
+        d_fdyn_t={'coor':'0','top':'1','traj':'2','parm':'3','other':'3', 'prt':'4'}
 
         dicpost=request.POST
         lkeydyncomp=["id_molecule","molecule","name","numberofmol","resname","type"]
@@ -8151,6 +8167,7 @@ def get_file_paths(objecttype,url=False,submission_id=None,return_main_submissio
         root = get_file_url_root()
     else:
         root = settings.MEDIA_ROOT
+        # root = "/"
     path = join_path(root,filepathdict[objecttype]['main'],relative=False,url=url)
     if submission_id is not None:
         submission_folder = filepathdict[objecttype]['submission']+str(submission_id)
@@ -8196,6 +8213,7 @@ def get_file_name_dict():
     filenamedict['dynamics']['subtypes']["topology"] = dict()
     filenamedict['dynamics']['subtypes']["trajectory"] = dict()
     filenamedict['dynamics']['subtypes']["parameters"] = dict()
+    filenamedict['dynamics']['subtypes']["protocol"] = dict()
     filenamedict['dynamics']['subtypes']["other"] = dict()
     filenamedict['dynamics']['subtypes']["log"] = dict()
     filenamedict['summary']['subtypes'] = dict()
@@ -8210,6 +8228,7 @@ def get_file_name_dict():
     filenamedict['dynamics']['subtypes']["topology"]["ext"] = ["psf","prmtop","top"]
     filenamedict['dynamics']['subtypes']["trajectory"]["ext"] = ["xtc","dcd"]
     filenamedict['dynamics']['subtypes']["parameters"]["ext"] = ["prm","tar.gz"]
+    filenamedict['dynamics']['subtypes']["protocol"]["ext"] = ["zip","tar.gz"]
     filenamedict['dynamics']['subtypes']["other"]["ext"] = ["tar.gz"]
     filenamedict['dynamics']['subtypes']["log"]["ext"] = ["log"]
     filenamedict['summary']['subtypes']['summary']['ext']=['txt']
@@ -8219,6 +8238,7 @@ def get_file_name_dict():
     filenamedict['dynamics']['subtypes']["trajectory"]["part"] = "trj"
     filenamedict['dynamics']['subtypes']["parameters"]["part"] = "prm"
     filenamedict['dynamics']['subtypes']["other"]["part"] = "oth"
+    filenamedict['dynamics']['subtypes']["protocol"]["part"] = "prt"
     filenamedict['dynamics']['subtypes']["log"]["part"] = "dyn"
     return filenamedict
 filenamedict = get_file_name_dict()
@@ -8739,8 +8759,8 @@ def generate_molecule_properties2(submission_id,molid):
     except:
         data['msg'] ='Error while computing InChI.'
     print("AAAAAAAAAAAAAAAAAA\n")
-    data['smiles'] = generate_smiles(mol,logfile=sys.stderr)
-    print(data['smiles'], "= generate_smiles(mol,logfile=sys.stdout)")
+    data['smiles'] = generate_smiles(mol,logfile=sys.__stderr__)
+    print(data['smiles'], "= generate_smiles(mol,logfile=sys.__stdout__)")
     print("AAAAAAAAAAAAAAAAAA\n")
     data['charge'] = get_net_charge(mol)
     print("data['charge'] = get_net_charge(mol)")
@@ -9488,6 +9508,8 @@ def SMALL_MOLECULEview(request, submission_id):
     return render(request,'dynadb/SMALL_MOLECULE.html', {'qMOL':qMOL,'fdbSub':fdbSub,'labtypel':labtypel,'Type':Type,'imp':imp,'qCOMP':qCOMP,'int_id':int_id,'int_id0':int_id0,'alias':alias,'submission_id':submission_id,'model_id':False,'colorlist':color_label_forms})
 
 def save_uploadedfile(filepath,uploadedfile):
+    if not settings.MEDIA_ROOT[:-1] in filepath: 
+        filepath = settings.MEDIA_ROOT[:-1] + filepath
     with open(filepath,'wb') as f:
         if uploadedfile.multiple_chunks:
             for chunk in uploadedfile.chunks():
@@ -10392,7 +10414,6 @@ def searchtable_data(dynobj,nongpcr=True):
     dynprot = dynobj.annotate(dyn_id=F('id'))
     dynprot = dynprot.annotate(pdb_namechain=F("id_model__pdbid"))
     dynprot = dynprot.annotate(dyncomp_resname=F("dyndbdynamicscomponents__resname"))
-    print(dynprot)
     dynprot = dynprot.annotate(dyncomp_type=F("dyndbdynamicscomponents__type"))
     dynprot = dynprot.annotate(dyncomp_id=F("dyndbdynamicscomponents__id_molecule_id"))
     dynprot = dynprot.annotate(comp_name=F("id_model__dyndbmodelcomponents__id_molecule__id_compound__name"))
@@ -10712,12 +10733,17 @@ def save_pdbfile(pdbfilekey, submission_id, uploadedfile, pdbfilepath=False, pdb
         pdbfileurl = os.path.join(submission_url,pdbname)
     # Otherwise remove existing file so as to save new one:
     else:
-        os.remove(pdbfilepath)
+        if os.path.isfile(settings.MEDIA_ROOT[:-1] + pdbfilepath):
+            os.remove(settings.MEDIA_ROOT[:-1] + pdbfilepath)
     # Try to save the file inside the server
     try:
+        # pdbfilepath =  os.path.join(submission_path,pdbname)
         save_uploadedfile(pdbfilepath,uploadedfile)
-    except:
-        os.remove(pdbfilepath)
+    except Exception as e:
+        print("ERROR!!!")
+        print(e)
+        if os.path.isfile(settings.MEDIA_ROOT[:-1] + pdbfilepath):
+            os.remove(settings.MEDIA_ROOT[:-1] + pdbfilepath)
         response = HttpResponseServerError('Cannot save uploaded file.',content_type='text/plain; charset=UTF-8')
     finally:
         uploadedfile.close()
@@ -10735,6 +10761,7 @@ def step1(request, submission_id):
     context = { 
         'fdbMF' : fdbMF,
         'submission_id' : submission_id,
+        'max_step' : check_submission_status(submission_id),
      }
     # Check if this form page has previously been filled. If so, take its values and put them in the form 
     ds = DyndbSubmission.objects.get(pk=submission_id)
@@ -10782,6 +10809,8 @@ def count_and_save_atoms(dyn_id, submission_id):
     dd = DyndbDynamics.objects.get(pk=dyn_id)
     dsdf = DyndbSubmissionDynamicsFiles.objects.get(submission_id=submission_id,type=0,is_deleted=False)    
     pdbpath = dsdf.filepath
+    if not settings.MEDIA_ROOT[:-1] in pdbpath: 
+        pdbpath = settings.MEDIA_ROOT[:-1] + pdbpath
     pdbdyn = md.load_pdb(pdbpath, standard_names=False).top
     natoms = pdbdyn.n_atoms
     dd.atom_num = natoms
@@ -10793,7 +10822,7 @@ def save_dyndbfile(filename, filextension, filepath, url, creation_fields, updat
     data = {
         'filename' : filename,
         'id_file_types' : dft.id,
-        'filepath' : filepath,
+        'filepath' : filepath.replace(settings.MEDIA_ROOT[:-1],""),
         'url' : url
     }
     #Update or create depnding on the files existance
@@ -10951,7 +10980,7 @@ def step1_submit(request, submission_id):
             'files_dynamics_id' : dyn_id,
             'filename' : pdbname,
             'url' : pdbfileurl,
-            'filepath' : pdbfilepath,
+            'filepath' : pdbfilepath.replace(settings.MEDIA_ROOT[:-1],""), #Absolute path with relative one
             'framenum' : 1,
             'id_files' : file_id,
             'files_dynamics_id' : filesdyn_id
@@ -10981,6 +11010,8 @@ def step1_submit(request, submission_id):
     context = { 
         'step' : '2',
         'submission_id' : submission_id,
+        'max_step' : check_submission_status(submission_id),
+
      }
     return render(request,'dynadb/step2.html', context, status=200)
 
@@ -11013,7 +11044,10 @@ def smalmol_info(inchikey):
         DFM_sdf = DyndbFilesMolecule.objects.filter(id_molecule=dmol.id, type=0)
         inGPCRmd = bool(len(DFM_sdf) and os.path.exists(DFM_sdf[0].id_files.filepath))
         DFM_image = DyndbFilesMolecule.objects.filter(id_molecule=dmol.id, type=2)
-        imagepath = DFM_image[0].id_files.url if (len(DFM_image) and os.path.exists(DFM_image[0].id_files.filepath)) else ''
+        if (len(DFM_image) and os.path.exists(DFM_image[0].id_files.filepath)):
+            imagepath = DFM_image[0].id_files.url  
+        else:
+            imagepath = ''
     # If molecule not in the database
     else:       
         sinchikey = inchikey
@@ -11160,7 +11194,7 @@ def find_smalmols(request, submission_id):
     else:    
         # Load PDB system file of this submission entry
         pdbpath = DyndbSubmissionDynamicsFiles.objects.filter(submission_id=submission_id, type=0)[0].id_files.filepath
-        pdbfile = md.load_pdb(pdbpath, standard_names=False)
+        pdbfile = md.load_pdb(settings.MEDIA_ROOT[:-1] + pdbpath, standard_names=False)
         top = pdbfile.top
         # Select small molecules (anything not protein) from the loaded PDB
         smalmol_names = { top.atom(i).residue.name for i in pdbfile.top.select('not protein')}
@@ -11249,7 +11283,7 @@ def save_molecule(dictpost, initfiles, molnum, id_comp, mode='create'):
         # If there is a molecule entry and it was created in this submission, update its information
         creation_submid = DMol[0].molecule_creation_submission_id.id if DMol[0].molecule_creation_submission_id else None
         if len(DMol) and (mode=='update') and (DMol[0].molecule_creation_submission_id == dictpost['submission_id']):
-            DM.update(**mol_dict)
+            DMol.update(**mol_dict)
         id_mol = DMol[0].id
     return(id_mol)
 
@@ -11326,12 +11360,17 @@ def sent_error(logfile, error_msg):
 def save_sdf(uploadfile, sdfname, submission_path, logfile):
     # (try to) load the SDF file, and check if it presents any mistakes
     # If it does, save them in a log file to check later
-    try:
-        mol = open_molecule_file(uploadfile,logfile=logfile)
-    except (ParsingError, MultipleMoleculesinSDF, InvalidMoleculeFileExtension) as e:
-        sent_error(logfile, e.args[0])
-    except:
-        sent_error(logfile, 'Cannot load molecule from uploaded file.')
+    # try:
+    print("FILEE:", uploadfile)
+        # if not settings.MEDIA_ROOT[:-1] in uploadfile: 
+        #     uploadfile = settings.MEDIA_ROOT[:-1] + uploadfile
+    mol = open_molecule_file(uploadfile,logfile=logfile)
+    # except (ParsingError, MultipleMoleculesinSDF, InvalidMoleculeFileExtension) as e:
+    #     print(e)
+    #     sent_error(logfile, e.args[0])
+    # except Exception as e:
+    #     print(e)
+    #     sent_error(logfile, 'Cannot load molecule from uploaded file.')
     # Check as well if the sdf file is in the format that we want
     if check_implicit_hydrogens(mol):
         sent_error(logfile, 'Molecule contains implicit hydrogens. Please, provide a molecule with explicit hydrogens.')
@@ -11357,7 +11396,6 @@ def save_png(inchikey, pngname, submission_path, logfile):
     except:
         try:
             os.remove(os.path.join(submission_path,pngname))
-            os.remove(os.path.join(submission_path,sdfname))
         except:
             pass
         sent_error(logfile, 'Error while drawing molecule.')
@@ -11368,7 +11406,7 @@ def save_dyndbfile_molecule(filename, filetype, filemoltype, submission_path, su
         'filename' : filename,
         'id_file_types' : filetype,
         'description' : '',
-        'filepath' : join_path(submission_path,filename,url=False),
+        'filepath' : join_path(submission_path.replace(settings.MEDIA_ROOT[:-1], ""),filename,url=False),
         'url' : join_path(submission_url,filename,url=True),
     }
     file_dict.update(initfiles)
@@ -11513,12 +11551,12 @@ def step2_submit(request, submission_id,):
     dm = DyndbModel.objects.get(dyndbsubmissionmodel__submission_id=submission_id)
     id_model = dm.id
     modelfile_path = DyndbFilesModel.objects.get(id_model=id_model).id_files.filepath
-    pdbmodel = md.load_pdb(modelfile_path, standard_names=False).top
+    pdbmodel = md.load_pdb(settings.MEDIA_ROOT + modelfile_path, standard_names=False).top
     # Get Dynamics object of this submission object and load its pdb file with MDtraj
     dd = DyndbDynamics.objects.get(submission_id=submission_id)
     id_dyn = dd.id
     dynfile_path = DyndbFilesDynamics.objects.get(id_dynamics=id_dyn, type=0).id_files.filepath
-    pdbdyn = md.load_pdb(dynfile_path, standard_names=False).top
+    pdbdyn = md.load_pdb(settings.MEDIA_ROOT + dynfile_path, standard_names=False).top
     # If there are small molecules in this system
     num_entries = request.POST['num_entries']
     if num_entries:
@@ -11571,6 +11609,7 @@ def step2_submit(request, submission_id,):
     context = { 
         'step' : '3',
         'submission_id' : submission_id,
+        'max_step': check_submission_status(submission_id),
      }
     # Once everything is done, go to step 3
     return render(request,'dynadb/step3.html', context, status=200)
@@ -11591,7 +11630,7 @@ def get_uniprot_seq(uniprotkbac):
                 header = line
             else:
                 seq += line
-        return(seq)
+        return(seq) 
     else:
         print('Could not obtain sequence for uniprotkbac '+uniprotkbac)
         return ''
@@ -11603,7 +11642,7 @@ def get_mutseq(pdb_path, segdict):
     mutseq = ''
     prev_resid = 0
     prev_resname = ''
-    with open(pdb_path,'r') as myfile:
+    with open(settings.MEDIA_ROOT + pdb_path,'r') as myfile:
         for line in myfile:
             if line.startswith(('ATOM','HETATM')):
                 resname = line[17:20].replace(' ','')
@@ -11659,7 +11698,7 @@ def get_alignment_URL(request):
         error_msg = "<b>Alignment error: </b><p>No reference sequence for this protein was found. Please introduce one in the field above</p>"
         return HttpResponse(error_msg, status=500)
     # Align sequences
-    result=align_wt_mut(uniseq,mutseq)
+    result=align_wt_mut_global(uniseq,mutseq)
     alignment='>uniprot:\n'+result[0]+'\n>system_seq:\n'+result[1]
     # Convert alignment from fasta to phylip
     p_alignment = fasta_to_phylip(alignment)
@@ -11751,8 +11790,8 @@ def find_prots(request,submission_id):
         dm = DyndbModel.objects.get(dyndbsubmissionmodel__submission_id=submission_id)
         dd = DyndbDynamics.objects.get(submission_id=submission_id)
         df = DyndbFiles.objects.get(dyndbfilesdynamics__id_dynamics=dd.id, dyndbsubmissiondynamicsfiles__type=0)
-        pdb_path = df.filepath
-        pdbtop = md.load_pdb(pdb_path, standard_names=False).topology
+        pdb_path = df.filepath 
+        pdbtop = md.load_pdb(settings.MEDIA_ROOT + pdb_path, standard_names=False).topology
         # Take chain and segment ids in the system
         chainseg = {}
         segresids = {}
@@ -11760,7 +11799,7 @@ def find_prots(request,submission_id):
         mutseqs = {}
         prev_resid = ''
         prev_seg = ''
-        with open(pdb_path,'r') as myfile:
+        with open(settings.MEDIA_ROOT + pdb_path, 'r') as myfile:
             for line in myfile:
                 if line.startswith(('ATOM','HETATM')):
                     resname = line[17:20].replace(' ','')
@@ -11872,19 +11911,24 @@ def get_seq_coordinates(id_model, prot_id, resid_from, resid_to, chain, segid):
         }}
         dynseq = get_mutseq(pdb_path,segdict)
         # Perform alignment
-        alig=align_wt_mut(uniseq,dynseq)
+        alig=align_wt_mut_global(uniseq,dynseq)
+        print("Alineame")
         alig_uniseq = alig[0]
         alig_mutseq = alig[1]
+        seg_alig = alig.aligned # Returns segments aligned (((0, 1), (2, 3), (4, 5)), ((0, 1), (1, 2), (2, 3)))
         # Find start of uniprot sequence in alginment
-        if alig_uniseq.startswith('-'):
-            starting = 1
-        else:
-            starting = alig[3]
+        starting = seg_alig[0][0][-1]
+        # if alig_uniseq.startswith('-'):
+        #     starting = 1
+        # else:
+        #     starting = alig[3]
         # Find ending of uniprot sequence in alginment            
-        if alig_uniseq.endswith('-'):            
-            ending = len(uniseq)
-        else:
-            ending = alig[4]
+        ending = seg_alig[0][-1][-1]
+        # if alig_uniseq.endswith('-'):            
+        #     ending = len(uniseq)
+        # else:
+        #     ending = alig[4]
+        print(starting, ending)
         return(starting, ending)
     # If no uniprot for this protein, return start and end positions of original protein
     else:
@@ -12231,7 +12275,7 @@ def step3_submit(request, submission_id,):
     dm = DyndbModel.objects.get(dyndbsubmissionmodel__submission_id=submission_id)
     id_model = dm.id
     modelfile_path = DyndbFilesModel.objects.get(id_model=id_model).id_files.filepath
-    pdbmodel = md.load_pdb(modelfile_path, standard_names=False).top
+    pdbmodel = md.load_pdb(settings.MEDIA_ROOT + modelfile_path, standard_names=False).top
     # Get Dynamics object of this submission object and load its pdb file with MDtraj
     dd = DyndbDynamics.objects.get(submission_id=submission_id)
     id_dyn = dd.id
@@ -12282,6 +12326,8 @@ def step3_submit(request, submission_id,):
     context = { 
         'step' : '4',
         'submission_id' : submission_id,
+        'max_step': check_submission_status(submission_id),
+
     }
     return render(request,'dynadb/step4.html', context, status=200)
 
@@ -12355,7 +12401,8 @@ def step4_submit(request, submission_id):
                 'dyn' : 1,
                 'trj' : 2,
                 'prm' : 3,
-                'oth' : 4
+                'oth' : 4,
+                'prt' : 5
     }
     # Get Dynamics object of this submission object and get its pdbfile path
     dd = DyndbDynamics.objects.get(submission_id=submission_id)
@@ -12369,6 +12416,7 @@ def step4_submit(request, submission_id):
         # Get list of all files submitted in this input thing, and iterate over them
         files_list = request.FILES.getlist(filekey)
         i=0
+        print(files_list)
         for filecontent in files_list:
             # Get file extension
             (up_filename, ext) = filecontent.name.split('.', 1)
@@ -12383,8 +12431,8 @@ def step4_submit(request, submission_id):
                 DyndbFiles.objects.filter(pk=df.id).update(**update_fields)
             # In other case, new tables must be created
             else:
-                basepath = settings.MEDIA_ROOT+'Dynamics/'
-                baseurl = "/dynadb/files/Dynamics/"
+                basepath = '/Dynamics'
+                baseurl = "/dynadb/files/Dynamics"
                 # Get file DyndbFileTypes id. The first one, because whatever
                 dft = DyndbFileTypes.objects.filter(extension=ext)[0]
                 # Save new DyndbFiles entry. The url, filepath and filename will be stablished once we have created the entry
@@ -12417,7 +12465,11 @@ def step4_submit(request, submission_id):
                     'framenum' : 1 # Provisional. Changed bellow
                 }
                 Dfd = dyndb_Files_Dynamics(filesdyn_dict)
-                dfd = Dfd.save()
+                if Dfd.is_valid():
+                    dfd = Dfd.save()
+                else:
+                    error=Dfd.errors.as_text()
+                    print(error)
                 filedyn_id = dfd.id
                 # Save DyndbSubmissionDynamicsFiles
                 filesdynsub_dict = {
@@ -12432,7 +12484,11 @@ def step4_submit(request, submission_id):
                     'files_dynamics_id' : filedyn_id
                 } 
                 Dsdf = dyndb_submission_dynamics_files(filesdynsub_dict)
-                dsdf = Dsdf.save()
+                if Dsdf.is_valid():
+                    dsdf = Dsdf.save()
+                else:
+                    error=Dfd.errors.as_text()
+                    print(error)
             # Numfile
             i+=1
             # Save file in server
@@ -12440,7 +12496,7 @@ def step4_submit(request, submission_id):
             save_uploadedfile(filepath,filecontent)
             # If file is trajectory, get number of frames and save it 
             if filekey=='trj':
-                framenum = get_frames_num(filepath,'traj',ext)
+                framenum = get_frames_num(settings.MEDIA_ROOT + filepath,'traj',ext)
                 dsdf.framenum = framenum
                 dfd.framenum = framenum
                 dsdf.save()
@@ -12455,6 +12511,137 @@ def step4_submit(request, submission_id):
     return render(request,'dynadb/step5.html', context, status=200)
 
 ##### STEP 5: References
+
+# DOI RETRIEVER
+def doitopmid(doi):
+    """
+    Return the PMID for a given DOI.
+    """
+
+    url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=" + doi + "&format=json"
+    r = requests.get(url)
+    info_pubmed_dict = json.loads(r.text)
+    pmid = info_pubmed_dict["esearchresult"]["idlist"][0]# PMID:
+    return int(pmid)
+
+def doitobib(doi):
+    """
+    Return a bibTeX string of metadata for a given DOI.
+    """
+    #IMPORTS
+    from requests.exceptions import HTTPError,ConnectionError,Timeout,TooManyRedirects
+
+    #OUTDATA
+    data = dict()
+    errdata = dict()
+
+    #URL
+    url = "https://doi.org/" + doi
+    headers = {"accept": "application/x-bibtex"}
+    try: 
+        r = requests.get(url, headers = headers)
+        info_r = r.text
+
+        # Clean the data
+        info = info_r.replace("\n", "").replace("\t", "").split(",") 
+        # Extract info and store it on different variables
+        for dt in info: 
+            if "doi =" in dt: #DOI
+                l_doi = dt.split("{")
+                doi_in = l_doi[-1].replace("}","")
+                data["doi"] = doi_in
+            elif "author =" in dt: #Author
+                l_auth = dt.split("=")
+                auth = l_auth[-1].replace("{","").replace("\\", "").replace("'","").replace("}","")
+                auth = re.sub("[^A-Z0-9_\s-]", "", auth,0,re.IGNORECASE).replace("and", ",").replace(" ,",",")[1:]
+                data["auth"] = auth
+            elif "title =" in dt: #Title
+                l_title = dt.split("=")
+                title = l_title[-1].replace("{","").replace("}","")[1:]
+                data["title"] = title
+            elif "journal =" in dt: #Journal or Press
+                l_journal = dt.split("=")
+                journal = l_journal[-1].replace("{","").replace("}","")[1:]
+                data["journal"] = journal
+            elif "year =" in dt: #Publication year::
+                l_year = dt.split("=")
+                year = l_year[-1][1:]
+                data["year"] = int(year)
+            elif "number =" in dt: #Issue:
+                l_number= dt.split("=")
+                number = l_number[-1].replace("{","").replace("}","")[1:]
+                data["issue"] = int(number)
+            elif "volume =" in dt: #Volume:
+                l_volume = dt.split("=")
+                volume = l_volume[-1].replace("{","").replace("}","")[1:]
+                data["volume"] = int(volume)
+            elif "pages =" in dt: #Pages:
+                l_pages = dt.split("=")
+                pages = l_pages[-1].replace("{","").replace("}","")[1:]
+                data["pages"] = pages
+            elif "url =" in dt: #URL:
+                l_url = dt.split("=")
+                url = l_url[-1].replace("{","").replace("}","")[1:]
+                data["url"] = url
+        
+        # Extract PMID
+        try: 
+            data["pmid"] = doitopmid(doi)
+        except Exception as e: 
+            print(e)
+            data["pmid"] = doitopmid(doi_in)
+    except HTTPError:
+        errdata['Error'] = True
+        errdata['ErrorType'] = 'HTTPError'
+        errdata['status_code'] = r.status_code
+        errdata['reason'] = r.reason
+    except ConnectionError as e:
+        errdata['Error'] = True
+        errdata['ErrorType'] = 'ConnectionError'
+        errdata['reason'] = 'Cannot connect.'
+    except Timeout as e:
+        errdata['Error'] = True
+        errdata['ErrorType'] = 'Timeout'
+        errdata['reason'] = 'Timeout exceeded.'
+    except TooManyRedirects as e:
+        errdata['Error'] = True
+        errdata['ErrorType'] = 'TooManyRedirects'
+        errdata['reason'] = 'Too many redirects.'
+    except StreamSizeLimitError as e:
+        errdata['Error'] = True
+        errdata['ErrorType'] = 'StreamSizeLimitError'
+        errdata['reason'] = str(e)
+    except StreamTimeoutError as e:
+        errdata['Error'] = True
+        errdata['ErrorType'] = 'StreamTimeoutError'
+        errdata['reason'] = str(e)
+    except ParsingError as e:
+        errdata['Error'] = True
+        errdata['ErrorType'] = 'ParsingError'
+        errdata['reason'] = str(e)
+    except:
+        errdata['Error'] = True
+        errdata['ErrorType'] = 'Internal'
+        do_not_skip_on_debug = True
+        raise
+    finally:
+        try:
+            r.close()
+        except:
+            pass
+        return (data,errdata)
+
+@login_required
+def doi_info(request):
+    """
+    Obtain data from doi, and send it back
+    """
+    # doi = "10.1093/bioinformatics/btaa117"
+    doi = request.GET['doi_in'].replace(' ','')
+    submission_id = request.GET['submission_id']
+    (data,errdata) = doitobib(doi)
+    return HttpResponse(json.dumps(data),content_type='step5/'+submission_id)   
+
 @login_required
 @user_passes_test_args(is_submission_owner,redirect_field_name=None)
 @test_if_closed        
@@ -12519,28 +12706,30 @@ def step5_submit(request, submission_id):
     # Check whether the fdbREFF instance of dyndb_ReferenceForm is valid:
     SubmitRef=True
     qRFdoi=DyndbReferences.objects.filter(doi=request.POST['doi'])
+    print(FRpk)
     qSubmission=DyndbSubmission.objects.filter(id=submission_id)
     qT=list(qSubmission.filter(dyndbsubmissionprotein__submission_id=submission_id,dyndbsubmissionmolecule__submission_id=submission_id,dyndbsubmissionmodel__submission_id=submission_id,dyndbdynamics__submission_id=submission_id).values('dyndbsubmissionprotein__protein_id','dyndbsubmissionmolecule__molecule_id','dyndbsubmissionmolecule__molecule_id__id_compound','dyndbsubmissionmodel__model_id','dyndbdynamics__id'))
+    print(qT)
     dictprot={'id_protein':qT[0]['dyndbsubmissionprotein__protein_id'], 'id_references':FRpk}
     dictmod={'id_model':qT[0]['dyndbsubmissionmodel__model_id'], 'id_references':FRpk }
     dictdyn={'id_dynamics':qT[0]['dyndbdynamics__id'], 'id_references':FRpk }
     refprot=dyndb_References_Protein(dictprot)
     if SubmitRef:
-        if not qRFdoi.filter(dyndbreferencesprotein__id_protein=qT[0]['dyndbsubmissionprotein__protein_id'],dyndbreferencesprotein__id_references=FRpk).exists():
+        if not qRFdoi.filter(dyndbreferencesprotein__id_protein=qT[0]['dyndbsubmissionprotein__protein_id'],dyndbreferencesprotein__id_references__in=FRpk).exists():
             if refprot.is_valid():
                 refprot.save()
             else:
                 print("refprot is not valid",refprot.errors.as_text())
     refmod=dyndb_References_Model(dictmod)
     if  SubmitRef:
-        if not qRFdoi.filter(dyndbreferencesmodel__id_model=qT[0]['dyndbsubmissionmodel__model_id'],dyndbreferencesmodel__id_references=FRpk).exists():
+        if not qRFdoi.filter(dyndbreferencesmodel__id_model=qT[0]['dyndbsubmissionmodel__model_id'],dyndbreferencesmodel__id_references__in=FRpk).exists():
             if refmod.is_valid():
                 refmod.save()
             else:
                 print("refmod is not valid",refmod.errors.as_text())
     refdyn=dyndb_References_Dynamics(dictdyn)
     if SubmitRef:
-        if not qRFdoi.filter(dyndbreferencesdynamics__id_dynamics=qT[0]['dyndbdynamics__id'],dyndbreferencesdynamics__id_references=FRpk).exists():
+        if not qRFdoi.filter(dyndbreferencesdynamics__id_dynamics=qT[0]['dyndbdynamics__id'],dyndbreferencesdynamics__id_references__in=FRpk).exists():
             if refdyn.is_valid():
                 refdyn.save()
                 print("refdyn may  be saved ",refdyn.errors.as_text())
@@ -12553,7 +12742,7 @@ def step5_submit(request, submission_id):
         dictmol[i]={'id_molecule':qT[i]['dyndbsubmissionmolecule__molecule_id'],  'id_references':FRpk}
         refmol=dyndb_References_Molecule(dictmol[i])                                     
         if SubmitRef:
-            if not qRFdoi.filter(dyndbreferencesmolecule__id_molecule=qT[i]['dyndbsubmissionmolecule__molecule_id'],dyndbreferencesmolecule__id_references=FRpk).exists():
+            if not qRFdoi.filter(dyndbreferencesmolecule__id_molecule=qT[i]['dyndbsubmissionmolecule__molecule_id'],dyndbreferencesmolecule__id_references__in=FRpk).exists():
                 if refmol.is_valid():                                                         
                     refmol.save()                                                             
                 else:                                                                         
@@ -12561,7 +12750,7 @@ def step5_submit(request, submission_id):
         dictcomp[i]={'id_compound':qT[i]['dyndbsubmissionmolecule__molecule_id__id_compound'],  'id_references':FRpk}
         refcomp=dyndb_References_Compound(dictcomp[i])
         if not SubmitRef:
-            if not qRFdoi.filter(dyndbreferencescompound__id_compound=qT[i]['dyndbsubmissionmolecule__molecule_id__id_compound'],dyndbreferencescompound__id_references=FRpk).exists():
+            if not qRFdoi.filter(dyndbreferencescompound__id_compound=qT[i]['dyndbsubmissionmolecule__molecule_id__id_compound'],dyndbreferencescompound__id_references__in=FRpk).exists():
                 if refcomp.is_valid():
                     refcomp.save()
                 else:

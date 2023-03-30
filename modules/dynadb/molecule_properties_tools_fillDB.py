@@ -48,7 +48,7 @@ def fileno(file_or_fd):
 @contextmanager
 def stdout_redirected(to=os.devnull, stdout=None):
     if stdout is None:
-       stdout = sys.stdout
+       stdout = sys.__stdout__
 
     stdout_fd = fileno(stdout)
     # copy stdout_fd before it is overwritten
@@ -93,8 +93,8 @@ def open_molecule_file(uploadedfile,logfile=os.devnull,filetype=None):
             filetype = uploadedfile.filetype
         
     
-    with stdout_redirected(to=logfile,stdout=sys.stderr):
-        with stdout_redirected(to=logfile,stdout=sys.stdout):
+    with stdout_redirected(to=logfile,stdout=sys.__stderr__):
+        with stdout_redirected(to=logfile,stdout=sys.__stdout__):
             print('Loading molecule...')
             uploadedfile.seek(0)
             if filetype == 'sdf' or filetype == 'mol':
@@ -184,8 +184,8 @@ def generate_smiles_openbabel(molblock,obabelcmd = "/usr/bin/obabel"):
     return (smi,smierr)
 
 def generate_smiles2(mol,logfile=os.devnull):
-    with stdout_redirected(to=logfile,stdout=sys.stderr):
-        with stdout_redirected(to=logfile,stdout=sys.stdout):
+    with stdout_redirected(to=logfile,stdout=sys.__stderr__):
+        with stdout_redirected(to=logfile,stdout=sys.__stdout__):
             molnoar = Mol(mol)
             try:
                 Kekulize(molnoar,clearAromaticFlags=True)
@@ -202,8 +202,8 @@ def generate_smiles2(mol,logfile=os.devnull):
     return smi
     
 def generate_smiles(mol,logfile=os.devnull):
-    with stdout_redirected(to=logfile,stdout=sys.stderr):
-        with stdout_redirected(to=logfile,stdout=sys.stdout):
+    with stdout_redirected(to=logfile,stdout=sys.__stderr__):
+        with stdout_redirected(to=logfile,stdout=sys.__stdout__):
             mol2 = Mol(mol) 
             mol2.SetProp("_Name","")
             molblock = MolToMolBlock(mol2,includeStereo=True)
@@ -231,8 +231,8 @@ def get_charge_from_inchi(inchi,removeHs=False):
     return netc
 
 def generate_png(mol,pngpath,logfile=os.devnull,size=300):
-    with stdout_redirected(to=sys.stdout,stdout=sys.stderr):
-        with stdout_redirected(to=logfile,stdout=sys.stdout):
+    with stdout_redirected(to=sys.__stdout__,stdout=sys.__stderr__):
+        with stdout_redirected(to=logfile,stdout=sys.__stdout__):
             nhmol = RemoveHs(mol,implicitOnly=False, updateExplicitCount=True, sanitize=False)
             SanitizeMol(nhmol,catchErrors=True)
             op = DrawingOptions()

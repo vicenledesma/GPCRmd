@@ -442,10 +442,11 @@ class DyndbFilesDynamics(models.Model):
         (2, 'Trajectory'),
         (3, 'Parameters'),
         (4, 'Others'),
+        (5, 'Protocol'),
     )
     id_dynamics = models.ForeignKey('DyndbDynamics', models.DO_NOTHING, db_column='id_dynamics',   null=True) 
     id_files = models.ForeignKey('DyndbFiles', models.DO_NOTHING,   db_column='id_files',  null=True)
-    type = models.SmallIntegerField( choices=file_types, default=0)
+    type = models.SmallIntegerField(choices=file_types, default=0)
     framenum = models.PositiveIntegerField(null=True,blank=True,default=None)
 
     class Meta:

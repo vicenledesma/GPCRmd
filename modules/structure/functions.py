@@ -4,11 +4,11 @@ from Bio.PDB.PDBIO import Select
 import Bio.PDB.Polypeptide as polypeptide
 
 from django.conf import settings
-from common.selection import SimpleSelection
-from common.alignment import Alignment
-from modules.dynadb.models import ProteinSegment
-from residue.models import Residue
-from structure.models import Structure
+from modules.common.selection import SimpleSelection
+from modules.common.alignment import Alignment
+from modules.protein.models import ProteinSegment
+from modules.residue.models import Residue
+from modules.structure.models import Structure
 
 from subprocess import Popen, PIPE
 from io import StringIO

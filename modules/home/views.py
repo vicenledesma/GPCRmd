@@ -443,7 +443,7 @@ def quickloadall_both(request):
     dynfiledata = dynfiledata.annotate(file_is_traj=F('dyndbfilesdynamics__id_files__id_file_types__is_trajectory'))
     dynfiledata = dynfiledata.annotate(file_ext=F('dyndbfilesdynamics__id_files__id_file_types__extension'))
     dynfiledata = dynfiledata.values("dyn_id","file_path","file_is_traj","file_ext")
-
+    print(dynfiledata)
     dyn_dict = {}
     for dyn in dynfiledata:
         dyn_id=dyn["dyn_id"]

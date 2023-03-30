@@ -1,17 +1,17 @@
 from django.conf import settings
 
-from common.selection import Selection
-from common.definitions import *
+from modules.common.selection import Selection
+from modules.common.definitions import *
 from modules.protein.models import Protein, ProteinConformation, ProteinState, ProteinSegment, ProteinFusionProtein
-from residue.models import Residue
-from residue.models import ResidueGenericNumber, ResidueGenericNumberEquivalent
-from residue.models import ResidueNumberingScheme
-from structure.models import Structure, Rotamer, StructureSegment, StructureSegmentModeling, StructureCoordinates
+from modules.residue.models import Residue
+from modules.residue.models import ResidueGenericNumber, ResidueGenericNumberEquivalent
+from modules.residue.models import ResidueNumberingScheme
+from modules.structure.models import Structure, Rotamer, StructureSegment, StructureSegmentModeling, StructureCoordinates
 
 from collections import OrderedDict
 from copy import deepcopy
 from operator import itemgetter
-from Bio.SubsMat import MatrixInfo
+from Bio.Align import substitution_matrices, PairwiseAligner
 import logging
 
 
@@ -825,8 +825,10 @@ class Alignment:
                         similarities.append(0)
                         similarity_scores.append(0)
                     else:
-                        pair = (protein_residue, reference_residue)
-                        similarity = self.score_match(pair, MatrixInfo.blosum62)
+                        aligner = PairwiseAligner()
+                        aligner.substitution_matrix = substitution_matrices.load("BLOSUM62")
+                        alignment = aligner.align(protein_residue, reference_residue)
+                        similarity = alignment.score
                         if similarity > 0:
                             similarities.append(1)
                         else:
@@ -841,12 +843,6 @@ class Alignment:
             return identity, similarity, similarity_score
         else:
             return False
-
-    def score_match(self, pair, matrix):
-        if pair not in matrix:
-            return matrix[(tuple(reversed(pair)))]
-        else:
-            return matrix[pair]
 
 class AlignedReferenceTemplate(Alignment):
     ''' Creates a structure based alignment between reference protein and target proteins that are made up from the 

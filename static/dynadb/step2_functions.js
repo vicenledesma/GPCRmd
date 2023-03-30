@@ -201,7 +201,7 @@ class smalmol_entry {
         </div>              
       </div>
       <div id="imagediv${id}" class='col-md-6 imagediv'>
-        <img id="mol_image${id}" class="mol_image" src=${imagepath} height="100%" alt="Image not avalible yet for this molecule">
+        <img id="mol_image${id}" class="mol_image" src="${imagepath}" height="100%" alt="Image not avalible yet for this molecule">
         <input type='hidden' name="image_path${id}" id="image_path${id}" form="mainform" value=${imagepath} >
       </div>
     </div>

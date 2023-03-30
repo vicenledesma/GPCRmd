@@ -50,7 +50,7 @@ def fileno(file_or_fd):
 def stdout_redirected(to=devnull, stdout=None):
     
     if stdout is None:
-       stdout = sys.stdout
+       stdout = sys.__stdout__
     try:
         stdout_fd = fileno(stdout)
     except (OSError,AttributeError):
@@ -64,15 +64,15 @@ def stdout_redirected(to=devnull, stdout=None):
                 to_file = open(to, 'a')
                 closefile = True
                 
-            if stdout == sys.stdout:
-                sys.stdout.flush() # flush library buffers that we know nothing about
-                stdout_old = sys.stdout # save current stdout object before it is overwritten
-                sys.stdout = to_file
+            if stdout == sys.__stdout__:
+                sys.__stdout__.flush() # flush library buffers that we know nothing about
+                stdout_old = sys.__stdout__ # save current stdout object before it is overwritten
+                sys.__stdout__ = to_file
                 stdout_type = 'stdout'
-            elif stdout == sys.stderr:
-                sys.stderr.flush() # flush library buffers that we know nothing about
-                stdout_old = sys.stderr # save current stdout object before it is overwritten
-                sys.stderr = to_file
+            elif stdout == sys.__stderr__:
+                sys.__stderr__.flush() # flush library buffers that we know nothing about
+                stdout_old = sys.__stderr__ # save current stdout object before it is overwritten
+                sys.__stderr__ = to_file
                 stdout_type = 'stderr'
             else:
                 stdout.flush() # flush library buffers that we know nothing about
@@ -85,11 +85,11 @@ def stdout_redirected(to=devnull, stdout=None):
                 
                 # restore stdout to its previous value
                 if stdout_type == 'stdout':
-                    sys.stdout.flush()
-                    sys.stdout = stdout_old                    
+                    sys.__stdout__.flush()
+                    sys.__stdout__ = stdout_old                    
                 elif stdout_type == 'stderr':
-                    sys.stderr.flush()
-                    sys.stderr = stdout_old                    
+                    sys.__stderr__.flush()
+                    sys.__stderr__ = stdout_old                    
                 else:
                     stdout.flush()
                     stdout = stdout_old
@@ -141,10 +141,9 @@ def open_molecule_file(uploadedfile,logfile=devnull,filetype=None):
         
         else:
             filetype = uploadedfile.filetype
-        
     
-    with stdout_redirected(to=logfile,stdout=sys.stderr):
-        with stdout_redirected(to=logfile,stdout=sys.stdout):
+    with stdout_redirected(to=logfile,stdout=sys.__stderr__):
+        with stdout_redirected(to=logfile,stdout=sys.__stdout__):
             print('Loading molecule...')
             uploadedfile.seek(0)
             if filetype == 'sdf' or filetype == 'mol':
@@ -233,8 +232,8 @@ def generate_smiles_openbabel(molblock,obabelcmd = "/usr/bin/obabel"):
     return (smi,smierr)
 
 def generate_smiles2(mol,logfile=devnull):
-    with stdout_redirected(to=logfile,stdout=sys.stderr):
-        with stdout_redirected(to=logfile,stdout=sys.stdout):
+    with stdout_redirected(to=logfile,stdout=sys.__stderr__):
+        with stdout_redirected(to=logfile,stdout=sys.__stdout__):
             molnoar = Mol(mol)
             try:
                 Kekulize(molnoar,clearAromaticFlags=True)
@@ -251,8 +250,8 @@ def generate_smiles2(mol,logfile=devnull):
     return smi
     
 def generate_smiles(mol,logfile=devnull):
-    with stdout_redirected(to=logfile,stdout=sys.stderr):
-        with stdout_redirected(to=logfile,stdout=sys.stdout):
+    with stdout_redirected(to=logfile,stdout=sys.__stderr__):
+        with stdout_redirected(to=logfile,stdout=sys.__stdout__):
             mol2 = Mol(mol) 
             mol2.SetProp("_Name","")
             molblock = MolToMolBlock(mol2,includeStereo=True)
@@ -280,8 +279,8 @@ def get_charge_from_inchi(inchi,removeHs=False):
     return netc
 
 def generate_png(mol,pngpath,logfile=devnull,size=300):
-    with stdout_redirected(to=sys.stdout,stdout=sys.stderr):
-        with stdout_redirected(to=logfile,stdout=sys.stdout):
+    with stdout_redirected(to=sys.__stdout__,stdout=sys.__stderr__):
+        with stdout_redirected(to=logfile,stdout=sys.__stdout__):
             nhmol = RemoveHs(mol,implicitOnly=False, updateExplicitCount=True, sanitize=False)
             SanitizeMol(nhmol,catchErrors=True)
             op = DrawingOptions()

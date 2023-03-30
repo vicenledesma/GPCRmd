@@ -82,7 +82,10 @@ urlpatterns = [
     re_path(r'^close__submission/(?P<submission_id>[0-9]+)/$', views.close__submission, name='close__submission'),
     re_path(r'^smalmol_info/', views.smalmol_info_url, name='smalmol_info'),
     re_path(r'^prot_info/', views.prot_info, name='prot_info'),
+    re_path(r'^doi_info/', views.doi_info, name='doi_info'),
     re_path(r'^get_alignment/', views.get_alignment_URL, name='get_alignment_URL'),
+    re_path(r'^protein/get_mutations/$', views.get_mutations_view, name='protein_get_mutations'),
+
     #re_path(r'^step2/(?P<submission_id>[0-9]+)/$', views.step2, name='step2'),
     ]
 

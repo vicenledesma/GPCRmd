@@ -280,6 +280,11 @@ def select_align(mode, mat_sco, mis_sco, open_gap, ext_gap):
 	aligner.extend_gap_score = ext_gap #extend gap penalty
 	return aligner
 
+def align_wt_mut_global(wtseq,mutseq):
+	aligner = select_align("global", 5, -1, -1.5, -1)
+	bestalig=aligner.align(wtseq,mutseq)[0]  #,5,-1,-1.5,-1
+	return bestalig
+
 def align_wt_mut(wtseq,mutseq):
 	aligner = select_align("local", 5, -1, -1.5, -1)
 	bestalig=aligner.align(wtseq,mutseq)[0]  #,5,-1,-1.5,-1

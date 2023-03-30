@@ -4,8 +4,8 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.PDB import *
 from Bio.PDB.PDBIO import Select
-from residue.models import Residue
-from structure.functions import BlastSearch, MappedResidue
+from modules.residue.models import Residue
+from modules.structure.functions import BlastSearch, MappedResidue
 
 import Bio.PDB.Polypeptide as polypeptide
 import os,logging

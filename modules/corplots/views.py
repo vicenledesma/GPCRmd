@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from os.path import exists 
 from importlib.machinery import SourceFileLoader
 from django.http import HttpResponse
@@ -7,6 +7,12 @@ from json import loads, dumps
 from wsgiref.util import FileWrapper
 from modules.contact_maps.scripts.customized_heatmap import *
 from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.conf import settings
+
 import pandas as pd
 import json
 from io import BytesIO
@@ -18,8 +24,6 @@ from bokeh import palettes
 from bokeh.models import ColumnDataSource,Label,HoverTool, Span, Slope, LabelSet
 from bokeh.layouts import row, column
 from bokeh.plotting import figure, output_file, show
-
-from django.conf import settings
 
 def robust_pearson(a, b):
     a = np.array(a)
@@ -40,6 +44,33 @@ def json_dict(path):
     json_data = json.loads(json_str)
     return json_data
 
+def login_in(request): 
+	"""
+	Login page to access into corplots tool.
+	"""
+	next = ""
+	if request.GET: # Get url to point in case of success
+		next = request.GET['next']
+	if request.POST: # When login button is clicked
+		try:
+			password = request.POST["password"] # Password introduced by the user on the login form
+		except:
+			password = "none"
+		user = authenticate(username="corplots", password=password) # Ask to the djangodb to auth this user with the password
+		if user is not None: # In case the password is correct:
+			request.session.set_expiry(600)
+			login(request, user)
+			if next == "": # In case that url not found
+				return HttpResponseRedirect("corplots/cor_login")
+			else: # In case that url is good
+				return HttpResponseRedirect(next)
+		else: # In case that password is NOT correct
+			return render(request, 'corplots/login.html', context={"next":next, "messages":["Error in the password!"]}) 
+
+	else: # Main login form
+		return render(request, 'corplots/login.html', context={"next":next, "messages":[""]}) 
+
+@login_required(login_url="cor_login", redirect_field_name="next") # Login required. Comment or remove in case to not need to login.
 def main(request):
 	"""
 	Load mainpage
@@ -74,7 +105,7 @@ def main(request):
 		cor_df['n'].tolist()
 		)
 
-	return render(request,'corplots/index.html',context)
+	return render(request,'corplots/index.html',context)	
 
 def corplots(out,path):
 	"""
