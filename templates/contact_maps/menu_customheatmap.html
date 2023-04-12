@@ -5,7 +5,7 @@
     Customized dataset <span class="info_icon glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Choose your own set of simulations (either in the dendrogram or in the dropdown) to anlayze their interaction pattern" ></span>
   </h4>
   <div class="dropdown optbar">
-    <button id="simulation_button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" name="simulationlist">
+    <button id="simulation_button" class="btn btn-primary btn-sm dropdown-toggle-aux" data-toggle="dropdown" name="simulationlist">
       Select simulations
       <span class="caret"></span>
     </button>
@@ -27,7 +27,7 @@
   <form class="dropdown optbar" target="_self" method="post">
     {% csrf_token %}
     <input type="hidden" name="SimList" value="">
-    <input type="submit" disabled  target="_blank" method="post" id="CustomButton" class="btn btn-success btn-sm" value="Apply">
+    <input type="submit" disabled  target="_blank" method="post" id="CustomButton" class="btn btn-success btn-sm dropdown-toggle-aux" value="Apply">
   </form>
 </div>
 <script type="text/javascript" >

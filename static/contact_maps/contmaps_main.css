@@ -19,6 +19,10 @@ a {
   border-bottom: #BF3C1F;
 }
 
+.dropdown-toggle-aux {
+  font-size: 18px;
+}
+
 .panel-heading {
   color: white;
   font-weight: 900;
@@ -106,6 +110,7 @@ input[type=checkbox] {
 
 .partners_checkbox{
   font-weight: normal !important;
+  margin-top:6px;
 }
 
 .falsebutton{
@@ -165,6 +170,7 @@ input[type=checkbox] {
 
 #download_span {
   cursor: pointer;
+  margin-top: 11px;
 }
 
 #csvButton {
@@ -211,17 +217,17 @@ hr {
 
 #show_hide_info_text {
   margin-left:5px;
-  font-size:12px;
 }
 
 .doc_title {
   text-align: justify;
   font-weight:bold;
-  color:#337AB7;
+  color:#BF3C1F;
 }
 
 .doc_content {
   text-align: justify;
+  font-size:22px;
 }
 
 .arrow {
@@ -234,8 +240,12 @@ hr {
     display: inline-block !important;
 }
 
-.dropdown-itype {  
+/* .dropdown-itype {  
   width: 204px !important;
+} */
+
+.extrawid{
+  width: 110%;
 }
 
 #xbutton_container {
@@ -347,13 +357,12 @@ hr {
 
 .FP-button {
   overflow-x: hidden;
-  margin-top:15px;
-  margin-bottom:15px !important;
-  font-size:12px;
-  width:150px;
-  padding-right:2px;
-  padding-left:2px;
-  height: 31px;
+  margin-top: 15px;
+  margin-bottom: 15px !important;
+  font-size: 18px;
+  width: 186px;
+  padding-right: 2px;
+  padding-left: 2px;
 }
 
 .clusters_dropup-div {
@@ -362,7 +371,7 @@ hr {
 }
 
 #clusters_dropdown {
-  height: 30px;
+  padding:8px;
 }
 
 .numbering_dropup-div {
@@ -391,13 +400,12 @@ hr {
 }
 
 .title_div {
-  background-color:#F3F3F3; 
   border-radius:2px;
   padding:5px;
   text-align: center;
   margin: 5 0 5 0;
 }
-}
+
 
 .title {
   padding:0px;
@@ -590,7 +598,21 @@ hr {
     /*float:right;
     position:absolute; */
     right: 45px;
-    margin-top:7px
+    margin-top:-87px;
+    margin-right:15px;
+}
+
+.howBtn{
+  background-color: white;
+  color: #171010;
+  border: 2px solid white;
+  font-size: 18px;
+  font-weight: bold;
+}
+.howBtn:hover{
+  background-color: white;
+  color:#171010;
+  border: 2px solid #171010;
 }
 
 .howtobtn{
@@ -612,6 +634,10 @@ hr {
 #aroundtitle{
   width: calc(100% - 62px);
   float:left;
+}
+
+.docRow{
+  margin-bottom:3%;
 }
 
 

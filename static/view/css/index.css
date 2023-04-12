@@ -262,10 +262,6 @@ width: 100%;
   width: calc(100% - 52px)
 }
 
-#tunnel_options button{
-  line-height: 120%;
-  width:45px;
-}
 
 #loading_fp{
   /*display:none;
@@ -617,7 +613,7 @@ label.ac_option {
 
 .wbtitle{
   font-size: 30px;
-  height: 80px;
+  padding: 1%;
 }
 
 .indexBtnSize, .indexOp, button.high_pd{

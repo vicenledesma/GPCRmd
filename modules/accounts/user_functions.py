@@ -39,7 +39,7 @@ def user_passes_test_args(test_func, login_url=None, access_denied_response=None
                     (not login_netloc or login_netloc == current_netloc)):
                 path = request.get_full_path()
             # break infinite redirect to login
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 if access_denied_response is not None:
                     return access_denied_response 
                 redirect_field_name_final = None
@@ -125,7 +125,7 @@ def is_published_or_submission_owner(user,object_type=None,incall=False,redirect
         object_id = set(object_id)
         # check if it is published
         published_ids = set(dbobject.objects.values_list('id',flat=True).filter(pk__in=object_id))
-    if user.is_authenticated():
+    if user.is_authenticated:
         if object_id_is_list_like:
             object_id_to_check = object_id.difference(published_ids)
             allowed_object_ids = set(dbobject.objects.filter(**{'pk__in':object_id_to_check,path_to_submission_id+'__user_id':user.id}).values_list('id',flat=True))

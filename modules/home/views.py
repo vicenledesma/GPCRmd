@@ -413,16 +413,16 @@ def is_updating(request):
     """
     Check out if a load-all-simulations-after-updating thing is going on
     """
-    print(os.path.exists(settings.MEDIA_ROOT + "Precomputed/WaterMaps/isloading.txt"))
-    isloading = os.path.exists(settings.MEDIA_ROOT + "Precomputed/WaterMaps/isloading.txt")
+    print(os.path.exists(settings.MEDIA_ROOT + "config/isloading.txt"))
+    isloading = os.path.exists(settings.MEDIA_ROOT + "config/isloading.txt")
     return(HttpResponse(isloading))
 
 def remove_marker(request): 
     """
     Delete the load-all-simulations-after-updating once quickloading is done
     """
-    if os.path.exists(settings.MEDIA_ROOT + "Precomputed/WaterMaps/isloading.txt"):
-        os.remove(settings.MEDIA_ROOT + "Precomputed/WaterMaps/isloading.txt")
+    if os.path.exists(settings.MEDIA_ROOT + "config/isloading.txt"):
+        os.remove(settings.MEDIA_ROOT + "config/isloading.txt")
     return(HttpResponse())
 
 def quickloadall_both(request):
@@ -432,7 +432,7 @@ def quickloadall_both(request):
     """
 
     # Create uploading file
-    f = open(settings.MEDIA_ROOT + 'Precomputed/WaterMaps/isloading.txt','w')
+    f = open(settings.MEDIA_ROOT + 'config/isloading.txt','w')
     f.close()
 
     #DyndbFiles.objects.filter(dyndbfilesdynamics__id_dynamics=dyn_id, id_file_types__is_trajectory=True)

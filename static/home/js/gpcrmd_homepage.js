@@ -4750,36 +4750,49 @@ $(document).ready(function(){
     var height = width
     var radius = (width / 2) - 50
     var width_arc_innerRadius = (width/2) - 40 //(width / 2) - 10;
-    var width_arc_outerRadius = (width/2) - 37 //width_arc_innerRadius + 10;
+    var width_arc_outerRadius = (width/2) - 38 //width_arc_innerRadius + 10;
   
-
     tree = data => d3.tree()
     .size([2 * Math.PI, radius])
     .separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth)
     (d3.hierarchy(data))
 
-
     const root = tree(data);
-
-
 
     //d3.select("#section_cordplot").style("height", wdiv + "px");
 
-    var mydiv = d3.select("#chart")     
+    var mydiv = d3.select("#chart") 
 //                .style("width", wdiv + "px")
 //                .style("height", wdiv + "px")
+    var zoom = d3.zoom()
+      // Don’t allow the zoomed area to be bigger than the viewport.
+      .scaleExtent([1, Infinity])
+      .translateExtent([[0, 0], [width, height]])
+      .extent([[0, 0], [width, height]])
+      .on("zoom", zoomed);
+
+    $("#Reset").click(() => {
+      mydiv.transition()
+        .duration(750)
+        .call(zoom.transform, d3.zoomIdentity);
+    });
 
     const svg = mydiv.append("svg")
        // .attr("width", "100%")
        // .attr("height", "100%")
-        .attr("style","display:block;margin:auto;")
-    .attr('viewBox','0 0 '+(width)+' '+(width))
+    .call(zoom)
+    .attr("style","display:block;margin:auto;")
+    .attr('viewBox','0 0 '+(width + 130)+' '+(width + 130))
     .attr('preserveAspectRatio','xMinYMin')
-        .style("font", "10px sans-serif")
-        .append("svg:g")
-//        .attr("transform", "translate(" + (wdiv * 0.5) + "," + (wdiv * 0.5) + ")");
-    .attr("transform", "translate(" + width / 2 + "," + width / 2 + ")");
+    .style("font", "10px sans-serif")
+    .append("svg:g")
+    .attr("transform", "translate(" + (width+140) / 2 + "," + (width+140) / 2 + ")")
+    ;
 
+    function zoomed() {
+      mydiv.attr("transform",d3.event.transform);
+    }  
+    
     const link = svg.append("g")
         .attr("fill", "none")
         .attr("stroke-opacity", 0.4)
@@ -4799,36 +4812,36 @@ $(document).ready(function(){
             return "bold"
         } else{
             if (d.depth === 1) {
-              return "800"
-            } else if (d.depth === 2) {
-              return "600"
-            } else if (d.depth === 3) {
               return "500"
+            } else if (d.depth === 2) {
+              return "300"
+            } else if (d.depth === 3) {
+              return "200"
             } else if (d.depth === 4) {
-              return "400"
+              return "100"
             }
         }
     }
     let setstyle_font =function(d,is_sel){
         if (is_sel){
           if (d.depth === 1) {
-            return "20px sans-serif"
+            return "14px sans-serif"
           } else if (d.depth === 2) {
-            return "17px sans-serif"
+            return "10px sans-serif"
           } else if (d.depth === 3) {
-            return "19px sans-serif"
+            return "8px sans-serif"
           } else if (d.depth === 4) {
-            return "12px monospace"
+            return "5px monospace"
           }    
       } else {
           if (d.depth === 1) {
-            return "18px sans-serif"
+            return "14px sans-serif"
           } else if (d.depth === 2) {
-            return "15px sans-serif"
+            return "10px sans-serif"
           } else if (d.depth === 3) {
-            return "17px sans-serif"
+            return "8px sans-serif"
           } else if (d.depth === 4) {
-            return "10px monospace"
+            return "5px monospace"
           }
       }
     }
@@ -4920,8 +4933,8 @@ $(document).ready(function(){
                 } else {
                   return setstyle_fontweight(t,true)
                 }
-
             })
+
       if ((d.data.name) && (!doNotDisplay)){
             current_circle = d3.select(fthis);
 
@@ -4934,12 +4947,19 @@ $(document).ready(function(){
                     return classli
                 });
 
-
             current_circle.selectAll("text")
               .style("font",  setstyle_font(d,true))
               .style("font-weight",setstyle_fontweight(d,true))
-
-
+              // .attr("x",function(t){
+              //   var transform = this.getAttribute("transform");
+              //   if (t.depth == 4) {
+              //     if (transform.includes("rotate")) {
+              //         return "-40"
+              //       }
+              //       else {
+              //         return "40"
+              //       }
+              // }});
             var this_transf=get_this_transform(fthis);
             var rotation =this_transf[0];
             var transl_x =this_transf[1];
@@ -4998,9 +5018,11 @@ $(document).ready(function(){
                               .attr("xlink:href", ApoNum[j] != "-" ? base_url+"/view/"+ApoNum[j] : null) 
                               .attr("target","_blank")
                               .append("text")
+                                .style("cursor", "pointer")
                                 .text("Apo simulation: ID " + ApoNum[j])
                                 .attr("y",  parseInt(40+16*(j+k)))
-                                .attr("fill", ApoNum[j] != "-" ? '#85bae0' : 'grey' );
+                                .attr("fill", ApoNum[j] != "-" ? '#85bae0' : 'grey' )
+
                           }
                       } else {
                           if (ApoNum){
@@ -5027,6 +5049,7 @@ $(document).ready(function(){
                               .attr("xlink:href", ComplexNum[i] != "-" ? base_url+"/view/"+ComplexNum[i] : null) 
                               .attr("target","_blank")
                               .append("text")
+                                .style("cursor", "pointer")
                                 .text(limit_text("Complex simulation: ID " + ComplexNum[i] + (Ligandname[0] != "-" ||  TransducerNum[0] != "-" ? " (" :"") + (Ligandname[i] != "-" ? "lig: "+Ligandname[i] :"") + (TransducerNum[i] !="-" ? "; transducer: "+TransducerNum[i]+";" :"") + (Ligandname[0] != "-" ||  TransducerNum[0] != "-" ? ")" :""),50))
                                 .attr("y",  parseInt(40+16*(i+j+k)))
                                 .attr("fill", ComplexNum[i] != "-" ? '#85bae0' : 'grey' )
@@ -5178,8 +5201,18 @@ $(document).ready(function(){
       }
       return numSims
     }
-  
-  
+    
+    function wrap() { // To wrap long text
+        var self = d3.select(this),
+            textLength = self.node().getComputedTextLength(),
+            text = self.text();
+        while (textLength > (70 - 2 * 1) && text.length > 0) { // (width - 2 * padding)
+            text = text.slice(0, -1);
+            self.text(text + '...');
+            textLength = self.node().getComputedTextLength();
+        }
+    } 
+
     var arc = d3.arc()
       .innerRadius(width_arc_innerRadius)
       .outerRadius(width_arc_outerRadius)
@@ -5229,7 +5262,7 @@ $(document).ready(function(){
       .attr("stroke", d => d.target.data.Simulated == "Yes" ? "black" : d.target.data.Simulated == "No" ? "lightgrey" : "black")
       .attr("stroke", d => d.target.data.Simulated == "Yes" ? (d.target.data.KlassCol == "A" ? "#898989" : d.target.data.KlassCol == "B" ? "#575757" : d.target.data.KlassCol == "C" ? "#898989" : d.target.data.KlassCol == "F" ? "#575757" : "black") : d.target.data.Simulated == "No" ? "lightgrey" : (d.target.data.KlassCol == "A" ? "#898989" : d.target.data.KlassCol == "B" ? "#575757" : d.target.data.KlassCol == "C" ? "#898989" : d.target.data.KlassCol == "F" ? "#575757" : "black"))
   
-  
+
     const node = svg.append("g")
       .attr("stroke-linejoin", "round")
       .attr("stroke-width", 3)
@@ -5244,6 +5277,7 @@ $(document).ready(function(){
     let displayAncestors = (d) => {
       svg.property("value", d).dispatch("input");
     }
+
     node.append("circle")
       .attr("fill", "#575757")
       .attr("r", d => d.data.Simulated == "Yes" ? 5 : d.data.Simulated == "No" ? 2 : 2)
@@ -5265,7 +5299,6 @@ $(document).ready(function(){
           return ""
         }
       })
-  
     node.append("text")
       .attr("fill", d => d.data.Simulated == "Yes" ? "black" : d.data.Simulated == "No" ? "lightgrey" : "black")
       .attr("dy", "0.31em")
@@ -5282,7 +5315,7 @@ $(document).ready(function(){
       .style("font-weight", function(d) {
         return setstyle_fontweight(d,false)
       })
-      .text(d => d.data.name)
+      .text(function(d) { return d.data.name; }).each(wrap)
       .attr("class",function(d) {
         if (d.height==0){
           return "clickable"
@@ -5293,7 +5326,8 @@ $(document).ready(function(){
       .clone(true).lower()
       .attr("stroke", "white")
       .on("mouseover", displayAncestors)
-  
+      .text(function(d) { return d.data.name; }).each(wrap)
+
     node.on("click", function(d) {
       selectOccupation(d, this, "click");
     })
@@ -5319,9 +5353,8 @@ $(document).ready(function(){
       svg.selectAll("#details-popup_hov").remove()
     });
      
-
     const leg = svg.append("g")
-      .attr("transform", "translate(150,-600)")
+      .attr("transform", "translate(250,-600)")
       .attr("id","legend_box");
     
     leg.append("rect")
@@ -5371,19 +5404,19 @@ $(document).ready(function(){
 
 
 //--------------------------------------------
-    $("#tabs_col").css("height",$("#plot_col").css("height"));
-    function control_row_size(){
-      var plot_h = $("#plot_col").css("height");
-      var plot_h_num = Number(plot_h.replace("px",""));
-      if (plot_h_num<700){
-        plot_h="700px";
-      }
-      $("#tabs_col").css("height",plot_h);
-    }
-    control_row_size();
-    $(window).resize(function(){
-          control_row_size();
-    });
+    // $("#tabs_col").css("height",$("#plot_col").css("height"));
+    // function control_row_size(){
+    //   var plot_h = $("#plot_col").css("height");
+    //   var plot_h_num = Number(plot_h.replace("px",""));
+    //   if (plot_h_num<700){
+    //     plot_h="700px";
+    //   }
+    //   $("#tabs_col").css("height",plot_h);
+    // }
+    // control_row_size();
+    // $(window).resize(function(){
+    //       control_row_size();
+    // });
   
 
 
@@ -5396,155 +5429,155 @@ $(document).ready(function(){
 //-------------------------- Stats charts
 
 
-  function drawCharts_subm() {
+//   function drawCharts_subm() {
           
-          var data_pre=$("#stats_subm").data("subm_data");
-          var datainfo=[['Date', 'GPCRmd simulations',{ role: 'annotation' }, "Trajectories", { role: 'annotation' }]];
-          var data_all = datainfo.concat(data_pre);
-          var data = google.visualization.arrayToDataTable(data_all);
+//           var data_pre=$("#stats_subm").data("subm_data");
+//           var datainfo=[['Date', 'GPCRmd simulations',{ role: 'annotation' }, "Trajectories", { role: 'annotation' }]];
+//           var data_all = datainfo.concat(data_pre);
+//           var data = google.visualization.arrayToDataTable(data_all);
 
 
-          var options = {
-            hAxis: {title: 'Date',slantedTextAngle:90},
-            vAxis: {title: "", minValue: 0, maxvalue: 55 , gridlines: {count: 0, color:"#bfbfbf"}},
-            legend: {position:"top"},
-            annotations: {stem:{length:2}},
-            colors: ['#423F3E', '#BF3C1F'],
-            chartArea:{width:370,top:40}
+//           var options = {
+//             hAxis: {title: 'Date',slantedTextAngle:90},
+//             vAxis: {title: "", minValue: 0, maxvalue: 55 , gridlines: {count: 0, color:"#bfbfbf"}},
+//             legend: {position:"top"},
+//             annotations: {stem:{length:2}},
+//             colors: ['#423F3E', '#BF3C1F'],
+//             chartArea:{width:370,top:40}
 
-          };
+//           };
 
-          var chart = new google.visualization.AreaChart(document.getElementById('stats_subm'));
+//           var chart = new google.visualization.AreaChart(document.getElementById('stats_subm'));
           
           
           
-          chart.draw(data, options);
-      }
-      google.load("visualization", "1", {packages:["corechart"],'callback': drawCharts_subm});
+//           chart.draw(data, options);
+//       }
+//       google.load("visualization", "1", {packages:["corechart"],'callback': drawCharts_subm});
 
 
-/*      function drawChart_class() {
-        var data_pre=$("#stats_class").data("class_data");
-        var datainfo=[['Class', 'GPCR']];
-        var data_all = datainfo.concat(data_pre);
-        var data = google.visualization.arrayToDataTable(data_all);
+// /*      function drawChart_class() {
+//         var data_pre=$("#stats_class").data("class_data");
+//         var datainfo=[['Class', 'GPCR']];
+//         var data_all = datainfo.concat(data_pre);
+//         var data = google.visualization.arrayToDataTable(data_all);
 
-        var options = {
-          legend: 'none',
-          pieSliceText: 'label',
-          width:300,
-          height:350,
-          chartArea:{width:280,height:280}
-        };
+//         var options = {
+//           legend: 'none',
+//           pieSliceText: 'label',
+//           width:300,
+//           height:350,
+//           chartArea:{width:280,height:280}
+//         };
 
-        var chart = new google.visualization.PieChart(document.getElementById('stats_class'));
+//         var chart = new google.visualization.PieChart(document.getElementById('stats_class'));
 
-        chart.draw(data, options);
-      }
+//         chart.draw(data, options);
+//       }
 
-      google.load("visualization", "1", {packages:["corechart"],'callback': drawChart_class});
-*/
+//       google.load("visualization", "1", {packages:["corechart"],'callback': drawChart_class});
+// */
 
-      function drawChart_famstats() {
+//       function drawChart_famstats() {
 
-        var data_all = $("#fam_stats").data("fam_stats");
-        var data = google.visualization.arrayToDataTable(data_all);
-        var options = {
-          slices: {
-            0: { color: '#D96B52' },
-            1: { color: '#b4aca9' }
-          },
-          pieSliceTextStyle:{color:"black", fontSize:21},
-          width:400,
-          height:450,
-          chartArea:{width:380,height:380},
-          legend:{ alignment:"center", textStyle: {fontSize: 21}},
-        };
+//         var data_all = $("#fam_stats").data("fam_stats");
+//         var data = google.visualization.arrayToDataTable(data_all);
+//         var options = {
+//           slices: {
+//             0: { color: '#D96B52' },
+//             1: { color: '#b4aca9' }
+//           },
+//           pieSliceTextStyle:{color:"black", fontSize:21},
+//           width:400,
+//           height:450,
+//           chartArea:{width:380,height:380},
+//           legend:{ alignment:"center", textStyle: {fontSize: 21}},
+//         };
 
-        var chart = new google.visualization.PieChart(document.getElementById('fam_stats'));
+//         var chart = new google.visualization.PieChart(document.getElementById('fam_stats'));
 
-        chart.draw(data, options);
-      }
-      google.load("visualization", "1", {packages:["corechart"],'callback': drawChart_famstats});
+//         chart.draw(data, options);
+//       }
+//       google.load("visualization", "1", {packages:["corechart"],'callback': drawChart_famstats});
 
 
 
-      function drawChart_subtypestats() {
+//       function drawChart_subtypestats() {
 
-        var data_all = $("#subtype_stats").data("subtype_stats");
-        var data = google.visualization.arrayToDataTable(data_all);
-        var options = {
-          slices: {
-            0: { color: '#D96B52' },
-            1: { color: '#837d7b' }
-          },
-          pieSliceTextStyle:{color:"black", fontSize:21},
-          width:400,
-          height:450,
-          chartArea:{width:380,height:380},
-          legend:{ alignment:"center", textStyle: {fontSize: 21}},
-        };
+//         var data_all = $("#subtype_stats").data("subtype_stats");
+//         var data = google.visualization.arrayToDataTable(data_all);
+//         var options = {
+//           slices: {
+//             0: { color: '#D96B52' },
+//             1: { color: '#837d7b' }
+//           },
+//           pieSliceTextStyle:{color:"black", fontSize:21},
+//           width:400,
+//           height:450,
+//           chartArea:{width:380,height:380},
+//           legend:{ alignment:"center", textStyle: {fontSize: 21}},
+//         };
 
-        var chart = new google.visualization.PieChart(document.getElementById('subtype_stats'));
+//         var chart = new google.visualization.PieChart(document.getElementById('subtype_stats'));
 
-        chart.draw(data, options);
-      }
-      google.load("visualization", "1", {packages:["corechart"],'callback': drawChart_subtypestats});
+//         chart.draw(data, options);
+//       }
+//       google.load("visualization", "1", {packages:["corechart"],'callback': drawChart_subtypestats});
 
 
       
-      function drawChart_pdbstats() {
+//       function drawChart_pdbstats() {
 
-        var data_all = $("#pdb_stats").data("pdb_stats");
-        var data = google.visualization.arrayToDataTable(data_all);
-        var options = {
-          slices: {
-            0: { color: '#D96B52' },
-            1: { color: '#837d7b' }
-          },
-          pieSliceTextStyle:{color:"black", fontSize:21},
-          width:400,
-          height:450,
-          chartArea:{width:380,height:380},
-          legend:{ alignment:"center", textStyle: {fontSize: 21}},
-        };
+//         var data_all = $("#pdb_stats").data("pdb_stats");
+//         var data = google.visualization.arrayToDataTable(data_all);
+//         var options = {
+//           slices: {
+//             0: { color: '#D96B52' },
+//             1: { color: '#837d7b' }
+//           },
+//           pieSliceTextStyle:{color:"black", fontSize:21},
+//           width:400,
+//           height:450,
+//           chartArea:{width:380,height:380},
+//           legend:{ alignment:"center", textStyle: {fontSize: 21}},
+//         };
 
-        var chart = new google.visualization.PieChart(document.getElementById('pdb_stats'));
+//         var chart = new google.visualization.PieChart(document.getElementById('pdb_stats'));
 
-        chart.draw(data, options);
-      }
-      google.load("visualization", "1", {packages:["corechart"],'callback': drawChart_pdbstats});
+//         chart.draw(data, options);
+//       }
+//       google.load("visualization", "1", {packages:["corechart"],'callback': drawChart_pdbstats});
 
-      /*      var data_act_pre=$("#stats_act").data("act_data");
-      function drawChart_activation() {
-        var datainfo=[['State', 'GPCR']];
-        var data_all = datainfo.concat(data_act_pre);
-        console.log(data_all)
-        var data = google.visualization.arrayToDataTable(data_all);
+//       /*      var data_act_pre=$("#stats_act").data("act_data");
+//       function drawChart_activation() {
+//         var datainfo=[['State', 'GPCR']];
+//         var data_all = datainfo.concat(data_act_pre);
+//         console.log(data_all)
+//         var data = google.visualization.arrayToDataTable(data_all);
 
-        var options = {
-          legend: 'none',
-          pieSliceText: 'label',
-          width:300,
-          height:350,
-          chartArea:{width:280,height:280},
-          //pieStartAngle: -50,
-          pieSliceTextStyle: {
-            color: 'black',
-            fontSize: 12
-          }
-        };
+//         var options = {
+//           legend: 'none',
+//           pieSliceText: 'label',
+//           width:300,
+//           height:350,
+//           chartArea:{width:280,height:280},
+//           //pieStartAngle: -50,
+//           pieSliceTextStyle: {
+//             color: 'black',
+//             fontSize: 12
+//           }
+//         };
 
-        var chart = new google.visualization.PieChart(document.getElementById('stats_act'));
+//         var chart = new google.visualization.PieChart(document.getElementById('stats_act'));
 
-        chart.draw(data, options);
-      }
-      if (data_act_pre){
-            google.load("visualization", "1", {packages:["corechart"],'callback': drawChart_activation});
-      }
+//         chart.draw(data, options);
+//       }
+//       if (data_act_pre){
+//             google.load("visualization", "1", {packages:["corechart"],'callback': drawChart_activation});
+//       }
 
 
-*/
+//       */
 })
 
 

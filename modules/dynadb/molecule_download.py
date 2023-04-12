@@ -299,15 +299,13 @@ def retreive_compound_png_pubchem(searchproperty,searchvalue,outputfile=None,wid
         args = []
         args.append(str(searchproperty))
         args.append(urllib.parse.quote(str(searchvalue),safe=''))
-
-        
         response = requests.get(URL+'/'.join(args)+'/PNG?'+str(width)+'x'+str(height),timeout=30,stream=True,verify=True)
         response.raise_for_status()
         if outputfile:
             if replace_background_color is None:
-            	fileh = open(outputfile,'wb')
+              fileh = open(outputfile,'wb')
             else:
-                fileh = TemporaryFile(dir=settings.FILE_UPLOAD_TEMP_DIR)
+              fileh = TemporaryFile(dir=settings.FILE_UPLOAD_TEMP_DIR)
         else:
             data = b''
         size = 0
@@ -324,8 +322,6 @@ def retreive_compound_png_pubchem(searchproperty,searchvalue,outputfile=None,wid
             else:
                 data += chunk
         response.close()
-
-        
         if outputfile:
             if replace_background_color is not None:
                 fileh.seek(0)

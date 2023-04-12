@@ -2664,13 +2664,10 @@ def hometest2(request):
     context["tree_data"]=json.dumps(tree_data)
     return render(request, 'covid19/hometest2.html', context)
 
-
-
-
 def quickloadall(request):
 
     # Create uploading file
-    f = open(settings.MEDIA_ROOT + 'Precomputed/WaterMaps/isloading.txt','w')
+    f = open(settings.MEDIA_ROOT + 'config/isloading.txt','w')
     f.close()
 
     #DyndbFiles.objects.filter(dyndbfilesdynamics__id_dynamics=dyn_id, id_file_types__is_trajectory=True)

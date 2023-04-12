@@ -26,11 +26,11 @@
   <div class="panel panel-primary" id="inner_fixed">
     <div id="aroundtitle">
       <h2 class="panel-heading">Receptor meta-analysis</h2>
-      <h4 class="panel-heading">Residue interaction frequency: <b>{{itype_name}}</b></h4>
+      <h4 class="panel-heading">Residue interaction frequency: <b style="vertical-align:unset">{{itype_name}}</b></h4>
     </div>
     <div class="howtoparent">
-      <a href="https://youtu.be/hHaw3SEf-D0" class="btn btn-default btn-sm howtobtn" target="_blank" role="button">How
-        to<br>use it<br><span class="glyphicon glyphicon-play" style="font-size:14px"></span></a>
+      <a href="https://youtu.be/hHaw3SEf-D0" class="howBtn btn btn-default btn-sm" target="_blank" role="button">How
+        to use it<br><span class="glyphicon glyphicon-play"></span></a>
     </div>
     <div class="panel-body">
 
@@ -128,7 +128,7 @@
                 </button>
 
                 <div class="clusters_dropup-div">
-                  <button id="clusterbutton0" class="btn btn-default dropdown-toggle changefocus FP-button"
+                  <button id="clusterbutton0" class="btn btn-default dropdown-toggle-aux changefocus FP-button"
                     type="button" data-toggle="dropdown">
                     Cluster 1 <span class="caret"></span>
                   </button>
@@ -146,7 +146,7 @@
                 </div>
 
                 <div class="numbering_dropup-div">
-                  <button id="numberbutton0" class="btn btn-default dropdown-toggle changefocus FP-button" type="button"
+                  <button id="numberbutton0" class="btn btn-default dropdown-toggle-aux changefocus FP-button" type="button"
                     data-toggle="dropdown">
                     Class A numbering <span class="caret"></span>
                   </button>
@@ -189,7 +189,7 @@
                 </button>
 
                 <div class="clusters_dropup-div">
-                  <button id="clusterbutton1" class="btn btn-default dropdown-toggle changefocus FP-button"
+                  <button id="clusterbutton1" class="btn btn-default dropdown-toggle-aux changefocus FP-button"
                     type="button" data-toggle="dropdown">
                     Cluster 2 <span class="caret"></span>
                   </button>
@@ -206,7 +206,7 @@
                   </ul>
                 </div>
                 <div class="numbering_dropup-div">
-                  <button id="numberbutton1" class="btn btn-default dropdown-toggle changefocus FP-button" type="button"
+                  <button id="numberbutton1" class="btn btn-default dropdown-toggle-aux changefocus FP-button" type="button"
                     data-toggle="dropdown">
                     Class A numbering <span class="caret"></span>
                   </button>
@@ -244,7 +244,7 @@
             <div class="container-fluid NGLtoolbar">
               <div class="row NGLtoolbar_row">
                 <div class="dropdown blueDropdownDiv" id="simulation_select">
-                  <button id="simButton0" class="btn btn-default btn-xs dropdown-toggle blueButton" type="button"
+                  <button id="simButton0" class="btn btn-default btn-xs dropdown-toggle-aux blueButton" type="button"
                     data-toggle="dropdown" data-dynid="{{clustdict.cluster1.0}}" aria-expanded="false"><span
                       class="caret"></span></button>
                   <ul class="dropdown-menu blueList simList">
@@ -252,7 +252,7 @@
                   </ul>
                 </div>
                 <div id="trajsDropdown0" class="dropdown blueDropdownDiv traj_select">
-                  <button id="trajButton0" class="btn btn-default btn-xs dropdown-toggle blueButton" type="button"
+                  <button id="trajButton0" class="btn btn-default btn-xs dropdown-toggle-aux blueButton" type="button"
                     data-toggle="dropdown">
                     <span class="caret"></span></button>
                   <ul class="dropdown-menu blueList trajList">
@@ -261,8 +261,8 @@
                 </div>
               </div>
               <div class="row NGLtoolbar_row">
-                <a id="viewer_link_bottom0" href="#" target='_blank' class="btn btn-success btn-sm viewer_link_bottom"
-                  role="button"><b>open with GPCRmd workbench</b></a>
+                <a id="viewer_link_bottom0" href="#" target='_blank' class="dropdown-toggle-aux btn btn-success btn-sm viewer_link_bottom"
+                  role="button"><b>View in workbench</b></a>
               </div>
             </div>
 
@@ -270,13 +270,13 @@
                 class="loading_NGL_bottom" /></span>
             <iframe id="ngl_iframe0" data-mdsrv_url={{mdsrv_url}} src="{{mdsrv_url}}/html/embed_contmaps_bottom.html"
               data-number="0" data-itype={{itype_code}} data-ligandonly={{ligandonly}} data-cluster={{cluster}}
-              data-warnings=true scrolling="no" height="500px" width="100%"></iframe>
+              data-warnings=true scrolling="no" style="border:none;" height="500px" width="100%"></iframe>
             <div id="posNotinRec0" class="alert alert-warning posNotinRec">
               <span id="posNotinRec_text0"></span>
             </div>
             <div id="speed_warnings0" data-display=true>
             </div>
-            <button class="btn btn-danger btn-xs NGLclear">Clear All</button>
+            <button class="dropdown-toggle-aux btn btn-danger btn-xs NGLclear">Clear All</button>
             <div class="pull-right">
               <button id="restartPos0" type="button" class="btn btn-link settingsB" title="Reset position"><span
                   class="glyphicon glyphicon-repeat"></span></button>
@@ -290,7 +290,7 @@
             <div class="container-fluid NGLtoolbar">
               <div class="row NGLtoolbar_row">
                 <div class="dropdown blueDropdownDiv" id="simulation_select">
-                  <button id="simButton1" class="btn btn-default btn-xs dropdown-toggle blueButton" type="button"
+                  <button id="simButton1" class="btn btn-default btn-xs dropdown-toggle-aux blueButton" type="button"
                     data-toggle="dropdown" data-dynid="{{clustdict.cluster2.0}}" aria-expanded="false"><span
                       class="caret"></span></button>
                   <ul class="dropdown-menu blueList simList">
@@ -298,7 +298,7 @@
                   </ul>
                 </div>
                 <div id="trajsDropdown1" class="dropdown blueDropdownDiv traj_select">
-                  <button id="trajButton1" class="btn btn-default btn-xs dropdown-toggle blueButton" type="button"
+                  <button id="trajButton1" class="btn btn-default btn-xs dropdown-toggle-aux blueButton" type="button"
                     data-toggle="dropdown">
                     <span class="caret"></span></button>
                   <ul class="dropdown-menu blueList trajList">
@@ -307,8 +307,8 @@
                 </div>
               </div>
               <div class="row NGLtoolbar_row">
-                <a id="viewer_link_bottom1" href="#" target='_blank' class="btn btn-success btn-sm viewer_link_bottom"
-                  role="button"><b>open with GPCRmd workbench</b></a>
+                <a id="viewer_link_bottom1" href="#" target='_blank' class="dropdown-toggle-aux btn btn-success btn-sm viewer_link_bottom"
+                  role="button"><b>View in workbench</b></a>
               </div>
             </div>
 
@@ -316,13 +316,13 @@
                 class="loading_NGL_bottom" /></span>
             <iframe id="ngl_iframe1" data-mdsrv_url={{mdsrv_url}} src="{{mdsrv_url}}/html/embed_contmaps_bottom.html"
               data-number="1" data-itype={{itype_code}} data-ligandonly={{ligandonly}} data-cluster={{cluster}}
-              data-stnd={{stnd}} scrolling="no" height="500px" width="100%"></iframe>
+              data-stnd={{stnd}} scrolling="no" style="border:none;" height="500px" width="100%"></iframe>
             <div id="posNotinRec1" class="alert alert-warning posNotinRec">
               <span id="posNotinRec_text1"></span>
             </div>
             <div id="speed_warnings1" data-display=true>
             </div>
-            <button class="btn btn-danger btn-xs NGLclear">Clear All</button>
+            <button class="dropdown-toggle-aux btn btn-danger btn-xs NGLclear">Clear All</button>
             <div class="pull-right">
               <button id="restartPos1" type="button" class="btn btn-link settingsB" title="Reset position"><span
                   class="glyphicon glyphicon-repeat"></span></button>

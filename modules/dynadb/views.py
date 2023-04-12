@@ -1342,13 +1342,15 @@ def get_imagepath(id, type):
         try:
             pk2filesmolecule=DyndbCompound.objects.select_related('std_id_molecule').get(pk=id).std_id_molecule.id
             imagepath=DyndbFilesMolecule.objects.select_related('id_files').filter(id_molecule=pk2filesmolecule).filter(type=2)[0].id_files.filepath
-            imagepath=imagepath.replace("/GPCRmd/","/dynadb/") #this makes it work
+            if settings.MEDIA_ROOT[:-1] in imagepath:
+                imagepath=imagepath.replace(settings.MEDIA_ROOT[:-1],"") #No absolute path
         except:
             imagepath=''
     else:
         try:
             imagepath=DyndbFilesMolecule.objects.select_related('id_files').filter(id_molecule=id).filter(type=2)[0].id_files.filepath
-            imagepath=imagepath.replace("/GPCRmd/","/dynadb/") #this makes it work
+            if settings.MEDIA_ROOT[:-1] in imagepath:
+                imagepath=imagepath.replace(settings.MEDIA_ROOT[:-1],"") #No absolute path
         except:
             imagepath=''
     return imagepath
@@ -3067,12 +3069,11 @@ def query_dynamics(request,dynamics_id):
         typeobj=match.id_files.id_file_types
         if typeobj.is_parameter or typeobj.is_anytype:
             myfilename=match.id_files.filename
+            print(myfilename)
             btn_text=""
             if "prm" in myfilename:
-            #if typeobj.is_parameter:
                 btn_txt="Parameters file (ID: %s)" % match.id_files.id
-            if "prt" in myfilename:
-            #if typeobj.is_parameter:
+            elif "prt" in myfilename:
                 btn_txt="Protocol file (ID: %s)" % match.id_files.id
             else:
                 btn_txt="Others file (ID: %s)" % match.id_files.id
@@ -10630,8 +10631,8 @@ def delete_submission(request, submission_id):
         # First delete all files of this dynamic
         for df in DF:
             filepath = df.filepath
-            if os.path.exists(filepath):
-                os.remove(filepath)
+            if os.path.exists(settings.MEDIA_ROOT + filepath):
+                os.remove(settings.MEDIA_ROOT + filepath)
         # Now change any creation_submission_id pointing to the submission_id we want to delete
         DP = DyndbProtein.objects.filter(protein_creation_submission_id=submission_id)
         DP.update(protein_creation_submission_id=None)
@@ -10800,6 +10801,10 @@ def step1(request, submission_id):
     context['step'] = '1'
     # Check which of the form's step has this submission undergo
     context['max_step'] = check_submission_status(submission_id)
+    
+    #Repeated step?
+    context['repeated_step'] = False
+
     return render(request, 'dynadb/step1.html', context)
 
 def count_and_save_atoms(dyn_id, submission_id):
@@ -11011,7 +11016,7 @@ def step1_submit(request, submission_id):
         'step' : '2',
         'submission_id' : submission_id,
         'max_step' : check_submission_status(submission_id),
-
+        'repeated_step' : False, #Repeated step?
      }
     return render(request,'dynadb/step2.html', context, status=200)
 
@@ -11360,17 +11365,14 @@ def sent_error(logfile, error_msg):
 def save_sdf(uploadfile, sdfname, submission_path, logfile):
     # (try to) load the SDF file, and check if it presents any mistakes
     # If it does, save them in a log file to check later
-    # try:
-    print("FILEE:", uploadfile)
+    try:
         # if not settings.MEDIA_ROOT[:-1] in uploadfile: 
         #     uploadfile = settings.MEDIA_ROOT[:-1] + uploadfile
-    mol = open_molecule_file(uploadfile,logfile=logfile)
-    # except (ParsingError, MultipleMoleculesinSDF, InvalidMoleculeFileExtension) as e:
-    #     print(e)
-    #     sent_error(logfile, e.args[0])
-    # except Exception as e:
-    #     print(e)
-    #     sent_error(logfile, 'Cannot load molecule from uploaded file.')
+        mol = open_molecule_file(uploadfile,logfile=logfile)
+    except (ParsingError, MultipleMoleculesinSDF, InvalidMoleculeFileExtension) as e:
+        sent_error(logfile, e.args[0])
+    except Exception as e:
+        sent_error(logfile, 'Cannot load molecule from uploaded file.')
     # Check as well if the sdf file is in the format that we want
     if check_implicit_hydrogens(mol):
         sent_error(logfile, 'Molecule contains implicit hydrogens. Please, provide a molecule with explicit hydrogens.')
@@ -11610,6 +11612,7 @@ def step2_submit(request, submission_id,):
         'step' : '3',
         'submission_id' : submission_id,
         'max_step': check_submission_status(submission_id),
+        'repeated_step' : False, #Repeated step?,
      }
     # Once everything is done, go to step 3
     return render(request,'dynadb/step3.html', context, status=200)
@@ -12327,7 +12330,7 @@ def step3_submit(request, submission_id,):
         'step' : '4',
         'submission_id' : submission_id,
         'max_step': check_submission_status(submission_id),
-
+        'repeated_step' : False, #Repeated step?,
     }
     return render(request,'dynadb/step4.html', context, status=200)
 
@@ -12469,7 +12472,8 @@ def step4_submit(request, submission_id):
                     dfd = Dfd.save()
                 else:
                     error=Dfd.errors.as_text()
-                    print(error)
+                    response = HttpResponse(error,status=422,sreason='Unprocessable Entity',content_type='text/plain; charset=UTF-8')
+                    return response
                 filedyn_id = dfd.id
                 # Save DyndbSubmissionDynamicsFiles
                 filesdynsub_dict = {
@@ -12488,7 +12492,9 @@ def step4_submit(request, submission_id):
                     dsdf = Dsdf.save()
                 else:
                     error=Dfd.errors.as_text()
-                    print(error)
+                    response = HttpResponse(error,status=422,sreason='Unprocessable Entity',content_type='text/plain; charset=UTF-8')
+                    return response
+
             # Numfile
             i+=1
             # Save file in server
@@ -12506,7 +12512,8 @@ def step4_submit(request, submission_id):
         'step' : '5',
         'submission_id' : submission_id,
         'max_step' : check_submission_status(submission_id),
-        "fdbREFF" : get_fdbREFF(submission_id)
+        "fdbREFF" : get_fdbREFF(submission_id),
+        'repeated_step' : False, #Repeated step?,
     }
     return render(request,'dynadb/step5.html', context, status=200)
 
@@ -12578,7 +12585,10 @@ def doitobib(doi):
             elif "pages =" in dt: #Pages:
                 l_pages = dt.split("=")
                 pages = l_pages[-1].replace("{","").replace("}","")[1:]
-                data["pages"] = pages
+                if "--" in pages:
+                    data["pages"] = pages.replace("--","-")
+                else:
+                    data["pages"] = pages
             elif "url =" in dt: #URL:
                 l_url = dt.split("=")
                 url = l_url[-1].replace("{","").replace("}","")[1:]
@@ -12655,6 +12665,10 @@ def step5(request, submission_id):
         'max_step' : check_submission_status(submission_id),
         "fdbREFF" : get_fdbREFF(submission_id)
      }
+    
+    #Repeated step?
+    context['repeated_step'] = False
+
     return render(request,'dynadb/step5.html', context, status=200)
 
 @login_required
@@ -12707,6 +12721,8 @@ def step5_submit(request, submission_id):
     SubmitRef=True
     qRFdoi=DyndbReferences.objects.filter(doi=request.POST['doi'])
     print(FRpk)
+    FRpk = FRpk[0]
+    print(FRpk)
     qSubmission=DyndbSubmission.objects.filter(id=submission_id)
     qT=list(qSubmission.filter(dyndbsubmissionprotein__submission_id=submission_id,dyndbsubmissionmolecule__submission_id=submission_id,dyndbsubmissionmodel__submission_id=submission_id,dyndbdynamics__submission_id=submission_id).values('dyndbsubmissionprotein__protein_id','dyndbsubmissionmolecule__molecule_id','dyndbsubmissionmolecule__molecule_id__id_compound','dyndbsubmissionmodel__model_id','dyndbdynamics__id'))
     print(qT)
@@ -12715,21 +12731,21 @@ def step5_submit(request, submission_id):
     dictdyn={'id_dynamics':qT[0]['dyndbdynamics__id'], 'id_references':FRpk }
     refprot=dyndb_References_Protein(dictprot)
     if SubmitRef:
-        if not qRFdoi.filter(dyndbreferencesprotein__id_protein=qT[0]['dyndbsubmissionprotein__protein_id'],dyndbreferencesprotein__id_references__in=FRpk).exists():
+        if not qRFdoi.filter(dyndbreferencesprotein__id_protein=qT[0]['dyndbsubmissionprotein__protein_id'],dyndbreferencesprotein__id_references=FRpk).exists():
             if refprot.is_valid():
                 refprot.save()
             else:
                 print("refprot is not valid",refprot.errors.as_text())
     refmod=dyndb_References_Model(dictmod)
     if  SubmitRef:
-        if not qRFdoi.filter(dyndbreferencesmodel__id_model=qT[0]['dyndbsubmissionmodel__model_id'],dyndbreferencesmodel__id_references__in=FRpk).exists():
+        if not qRFdoi.filter(dyndbreferencesmodel__id_model=qT[0]['dyndbsubmissionmodel__model_id'],dyndbreferencesmodel__id_references=FRpk).exists():
             if refmod.is_valid():
                 refmod.save()
             else:
                 print("refmod is not valid",refmod.errors.as_text())
     refdyn=dyndb_References_Dynamics(dictdyn)
     if SubmitRef:
-        if not qRFdoi.filter(dyndbreferencesdynamics__id_dynamics=qT[0]['dyndbdynamics__id'],dyndbreferencesdynamics__id_references__in=FRpk).exists():
+        if not qRFdoi.filter(dyndbreferencesdynamics__id_dynamics=qT[0]['dyndbdynamics__id'],dyndbreferencesdynamics__id_references=FRpk).exists():
             if refdyn.is_valid():
                 refdyn.save()
                 print("refdyn may  be saved ",refdyn.errors.as_text())
@@ -12742,7 +12758,7 @@ def step5_submit(request, submission_id):
         dictmol[i]={'id_molecule':qT[i]['dyndbsubmissionmolecule__molecule_id'],  'id_references':FRpk}
         refmol=dyndb_References_Molecule(dictmol[i])                                     
         if SubmitRef:
-            if not qRFdoi.filter(dyndbreferencesmolecule__id_molecule=qT[i]['dyndbsubmissionmolecule__molecule_id'],dyndbreferencesmolecule__id_references__in=FRpk).exists():
+            if not qRFdoi.filter(dyndbreferencesmolecule__id_molecule=qT[i]['dyndbsubmissionmolecule__molecule_id'],dyndbreferencesmolecule__id_references=FRpk).exists():
                 if refmol.is_valid():                                                         
                     refmol.save()                                                             
                 else:                                                                         
@@ -12750,7 +12766,7 @@ def step5_submit(request, submission_id):
         dictcomp[i]={'id_compound':qT[i]['dyndbsubmissionmolecule__molecule_id__id_compound'],  'id_references':FRpk}
         refcomp=dyndb_References_Compound(dictcomp[i])
         if not SubmitRef:
-            if not qRFdoi.filter(dyndbreferencescompound__id_compound=qT[i]['dyndbsubmissionmolecule__molecule_id__id_compound'],dyndbreferencescompound__id_references__in=FRpk).exists():
+            if not qRFdoi.filter(dyndbreferencescompound__id_compound=qT[i]['dyndbsubmissionmolecule__molecule_id__id_compound'],dyndbreferencescompound__id_references=FRpk).exists():
                 if refcomp.is_valid():
                     refcomp.save()
                 else:

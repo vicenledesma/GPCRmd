@@ -11,8 +11,9 @@
 <div class="container-fluid">
   <div class="row searchDiv">
     <div class="col-sm-12">
-      <div class="panel panel-primary">
-        <h2 class="panel-heading">Search</h2>
+      <div class="searchPanelDiv panel panel-primary">
+        <h2 class="panel-heading searchTitle">Search</h2>
+        <!-- Hidden button: how to use browser
         <div class="howtoparent">
           <a href="https://youtu.be/BLLXC8G10R0" class="btn btn-default btn-sm howtobtn" target="_blank"
             role="button">How to<br>use it<br><span class="glyphicon glyphicon-play" style="font-size:14px"></span></a>
@@ -30,11 +31,11 @@
               </ul>
             </div>
           </div>
-        </div>
+        </div>-->
 
-        <div class="search-tabs tab-content restheight100" style="height: 100%">
-          <div id="searchtable" class="height100 tab-pane fade in active test123" style="margin:0px 15px;height: 100%;">
-            <center class="height100" style="height: 100%">
+        <div class="search-tabs tab-content">
+          <div id="searchtable" class="tab-pane fade in active" >
+            <center>
 
               <span id="loading">
                 <center><img src="{% static 'view/images/loading-gear.gif' %}"
@@ -42,8 +43,7 @@
                 </center>
               </span>
 
-              <iframe class="height100" id="height: 100%" style="border:none" height=100% width="100%"
-                src="/dynadb/table"> </iframe>
+              <iframe  style="border:none;overflow:hidden;height:100%;width:100%" height="100%" width="100%" src="/dynadb/table"> </iframe>
 
             </center>
           </div>

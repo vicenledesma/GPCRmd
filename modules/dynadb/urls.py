@@ -91,8 +91,8 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += (
-        re_path(r'^files/(?P<path>.*)$', serve, name='files'),
-        re_path(r'^static/(?P<path>.*)$', serve, name='static')
+        re_path(r'^files/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}, name='files'),
+        re_path(r'^static/(?P<path>.*)$', serve,  {'document_root': settings.STATIC_ROOT}, name='static')
     )
 else:
     if settings.FILES_NO_LOGIN:

@@ -230,6 +230,16 @@ a:hover {
     text-align: right;
 }
 
+nav#topmenu.topMenu.navbar-fixed-top div.container-fluid div#navbar.navbar-collapse.collapse ul.nav.navbar-nav.navbar-right li.active a.menuItem,
+nav#topmenu.topMenu.navbar-fixed-top div.container-fluid div#navbar.navbar-collapse.collapse ul.nav.navbar-nav.navbar-right li.dropdown a.dropdown-toggle{
+    background-color: #171010 !important;
+}
+
+nav#topmenu.topMenu.navbar-fixed-top div.container-fluid div#navbar.navbar-collapse.collapse ul.nav.navbar-nav.navbar-right li a.menuItem:hover,
+nav#topmenu.topMenu.navbar-fixed-top div.container-fluid div#navbar.navbar-collapse.collapse ul.nav.navbar-nav.navbar-right li.dropdown a.dropdown-toggle:hover{
+    background-color: #171010 !important;
+}
+
 #navbar {
     margin-top: 0.5%;
 }
@@ -357,12 +367,12 @@ nav .dropdown-menu {
 
 
 .searchBtn {
-    background-color: #CA1616;
-    border-color: #423F3E;
+    background-color: #BF3C1F;
+    border-color: #171010;
     ;
     font-size: 20px;
     font-weight: bold;
-    border-radius: 0 25px 25px 0;
+    /* border-radius: 0 25px 25px 0; */
     margin-left: -4px;
     height: 45px;
     border-width: 2px;
@@ -370,14 +380,15 @@ nav .dropdown-menu {
 
 .searchBtn:hover {
     font-weight: bolder;
-    background-color: #BF3C1F;
-    border-color: #BF3C1F;
+    background-color: #171010;
+    border-color: #171010;
 }
 
 input.searchBar {
     text-align: center;
-    border-radius: 25px 0 0 25px;
+    /* border-radius: 25px 0 0 25px; */
     border-color: #423F3E;
+    border:2px solid #171010;
     height: 45px;
     font-size: 20px;
     background: white;
@@ -403,8 +414,9 @@ input.searchBar:focus {
 }
 
 .aExamples:hover {
-    color: #423F3E;
+    color: white;
     cursor: pointer;
+    text-decoration: underline;
 }
 
 .subanner {
@@ -474,15 +486,44 @@ p.subtitle {
 }
 
 .tab-content {
-    /*height:785px;/* !! */
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    padding: 30px;
+    padding: 10px;
     height: calc(100% - 40px);
-    ;
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+.searchCols{
+    font-size: 15px;
+}
+
+.colSelection{
+    margin-bottom:1%;
+    padding-left: 0;
+}
+
+.searchTable td, #table_id th{
+    text-align: left;
+}
+
+.searchLink{
+ color: #171010;
+}
+
+.searchLink:hover{
+    color:#BF3C1F;
+}
+
+.submitBtn{
+    background-color: white;
+    color: #171010;
+    border: 2px solid #BF3C1F;
+    font-size: 18px;
+    font-weight: bold;
+}
+.submitBtn:hover{
+    background-color: #171010;
+    color:white;
+    border: 2px solid #BF3C1F;
 }
 
 /*
@@ -948,22 +989,26 @@ a.buttonNews {
     text-decoration: none;
     color: white;
 
-    background-color: #CA1616;
+    /* background-color: #CA1616;
     border-color: #423F3E;
-    ;
+    border-radius: 25px;
+    
+    border-width: 2px;*/
+    padding: 12px 44px; 
+    height: 45px;
+    background-color: #BF3C1F;
+    color: white;
+    border: 2px solid white;
     font-size: 20px;
     font-weight: bold;
-    border-radius: 25px;
-    height: 45px;
-    border-width: 2px;
-    padding: 12px 44px;
 
 }
 
 .buttonNews:hover {
     font-weight: bolder;
-    background-color: #BF3C1F;
-    border-color: #BF3C1F;
+    background-color: #171010;
+    border-color: white;
+    color:#BF3C1F;
     cursor: pointer;
 }
 
@@ -1218,14 +1263,25 @@ a.buttonNews {
     margin-top: 5%;
 }
 
-.search-tabs {
-    margin-left: 15px;
-    margin-right: 15 px;
+.searchTitle{
+    padding:1%;
+}
+
+.indexBtnSize{
+    font-size: 18px;
 }
 
 #ajaxresults22_paginate {
     margin: 50px 1px 50px 1px;
 
+}
+
+.search-tabs{
+    height: 140%;
+}
+
+.searchPanelDiv{
+    margin-bottom:3%;
 }
 
 
@@ -1425,6 +1481,10 @@ label {
     color: #171010;
 }
 
+.simTable td p{
+    margin-top:10px;
+}
+
 .logIncontent {
     background-color: white;
     margin-top: 3%;
@@ -1501,7 +1561,7 @@ label {
     text-align:center
 }
 
-.submitBtn{
+/* .submitBtn{
     color:white;
     font-weight: bold;
     background-color: #BF3C1F;
@@ -1515,7 +1575,7 @@ label {
 .submitBtn:hover{
     background-color: #D96B52;
     color: #171010;
-}
+} */
 
 /* Memberpage */
 .firstBtn{

@@ -246,7 +246,7 @@ class prot_entry {
           <div class='row initial-text'>
             <div class="col-md-12 segcontainer" id="segcontainer${id}">
               <div id="seg_index" class="row labelrow">
-                <label for='pdbid${id}' class="col-md-2 col-md-offset-1">
+                <label for='pdbid${id}' class="col-md-2 col-md-offset-2">
                   <a title='ID of the PDB structure from which this fragment was obtained'>PDB id</a>
                 </label>
                 <label for='source{id}' class="col-md-2">

@@ -4019,7 +4019,7 @@ def quickload(request,dyn_id,trajfile_id):
 def quickloadall(request):
 
     # Create uploading file
-    f = open(settings.MEDIA_ROOT + 'Precomputed/WaterMaps/isloading.txt','w')
+    f = open(settings.MEDIA_ROOT + 'config/isloading.txt','w')
     f.close()
 
     #DyndbFiles.objects.filter(dyndbfilesdynamics__id_dynamics=dyn_id, id_file_types__is_trajectory=True)
