@@ -24,7 +24,8 @@ class Command(BaseCommand):
 
         # If we want to update or obtain the data 
         if options['update']: 
-            print("> Refreshing data...")
+            print("- UPDATE STEP...")
+            print("     > Refreshing data...")
             table_info = open(mode="w", file="gpcrdb_table.html")
             urlData = requests.get(url)
             urltext = urlData.text
@@ -48,24 +49,24 @@ class Command(BaseCommand):
                     over_header = 0 
                 elif table == 1 and over_header == 0: 
                     table_info.writelines(line+"\n")
-        else:
-            print("> Data already exist")
 
-        # Get the dataset from gpcrdb on pandas
-        print("> Getting the dataset...")
-        gpcrdb_table = pd.read_html("gpcrdb_table.html")
-        gpcrdb_table = gpcrdb_table[0].iloc[1:,1:-1] 
+            # Get the dataset from gpcrdb on pandas
+            print("     > Getting the dataset...")
+            gpcrdb_table = pd.read_html("gpcrdb_table.html")
+            gpcrdb_table = gpcrdb_table[0].iloc[1:,1:-1] 
 
-        # Create State dictionary from table 
-        print("> Creating the state dictionary ([pdb] = state)... ")
-        dic_state = {}
-        for index, row in gpcrdb_table.iterrows():
-            pdb_id = str(row["PDB"])
-            state = str(row["State"])
-            if pdb_id not in dic_state.keys():
-                dic_state[pdb_id] = state
+            # Create State dictionary from table 
+            print("     > Creating the state dictionary ([pdb] = state)... ")
+            dic_state = {}
+            for index, row in gpcrdb_table.iterrows():
+                pdb_id = str(row["PDB"])
+                state = str(row["State"])
+                if pdb_id not in dic_state.keys():
+                    dic_state[pdb_id] = state
 
-        # Write information into data.py file on dynadb main directory
-        print("> Writing info into modules/dynadb/data.py...")
-        dic_state_file = open(mode="w", file=f"{MODULES_ROOT}/dynadb/data.py")
-        dic_state_file.write(f"pdb_state={dic_state}")
+            # Write information into data.py file on dynadb main directory
+            print("     > Writing info into modules/dynadb/data.py...")
+            dic_state_file = open(mode="w", file=f"{MODULES_ROOT}/dynadb/data.py")
+            dic_state_file.write(f"pdb_state={dic_state}")
+
+        

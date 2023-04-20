@@ -6,9 +6,6 @@ from modules.dynadb.customized_errors import StreamSizeLimitError, StreamTimeout
 from requests.exceptions import HTTPError,ConnectionError,Timeout,TooManyRedirects
 from django.conf import settings
 
-
-
-
 def valid_uniprotkbac(uniprotkbac):
     reupkbac1 = re.compile(r'^[OPQ][0-9][A-Z0-9]{3}[0-9]([-][0-9]*)?$')
     reupkbac2 = re.compile(r'^[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}([-][0-9]*)?$')

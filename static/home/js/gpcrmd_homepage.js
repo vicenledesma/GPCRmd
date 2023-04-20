@@ -4764,35 +4764,51 @@ $(document).ready(function(){
     var mydiv = d3.select("#chart") 
 //                .style("width", wdiv + "px")
 //                .style("height", wdiv + "px")
-    var zoom = d3.zoom()
-      // Don’t allow the zoomed area to be bigger than the viewport.
-      .scaleExtent([1, Infinity])
-      .translateExtent([[0, 0], [width, height]])
-      .extent([[0, 0], [width, height]])
-      .on("zoom", zoomed);
 
-    $("#Reset").click(() => {
-      mydiv.transition()
-        .duration(750)
-        .call(zoom.transform, d3.zoomIdentity);
-    });
+    function zoomed() {
+        // svg.attr("transform", d3.event.transform);
+        // console.log(d3.event.transform);
+        // var xy = d3.mouse(this);  
+        // var transform = d3.zoomTransform(svg.node());
+        // var xy1 = transform.invert(xy);
+        // console.log(xy1);
+        svg.attr("transform", "translate(" + (d3.event.transform["x"]+width+130) / 2 + "," + (d3.event.transform["y"]+height+130) / 2 + ")scale(" + d3.event.transform["k"] + ")")
+      }
+    
+    var zoom = d3.zoom()
+      .scaleExtent([1, 10])
+      // .translateExtent([[-1*(width + 130), -1*(height + 130)], [width, height]])
+      .extent([[0, 0], [width, height]])
+      .on("zoom", zoomed)
 
     const svg = mydiv.append("svg")
        // .attr("width", "100%")
        // .attr("height", "100%")
-    .call(zoom)
-    .attr("style","display:block;margin:auto;")
-    .attr('viewBox','0 0 '+(width + 130)+' '+(width + 130))
-    .attr('preserveAspectRatio','xMinYMin')
-    .style("font", "10px sans-serif")
-    .append("svg:g")
-    .attr("transform", "translate(" + (width+140) / 2 + "," + (width+140) / 2 + ")")
-    ;
+      .on("zoom", zoomed)
+      .call(zoom) 
+      .attr("style","display:block;margin:auto;")
+      .attr('viewBox','0 0 '+(width + 130)+' '+(width + 130))
+      .attr('preserveAspectRatio','xMinYMin')
+      .style("font", "10px sans-serif")
+      .style("border", "1px solid black")
+      .style("border-color","#BF3C1F")
+      .append("svg:g")
+      .attr("transform", "translate(" + (width+130) / 2 + "," + (width+130) / 2 + ")")
+      ;
 
-    function zoomed() {
-      mydiv.attr("transform",d3.event.transform);
-    }  
-    
+    var transform = d3.zoomIdentity //<-- create your transform with your initialScale
+      .translate(0, 0)
+      .scale(1);
+
+    $("#Reset").click(() => {
+      svg.transition()
+        .duration(750)
+        .call(zoom.transform, transform)
+        // .call(zoom.translateTo, 500, 500)
+
+        // .attr("transform", "translate(" + (width+140) / 2 + "," + (width+140) / 2 + ")")
+    });
+
     const link = svg.append("g")
         .attr("fill", "none")
         .attr("stroke-opacity", 0.4)
@@ -4825,23 +4841,23 @@ $(document).ready(function(){
     let setstyle_font =function(d,is_sel){
         if (is_sel){
           if (d.depth === 1) {
-            return "14px sans-serif"
+            return "12px sans-serif"
           } else if (d.depth === 2) {
             return "10px sans-serif"
           } else if (d.depth === 3) {
             return "8px sans-serif"
           } else if (d.depth === 4) {
-            return "5px monospace"
+            return "2px monospace"
           }    
       } else {
           if (d.depth === 1) {
-            return "14px sans-serif"
-          } else if (d.depth === 2) {
             return "10px sans-serif"
-          } else if (d.depth === 3) {
+          } else if (d.depth === 2) {
             return "8px sans-serif"
+          } else if (d.depth === 3) {
+            return "6px sans-serif"
           } else if (d.depth === 4) {
-            return "5px monospace"
+            return "2px monospace"
           }
       }
     }
@@ -4945,11 +4961,13 @@ $(document).ready(function(){
                         classli.add(selecitonstyle_class)
                     }
                     return classli
-                });
+                })
+                .raise();
 
             current_circle.selectAll("text")
               .style("font",  setstyle_font(d,true))
               .style("font-weight",setstyle_fontweight(d,true))
+              .raise();
               // .attr("x",function(t){
               //   var transform = this.getAttribute("transform");
               //   if (t.depth == 4) {
@@ -5354,7 +5372,7 @@ $(document).ready(function(){
     });
      
     const leg = svg.append("g")
-      .attr("transform", "translate(250,-600)")
+      .attr("transform", "translate(200,-600)")
       .attr("id","legend_box");
     
     leg.append("rect")

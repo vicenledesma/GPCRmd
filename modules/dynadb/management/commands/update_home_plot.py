@@ -46,6 +46,8 @@ class Command(BaseCommand):
             default=False,
             help='Looks for the PDB id of dynamics to be added without considering the class, family and sbtype of the receptor. This means that if our receptor is class F, it will iterate through all families, subtypes and PDBs of the rest of the classes to find the PDB inf in tree_data. Use when for some reason there is a missmatch with a class/family/subtype name (or longname) in tree_data with respect to GPCRdb (But rather than forcing it, you should fix the name in tree_data!)',
         )
+        
+    def handle(self, *args, **kwargs):
         def search_in_treeData(childrenli,myname,nameLongname):
             namefound=False
             for nlevel in range(0,len(childrenli)):
@@ -54,6 +56,7 @@ class Command(BaseCommand):
                     namefound=True
                     return(nlevel)
             return(False)
+    
         def appendocreate(mystr,element):
             if mystr:
                 mylist=mystr.split("|")
@@ -63,6 +66,7 @@ class Command(BaseCommand):
                 mystr=element
             return mystr
 
+        # args = parser.parse_args() # Get the arguments
 
         #Dowbload data from GPCRdb
         strucpcrdb=requests.get('http://gpcrdb.org/services/structure/').json()
@@ -71,13 +75,13 @@ class Command(BaseCommand):
         slugtofamdata={d["slug"]:d for d in famgpcrdb}
 
         #Load input dict
-        gpcrmdtree_path=options["gpcrmdtree_path"]
+        gpcrmdtree_path=kwargs["gpcrmdtree_path"]
         with open(gpcrmdtree_path, 'rb') as filehandle:  
             tree_data = pickle.load(filehandle)
 
         #Obtain dyn to be considered
-        if options['dynamics_id']:
-            dynobj=dynobj.filter(id__in=options['dynamics_id'])
+        if kwargs['dynamics_id']:
+            dynobj=dynobj.filter(id__in=kwargs['dynamics_id'])
         else:
             dynobj=DyndbDynamics.objects.filter(is_published=True)
         if dynobj == []:
@@ -134,7 +138,7 @@ class Command(BaseCommand):
             if dyn["comp_type"]==1:
                 dyn_dict[dyn_id]["lig_li"].add(dyn["ligname"])
 
-        force_find_pdb=options["force_find_pdb"]
+        force_find_pdb=kwargs["force_find_pdb"]
         for dyn_id,dyn_data in dyn_dict.items():
             if len(dyn_data.keys())<=1:
                 print("No data found for dyn %s"%dyn_id)
@@ -163,22 +167,29 @@ class Command(BaseCommand):
                                 break
 
             else:
+                print(pdbid)
                 nclass=search_in_treeData(tree_data["children"],myclass,"name")
                 if nclass is False:
                     print("Class not found in tree_data for dyn %s" %dyn_id)
                     continue
-                nfam=search_in_treeData(tree_data["children"][nclass]["children"],myfam,"longname")
-                if nfam is False:
-                    print("nfam %s not found in tree_data for dyn %s" %(myfam,dyn_id))
+                try:
+                    nfam=search_in_treeData(tree_data["children"][nclass]["children"],myfam,"longname")
+                    if nfam is False:
+                        print("nfam %s not found in tree_data for dyn %s" %(myfam,dyn_id))
+                        continue
+                except:
                     continue
-                nsubt=search_in_treeData(tree_data["children"][nclass]["children"][nfam]["children"],mysubt,"longname")
-                if nsubt is False:
-                    print("Subtype %s not found in tree_data for dyn %s (%s %s %s)" %(mysubt,dyn_id,nclass,nfam,nsubt))
+                try:
+                    nsubt=search_in_treeData(tree_data["children"][nclass]["children"][nfam]["children"],mysubt,"longname")
+                    if nsubt is False:
+                        print("Subtype %s not found in tree_data for dyn %s (%s %s %s)" %(mysubt,dyn_id,nclass,nfam,nsubt))
+                        continue
+                except:
                     continue
                 npdb=search_in_treeData(tree_data["children"][nclass]["children"][nfam]["children"][nsubt]["children"],pdbid,"name")
-            if npdb is False:
-                print("PDB %s not found in tree_data for dyn %s." % (pdbid,dyn_id))
-                continue
+                if npdb is False:
+                    print("PDB %s not found in tree_data for dyn %s." % (pdbid,dyn_id))
+                    continue
             pdbdata=tree_data["children"][nclass]["children"][nfam]["children"][nsubt]["children"][npdb]
             if dyn_data["lig_li"]:
                 apocomp="Complex"
@@ -200,7 +211,7 @@ class Command(BaseCommand):
                     treetransd_fin=appendocreate(treetransd,"-")
                     pdbdata["Transducer"]=treetransd_fin
 
-        gpcrmdtree_path_out=options["gpcrmdtree_path_out"]
+        gpcrmdtree_path_out=kwargs["gpcrmdtree_path_out"]
         with open(gpcrmdtree_path_out, 'wb') as filehandle:  
             # store the data as binary data stream
             pickle.dump(tree_data, filehandle)
