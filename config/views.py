@@ -9,9 +9,9 @@ from django.template import Context, loader
 def error404(request, *args, **kwargs):
     try:
         template = loader.get_template('home/404.html')
-        context = Context({
+        context = {
             'message': 'All: %s' % request,
-            })
+            }
     except Exception as e: 
         print(e)
 
@@ -20,9 +20,9 @@ def error404(request, *args, **kwargs):
 def error500(request):
     try:
         template = loader.get_template('home/500.html')
-        context = Context({
+        context = {
             'message': 'All: %s' % request,
-            })
+            }
     except Exception as e: 
         print(e)
 

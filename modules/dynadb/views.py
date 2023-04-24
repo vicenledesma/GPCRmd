@@ -10353,6 +10353,10 @@ def datasets(request):
             author ="%s %s, %s" % (dyn["user_fname"],dyn["user_lname"],dyn["user_institution"])
         dyn_dict[dyn_id]["is_gpcrmd"]=is_gpcrmd
         dyn_dict[dyn_id]["author"]=author
+        
+    # Counters for the statistics  
+    data_gpcrmdcom = 0 
+    data_indv = 0
     for dyn_id,dyndata in dyn_dict.items():
         context={}
         myclass_slug=dyndata["class_slug"]
@@ -10379,7 +10383,6 @@ def datasets(request):
         npr=search_in_treeData(gpcrclassif_prot,myprot_slug)
         if npr is False:
             continue
-        print(nclass,nfam,nsf,npr)
         if dyndata["is_gpcrmd"]:
             gpcrpdbdict=gpcrclassif_prot[npr]["children"]
             if pdbid not in gpcrpdbdict:
@@ -10389,6 +10392,7 @@ def datasets(request):
             gpcrclassif_fams[nfam]["has_sim"]=True
             gpcrclassif_sf[nsf]["has_sim"]=True
             gpcrclassif_prot[npr]["has_sim"]=True
+            data_gpcrmdcom += 1
         else:
             o_gpcrclassif_fams=others_gpcrclassif[nclass]["children"]
             o_gpcrclassif_sf=o_gpcrclassif_fams[nfam]["children"]
@@ -10401,7 +10405,9 @@ def datasets(request):
             others_gpcrclassif[nclass]["has_sim"]=True
             o_gpcrclassif_fams[nfam]["has_sim"]=True
             o_gpcrclassif_sf[nsf]["has_sim"]=True
-            o_gpcrclassif_prot[npr]["has_sim"]=True            
+            o_gpcrclassif_prot[npr]["has_sim"]=True   
+            data_indv += 1
+         
     context["gpcrclassif"]= gpcrclassif
     context["others_gpcrclassif"]=others_gpcrclassif
     gpcrmdtree_path= settings.MEDIA_ROOT+"Precomputed/Summary_info/gpcrmdtree.data"
@@ -10409,6 +10415,12 @@ def datasets(request):
         tree_data = pickle.load(filehandle)
     context['tree_data']=json.dumps(tree_data)
     #print(json.dumps(tree_data))
+    # Get contribution statistics on GPCRmd
+    stats_dataset= [["Contributor", "Num"],
+                    ["GPCRmd community", data_gpcrmdcom],
+                    ["Individual", data_indv]
+                    ]
+    context["stats_dataset"]=json.dumps(stats_dataset)
     return render(request, 'dynadb/datasets.html', context)
 
 def searchtable_data(dynobj,nongpcr=True):

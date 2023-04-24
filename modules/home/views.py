@@ -195,7 +195,6 @@ def gpcrmd_home(request):
                 ]
     context["fam_stats"]=json.dumps(fam_stats)
 
-
     #Subtypes sumulated
     sim_subtyppes=len(subtype_set)
     total_subtyppes=subt_count

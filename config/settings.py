@@ -19,7 +19,8 @@ else:
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(__file__)) #/var/www/GPCRmd
+
 DEBUG_TOOLBAR = True
 
 # Application definition
@@ -31,13 +32,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
-    'modules.accounts',
+    'rest_framework',
+    'modules.accounts.apps.AccountsConfig',
+    'modules.api',
     'modules.common',
     'modules.contact_maps',
     'modules.corplots',
     'modules.covid19',
-    'modules.crossreceptor_analysis',
-    'modules.dynadb',
+    'modules.crossreceptor_analysis.apps.CrossreceptorAnalysisConfig',
+    'modules.drugs',
+    'modules.dynadb.apps.DynadbConfig',
     'modules.home',
     'modules.interaction',
     'modules.ligand',
@@ -47,7 +51,7 @@ INSTALLED_APPS = [
     'modules.residue',
     'modules.sc2md',
     'modules.structure',
-    'modules.view'
+    'modules.view.apps.ViewConfig'
 
 ]
 # INSTALLED_APPS = [
@@ -103,6 +107,7 @@ DEBUG_TOOLBAR_MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware']
 if not DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_MIDDLEWARE = []
     
+# ['config.custom_middlewares.MultipleProxyMiddleware']+\
 MIDDLEWARE = DEBUG_TOOLBAR_MIDDLEWARE+\
     ['django.middleware.common.CommonMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -110,7 +115,7 @@ MIDDLEWARE = DEBUG_TOOLBAR_MIDDLEWARE+\
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    
+    # 'config.custom_middlewares.WsgiLogErrors',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -138,7 +143,7 @@ if DEBUG:
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/files/'
-MEDIA_ROOT = '/var/www/GPCRmd/media/files/'
+MEDIA_ROOT = '/GPCRmd/media/files/'
 SENDFILE_BACKEND = 'sendfile.backends.xsendfile'
 
 MAIN_ROOT = '/var/www/GPCRmd'
@@ -146,7 +151,6 @@ TEMP_ROOT = '/var/www/GPCRmd/templates'
 #MODULES DIR
 MODULES_ROOT = "/var/www/GPCRmd/modules"
 #Search Engine
-
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
@@ -155,12 +159,15 @@ HAYSTACK_CONNECTIONS = {
 }
 
 # Serializer
-
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
+# Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
 
 # Templates
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -179,7 +186,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
-                'config.context_processors.google_analytics'
+                'config.context_processors.google_analytics', 
             ],
         },
     },
@@ -203,12 +210,11 @@ if DEBUG:
     DEBUG_TOOLBAR_PATCH_SETTINGS = False
     INTERNAL_IPS = ('10.0.2.2')
 
-
 # Logging
 if DEBUG:
     LOGGING = {
        'version': 1,
-       'disable_existing_loggers': False,
+       'disable_existing_loggers': True,
        'formatters': {
            'verbose': {
                'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
@@ -218,21 +224,27 @@ if DEBUG:
        'handlers': {
            'django': {
                'level': 'DEBUG',
-               'class': 'logging.FileHandler',
+               'class': 'logging.handlers.RotatingFileHandler',
                'filename': f'{BASE_DIR}/logs/django.log',
-               'formatter': 'verbose'
+               'formatter': 'verbose',
+               'backupCount': 10, # keep at most 10 log files
+                'maxBytes': 5242880, # 5*1024*1024 bytes (5MB)
            },
            'build': {
                'level': 'DEBUG',
-               'class': 'logging.FileHandler',
+               'class': 'logging.handlers.RotatingFileHandler',
                'filename': f'{BASE_DIR}/logs/build.log',
-               'formatter': 'verbose'
+               'formatter': 'verbose',
+               'backupCount': 10, # keep at most 10 log files
+                'maxBytes': 5242880, # 5*1024*1024 bytes (5MB)
            },
            'gpcrmd': {
                'level': 'DEBUG',
-               'class': 'logging.FileHandler',
+               'class': 'logging.handlers.RotatingFileHandler',
                'filename': f'{BASE_DIR}/logs/gpcrmd.log',
-               'formatter': 'verbose'
+               'formatter': 'verbose',
+               'backupCount': 10, # keep at most 10 log files
+                'maxBytes': 5242880, # 5*1024*1024 bytes (5MB)
            },
        },
        'loggers': {
