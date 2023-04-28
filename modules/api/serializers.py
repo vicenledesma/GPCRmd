@@ -1,7 +1,19 @@
-from modules.accounts.models import User
+from modules.dynadb.models import DyndbModel, DyndbProtein
 from rest_framework import serializers
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class AllPdbsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['url', 'username', 'email']
+        model = DyndbModel
+        fields = ['pdbid']
+
+class AllUniprotsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DyndbProtein
+        fields = ['uniprotkbac']
+        # depth = 1
+
+
+
+        
+
+    

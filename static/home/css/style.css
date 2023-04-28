@@ -194,12 +194,13 @@ p,
 span,
 th,
 td,
-select {
+select{
     font-family: Arial, Helvetica, sans-serif;
     color: #171010;
     font-size: 20px;
     text-align: justify;
 }
+
 input{
     font-size: 20px;
 }
@@ -1644,4 +1645,3 @@ label {
     margin-right:2.5%;
     margin-bottom:0px
   }
-

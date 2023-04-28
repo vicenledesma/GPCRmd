@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.staticfiles',
     'rest_framework',
+    'drf_yasg',
     'modules.accounts.apps.AccountsConfig',
     'modules.api',
     'modules.common',
@@ -163,8 +164,12 @@ SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 # Rest Framework
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    # 'DEFAULT_SCHEMA_CLASS': "drf-spectacular.openapi.AutoSchema",
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'PAGE_SIZE': 10
+}
+SWAGGER_SETTINGS = {
+    'DOC_EXPANSION': "None" # Collapse everything 
 }
 
 # Templates

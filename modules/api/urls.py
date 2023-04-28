@@ -1,14 +1,37 @@
+"""
+Quickstart: https://drf-yasg.readthedocs.io/en/stable/readme.html#quickstart
+"""
+
+from django.contrib import admin
 from django.urls import include, re_path
-from rest_framework import routers
+
+from rest_framework.urlpatterns import format_suffix_patterns
+
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 from . import views
 
-# Routers
-router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
+# Schema
+schema_view = get_schema_view(
+   openapi.Info(
+      title="GPCRmd API",
+      default_version='v1',
+      description="Test description",
+   ),
+   public=True,
+)
 
+# Wire up our API using automatic URL routing.
+# Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    re_path(r'', include(router.urls)),
-    re_path(r'^api_auth/', include('rest_framework.urls')),
+   re_path(r'^$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+   # re_path(r'^', include(router.urls)),
+   re_path(r'^search_allpdbs/$', views.SearchAllPdbs.as_view()),
+   re_path(r'^search_alluniprots/$', views.SearchAllUniprots.as_view()),
+   re_path(r'^download_all/$', views.download_all, name="download_all"),
+   # re_path(r'^celery-progress/', include('celery_progress.urls')), 
 
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)

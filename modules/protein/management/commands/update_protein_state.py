@@ -26,7 +26,7 @@ class Command(BaseCommand):
         if options['update']: 
             print("- UPDATE STEP...")
             print("     > Refreshing data...")
-            table_info = open(mode="w", file="gpcrdb_table.html")
+            table_info = open(mode="w", file=f"{MODULES_ROOT}/protein/management/tools/gpcrdb_table.html")
             urlData = requests.get(url)
             urltext = urlData.text
             l_urltext = urltext.split("\n")
@@ -52,7 +52,7 @@ class Command(BaseCommand):
 
             # Get the dataset from gpcrdb on pandas
             print("     > Getting the dataset...")
-            gpcrdb_table = pd.read_html("gpcrdb_table.html")
+            gpcrdb_table = pd.read_html("{MODULES_ROOT}/protein/management/tools/gpcrdb_table.html")
             gpcrdb_table = gpcrdb_table[0].iloc[1:,1:-1] 
 
             # Create State dictionary from table 

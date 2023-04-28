@@ -13,7 +13,7 @@ urlpatterns = [
     re_path(r'^tunnelsandchannels/$', views.index,{"tunnels_channels_def":True, "dyn_id":7}, name='index'),
     re_path(r'^ligprotcontacts/$', views.index,{"ligprotint_def":True, "dyn_id":"90"}, name='index'),
     re_path(r'^nongpcr/(?P<dyn_id>[0-9]+)/$', views.nongpcr, name='nongpcr'),
-    re_path(r'^(?P<dyn_id>[0-9]+)/(?P<sel_pos>\d+x\d+_\d+x\d+$)', views.index, name='index'),#For contact plots
+    re_path(r'^(?P<dyn_id>[0-9]+)/(?P<sel_pos>\d+x\d+_\d+x\d+$)/$', views.index, name='index'),#For contact plots
     re_path(r'^(?P<dyn_id>[0-9]+)/(Ligand_)?(?P<sel_pos>\d+x\d+)(_Ligand)?', views.index, name='index'),#For contact plots when ligand
     re_path(r'^(?P<dyn_id>[0-9]+)/(?P<selthresh>\d\.\d)/(?P<sel_pos>\d+x\d+)/$', views.index, name='index'),
   #  re_path(r'^distances/(?P<dist_str>[0-9]+-[0-9]+(a[0-9]+-[0-9]+)*)/(?P<struc_id>[0-9]+)/(?P<traj_id>[0-9]+)$', views.distances, name='distances'),
@@ -35,7 +35,7 @@ urlpatterns = [
     re_path(r'^quickloadall/$', views.quickloadall, name="quickloadall"),
     re_path(r'^min/(?P<dyn_id>[0-9]+)/$', views.basicview, name="basicview"),
     re_path(r'^update_bokeh/$', views.update_bokeh, name="update_bokeh"),
-    re_path(r'^ac_update/(?P<dyn_id>[0-9]+)', views.ac_load_data, name="ac_load_data"),
+    re_path(r'^ac_update/(?P<dyn_id>[0-9]+)/$', views.ac_load_data, name="ac_load_data"),
     re_path(r'^get_pocket_plot_and_files/$', views.get_pocket_plot_and_files, name="get_pocket_plot_and_files"),
     re_path(r'^get_pocket_and_dyn_data/$', views.get_pocket_and_dyn_data, name="get_pocket_and_dyn_data"),
 ]
