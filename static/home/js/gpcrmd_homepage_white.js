@@ -4792,6 +4792,7 @@ $(document).ready(function(){
       .style("font", "10px sans-serif")
       .style("border", "1px solid black")
       .style("border-color","#BF3C1F")
+      .style("background-color","#171010")
       .append("svg:g")
       .attr("transform", "translate(" + (width+130) / 2 + "," + (width+130) / 2 + ")")
       ;
@@ -4819,7 +4820,7 @@ $(document).ready(function(){
         .attr("d", d3.linkRadial()
             .angle(d => d.x)
             .radius(d => d.y))
-      .attr("stroke", d => d.target.data.Simulated == "Yes" ? "black" : d.target.data.Simulated == "No" ? "lightgrey" : "black")
+      .attr("stroke", d => d.target.data.Simulated == "Yes" ? "white" : d.target.data.Simulated == "No" ? "lightgrey" : "white")
     
     let current_circle = undefined;
 
@@ -5112,7 +5113,7 @@ $(document).ready(function(){
                   .attr("font-weight", "bold")
                   .attr("x", (popup_size.width +10  )+"px")
                   .attr("id", "closePopup")
-                  .attr("fill", "#a6a6a6");
+                  .attr("fill", "white");
           }
       
           //Move popup ---------------------------
@@ -5240,24 +5241,24 @@ $(document).ready(function(){
   
   
     svg.append('path')
-      .style("fill", "#575757 ")
-      .style("stroke", "#575757")
+      .style("fill", "white")
+      // .style("stroke", "white")
       .attr('d', arc({
         startAngle: 0.01,
         endAngle: 5.55
       }))
   
     svg.append('path')
-      .style("fill", "#898989") //898989
-      .style("stroke", "#898989")
+      .style("fill", "white") //898989
+      // .style("stroke", "white")
       .attr('d', arc({
         startAngle: 5.57,
         endAngle: 5.89
       }))
   
     svg.append('path')
-      .style("fill", "#575757")
-      .style("stroke", "#575757") //d5d5d5
+      .style("fill", "white")
+      // .style("stroke", "white") //d5d5d5
       .attr("stroke-width", "1")
       .attr('d', arc({
         startAngle: 5.9,
@@ -5265,8 +5266,8 @@ $(document).ready(function(){
       }))
   
     svg.append('path')
-      .style("fill", "#898989") //#4169E1")
-      .style("stroke", "#898989") //#4169E1")
+      .style("fill", "white") //#4169E1")
+      // .style("stroke", "white") //#4169E1")
       .attr("stroke-width", "1")
       .attr('d', arc({
         startAngle: 6.06,
@@ -5277,13 +5278,13 @@ $(document).ready(function(){
       .attr("d", d3.linkRadial()
         .angle(d => d.x)
         .radius(d => d.y))
-      .attr("stroke", d => d.target.data.Simulated == "Yes" ? "black" : d.target.data.Simulated == "No" ? "lightgrey" : "black")
-      .attr("stroke", d => d.target.data.Simulated == "Yes" ? (d.target.data.KlassCol == "A" ? "#898989" : d.target.data.KlassCol == "B" ? "#575757" : d.target.data.KlassCol == "C" ? "#898989" : d.target.data.KlassCol == "F" ? "#575757" : "black") : d.target.data.Simulated == "No" ? "lightgrey" : (d.target.data.KlassCol == "A" ? "#898989" : d.target.data.KlassCol == "B" ? "#575757" : d.target.data.KlassCol == "C" ? "#898989" : d.target.data.KlassCol == "F" ? "#575757" : "black"))
+      // .attr("stroke", d => d.target.data.Simulated == "Yes" ? "white" : d.target.data.Simulated == "No" ? "lightgrey" : "white")
+      // .attr("stroke", d => d.target.data.Simulated == "Yes" ? (d.target.data.KlassCol == "A" ? "#898989" : d.target.data.KlassCol == "B" ? "#575757" : d.target.data.KlassCol == "C" ? "#898989" : d.target.data.KlassCol == "F" ? "#575757" : "black") : d.target.data.Simulated == "No" ? "lightgrey" : (d.target.data.KlassCol == "A" ? "#898989" : d.target.data.KlassCol == "B" ? "#575757" : d.target.data.KlassCol == "C" ? "#898989" : d.target.data.KlassCol == "F" ? "#575757" : "black"))
   
 
     const node = svg.append("g")
-      .attr("stroke-linejoin", "round")
-      .attr("stroke-width", 3)
+      // .attr("stroke-linejoin", "round")
+      // .attr("stroke-width", 3)
       .selectAll("g")
       .data(root.descendants().reverse())
       .enter().append("g")
@@ -5297,7 +5298,7 @@ $(document).ready(function(){
     }
 
     node.append("circle")
-      .attr("fill", "#575757")
+      .attr("fill", "white")
       .attr("r", d => d.data.Simulated == "Yes" ? 5 : d.data.Simulated == "No" ? 2 : 2)
       .attr("class",function(d) {
         if (d.height==0){
@@ -5308,7 +5309,7 @@ $(document).ready(function(){
       })
 
     node.append("circle")
-      .attr("fill", d => d.data.State == "Active" ? "green" : d.data.State == "Inactive" ? "red" : d.data.State == "Intermediate" ? "orange" : "black")
+      .attr("fill", d => d.data.State == "Active" ? "green" : d.data.State == "Inactive" ? "red" : d.data.State == "Intermediate" ? "orange" : "white")
       .attr("r", 2.5)
       .attr("class",function(d) {
         if (d.height==0){
@@ -5318,7 +5319,7 @@ $(document).ready(function(){
         }
       })
     node.append("text")
-      .attr("fill", d => d.data.Simulated == "Yes" ? "black" : d.data.Simulated == "No" ? "lightgrey" : "black")
+      .attr("fill", d => d.data.Simulated == "Yes" ? "white" : d.data.Simulated == "No" ? "lightgrey" : "white")
       .attr("dy", "0.31em")
       .attr("x", d => d.x < Math.PI === !d.children ? 6 : -6)
       .attr("text-anchor", function(d) {

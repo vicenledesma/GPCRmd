@@ -9,7 +9,7 @@ FILES_NO_LOGIN = False
 
 #Determine http or https (ssl)
 SSL=False
-DEV = True
+DEV = False
 
 #Settings selection
 if DEV == False:
@@ -56,48 +56,20 @@ INSTALLED_APPS = [
 
 ]
 # INSTALLED_APPS = [
-#     'dynadb.apps.DynadbConfig',
-#     'accounts.apps.AccountsConfig',
-#     'view.apps.ViewConfig',
-#     'crossreceptor_analysis.apps.CrossreceptorAnalysisConfig',
-#     'django.contrib.admin',
-#     'django.contrib.auth',
-#     'django.contrib.contenttypes',
-#     'django.contrib.sessions',
-#     'django.contrib.messages',
-#     'django.contrib.staticfiles',
-#     'django.contrib.humanize',
 #     'sendfile',
-#     'rest_framework',
-#     'rest_framework_swagger',
-#     'common',
-#     'api',
-#     'news',
 #     'pages',
-#     'home',
-#     'protein',
 #     'family',
-#     'residue',
 #     'alignment',
 #     'similaritysearch',
 #     'similaritymatrix',
-#     'structure',
-#     'ligand',
-#     'interaction',
-#     'mutation',
 #     'phylogenetic_trees',
 #     'sitesearch',
 #     'build_' + SITE_NAME,
 #     'construct',
 #     'tools',
 #     'haystack',
-#     'drugs',
 #     'graphos',
 #     'revproxy',
-#     'contact_maps',
-#     'covid19',
-#     'sc2md',
-#     'corplots',
 # ]
 
 if DEBUG_TOOLBAR:
@@ -133,6 +105,9 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+#DATABASE
+DB_ENGINE = 'gpcrmd_admin'
+
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 # STATIC_ROOT = '/var/www/GPCRmd/static'
@@ -151,6 +126,7 @@ MAIN_ROOT = '/var/www/GPCRmd'
 TEMP_ROOT = '/var/www/GPCRmd/templates'
 #MODULES DIR
 MODULES_ROOT = "/var/www/GPCRmd/modules"
+DOWNLOAD_FILES = "/GPCRmd/media/tmp/GPCRmd_downloads"
 #Search Engine
 HAYSTACK_CONNECTIONS = {
     'default': {

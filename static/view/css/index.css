@@ -1,3 +1,48 @@
+a, a:hover, a:focus {
+  color: #BF3C1F;
+}
+
+.btn{
+  font-size:18px;
+}
+
+.btn-default{
+  border-color: #BF3C1F;
+}
+
+.btn-default:hover{
+  border: solid 1px #171010;
+  background-color: #e8e5e5;
+}
+
+.btn-danger{
+  font-weight: bold;
+  color:white;
+  background-color: #BF3C1F;
+  border: solid 2px #171010;
+}
+
+.btn-danger:hover {
+  font-weight: bold;
+  color:#171010;
+  background-color: white;
+  border: solid 2px #BF3C1F;
+}
+
+.btn-info, .btn-primary, .btn-success{
+  font-weight: bold;
+  color:#BF3C1F;
+  border: solid 2px #BF3C1F;
+  background-color: white;
+}
+
+.btn-info:hover, .btn-primary:hover, .btn-success:hover {
+  font-weight: bold;
+  border: solid 2px #171010;
+  background-color: white;
+  color: #171010;
+}
+
 .panel-primary {
   border-color: #BF3C1F;
 }
@@ -239,8 +284,8 @@ width: 100%;
   float:right;
   /*position:absolute; */
     right: 45px;
-  margin-top: -47px;
-  margin-bottom: 10px;
+  margin-top: -40px;
+  margin-bottom: 7px;
 }
 
 .howtobtn{
@@ -324,6 +369,9 @@ ul.dropdown-menu.inner{
   font-size:12px;
 }
 
+.basictooltip{
+  font-size:15px;
+}
 
 .my_glyphicon_btn{
   color: rgb(88, 88, 88);
@@ -439,8 +487,9 @@ ul.dropdown-menu.inner{
 }
 
 .ac_btn {
-  width: 120%;
+  width: 155%;
   margin-bottom: 2px;
+  font-size: 18px;
 }
 
 .caret-right {
@@ -601,6 +650,21 @@ label.ac_option {
 .user_info{
   cursor:pointer;
   padding-top: 15px;
+  border-bottom: none;
+}
+
+.wbtutorial{
+  background-color: white;
+  color: #171010;
+  border: 2px solid #BF3C1F;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.wbtutorial:hover {
+  background-color: #BF3C1F;
+  color: white;
+  border: 2px solid #171010;
 }
 
 .wbpanel{
@@ -654,5 +718,3 @@ select.tunForm{
   height: 28px;
   font-size: 18px;
 }
-
-

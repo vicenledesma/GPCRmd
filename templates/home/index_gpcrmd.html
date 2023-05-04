@@ -1,8 +1,7 @@
 <head>
-  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-  <script type="text/javascript">
-    google.load("visualization", "1", { packages: ["corechart"], "language": "en" });
-  </script>
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://www.google.com/jsapi"></script>
+ 
   <script>document.domain = document.domain;</script>
   {% extends "home/base.html" %}
   {% load static %}
@@ -50,20 +49,29 @@
 
     <!-- First row -->
     <div id="firstRowTools" class="toolRow row ">
-      <div class="tool col-xs-6 col-md-3 ">
+      {% comment %} <div class="tool col-xs-6 col-md-3 ">
         <button id="analysis_ac_pan-button" class="thumbnail toolBox toolBox_hover active" onclick="openSearch1(this)"> 
           <img class="toolImg" src="{% static 'home/images/tools/ac.png' %}" alt="AllostericCommunication">
           <div class="caption">
             <h3 class="toolTitle toolTitle_hover">Allosteric<br>communication</h3>
           </div>
         </button>
-      </div>
+      </div> {% endcomment %}
 
       <div class="tool col-xs-6 col-md-3">
         <button id="analysis_cs_pan-button" class="thumbnail toolBox toolBox_hover" onclick="openSearch1(this)">
           <img class="toolImg" src="{% static 'home/images/tools/cs.png' %}" alt="ChemicalShift">
           <div class="caption">
-            <h3 class="toolTitle toolTitle_hover">Chemical<br>shift</h3>
+            <h3 class="toolTitle toolTitle_hover">Chemical<br>shift (dev)</h3>
+          </div>
+        </button>
+      </div>
+
+      <div class="tool col-xs-6 col-md-3 ">
+        <button id="analysis_pockets_pan" class="thumbnail toolBox toolBox_hover active" onclick="openSearch1(this)"> 
+          <img class="toolImg" src="{% static 'home/images/tools/po.png' %}" alt="Pockets">
+          <div class="caption">
+            <h3 class="toolTitle toolTitle_hover">Pockets</h3>
           </div>
         </button>
       </div>
@@ -113,7 +121,7 @@
                 view a simulation with all tools check this example:<br> 
                 <a class="textlink" href="/view/36/"> Adenosine receptor A2a in complex with xanthine amine 
                 congener (3REY)</a> </p>
-              <div class="search-tabs tab-content restheight100" style="height: 100%">
+              <div class="modulateHeigh search-tabs tab-content restheight100">
                 <div id="searchtable" class="height100 tab-pane fade in active test123" style="margin:0px 15px;height: 100%;">
                   <center class="height100" style="height: 100%">
       
@@ -186,7 +194,29 @@
     </div>
   </div>
 
-  <!-- Family tree -->
+  <!-- Workbench -->
+  <div class="wb jumbotron jumbotron-fluid">
+    <div class="row">
+      <div class="wbench">
+        <div class="workImageDiv col-xs-12 col-md-5 col-md-offset-1 vcenter">
+          <a href="/gpcrtree/"><img class="workImage" src="{% static 'home/images/famTree_white.png' %}"></a>
+        </div>
+        <div class="workTextDiv col-xs-12 col-md-5 vcenter">
+          <a href="/gpcrtree/">
+            <h2 class="jumbotronTitle workTitle display-4">Check the available simulations</h2>
+          </a>
+          <p class="workText lead">Look into the family tree to find any simulated structure.
+            The family tree helps you find the GPCR you are looking for. The GPCRs are classified by class
+            and family. Finally, the different PDBs corresponding to each protein are displayed. Put your
+            mouse in the PDB you are interested in and find out the different simulations.<br>
+            There are more than 500 simulations available!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div> 
+
+  {% comment %} <!-- Family tree -->
   <div class="ft jumbotron jumbotron-fluid">
     <div class="row">
       <div class ="famtree">
@@ -194,11 +224,11 @@
           <a href="/gpcrtree/">
             <h2 class="jumbotronTitle famTitle display-4">Check the available simulations</h2>
           </a>
-          <p class="famText lead ">Look into the family tree to find your simulated structure.
+          <p class="famText lead ">Look into the family tree to find any simulated structure.
             The family tree helps you find the GPCR you are looking for. The GPCRs are classified by class
             and family. Finally, the different PDBs corresponding to each protein are displayed. Put your
             mouse in the PDB you are interested in and find out the different simulations.<br>
-            There are XXX structures available!
+            There are more than 500 simulations available!
           </p>
         </div>
         <div class="famImageDiv col-xs-12 col-md-4 vcenter">
@@ -220,15 +250,15 @@
             <h2 class="jumbotronTitle workTitle display-4">Quickly analyse <br>simulations</h2>
           </a>
           <p class="workText lead">Visualize and inspect the GPCR molecular simulations in the workbench.
-            The simulation is displayed in the left pannel with different selection options available.
-            In the righ pannel, you could find all the different tools that can be instantaneously applied
+            The simulation is displayed in the left panel with different selection options available.
+            In the right panel, you can find all the different tools that can be instantaneously applied
             into the simulation.<br>
             Apply all the tools available in the workbench to analyze your simulation in depth!
           </p>
         </div>
       </div>
     </div>
-  </div>
+  </div> {% endcomment %}
 
   <!-- MetaAnalysis -->
   <div class="ft jumbotron jumbotron-fluid">
@@ -239,9 +269,9 @@
             <h2 class="jumbotronTitle famTitle display-4">Receptor meta-analysis</h2>
           </a>
           <p class="famText lead">Explore the receptor meta-analysis tool.
-            Visualize the contact frequencies of all receptors of the database in a heatmap. Select different
-            simulations, interaction types and cluster the receptors. In addition, you can visualize in different
-            networks the most frequent interactions of each cluster.<br>
+            Visualize the contact frequencies of all receptors in the database in a heatmap. You can select 
+            different simulations, interaction types, and cluster the receptors. Additionally, you can 
+            visualize the most frequent interactions of each cluster using different networks.<br>
             Check the tool!
           </p>
         </div>
@@ -268,11 +298,32 @@
         <div class="col-xs-12 col-md-4">
           <div class="subPanelLeft panel panel-primary">
             <div class="news">
-              <h2 class="newTitle">Ernest meeting 2022</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur
-                adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat...<a id="news1" class="textlink" onclick="go_to_news(this)">Show all</a>
+              <h2 class="newTitle">8th and Final ERNEST Meeting to Take Place in Crete with Participation from GPCR Drug Discovery Group</h2>
+              <p>The 8th and final meeting of the European Research 
+                Network on Signal Transduction (<a class="textlink" href="https://ernest-gpcr.eu/8th-and-final-ernest-meeting-may-3-7-2023-in-crete/"
+                target="_blank">ERNEST</a>) is set to take place from May 3-7, 2023 in Crete. 
+                This event promises to be an exciting gathering of scientists from around the world who are 
+                interested in the latest developments in signal transduction research. Among the attendees 
+                will be several members of the G protein-coupled receptor (GPCR) Drug Discovery Group from 
+                the <a class="textlink" href="http://grib.imim.es/" target="_blank">GRIB</a> in Barcelona...<a id="news1" class="textlink" onclick="go_to_news(this)">Show all</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-12 col-md-4">
+          <div class="subPanelLeft panel panel-primary">
+            <div class="news">
+              <a href="/newsLink1/">
+                <h2 class="newTitle">Revolutionary Alpha Fold Algorithm Unveiled: A Game-Changer for Protein Folding and Drug Discovery</h2>
+              </a>
+              <p>In a groundbreaking new publication, researchers have unveiled 
+                the latest advancements in the field of protein folding. The publication, titled "<a class="textlink"
+                 href="https://www.nature.com/articles/s41586-021-03819-2" target="_blank">Alpha Fold: a 
+                solution to a 50-year-old grand challenge in biology,</a>" details the creation of a powerful algorithm 
+                that can predict the three-dimensional structures of proteins with unprecedented accuracy. This 
+                breakthrough has the potential to revolutionize drug discovery, as it provides a more efficient way 
+                to design and develop new drugs that can target specific proteins...<a id="news2" class="textlink" onclick="go_to_news(this)">Show all</a>
               </p>
             </div>
           </div>
@@ -285,24 +336,9 @@
                 <h2 class="newTitle">Second simulation round</h2>
               </a>
               <p>After our first successful <a class="textlink"
-                  href="https://www.nature.com/articles/s41592-020-0884-y">publication in Nature
-                  Methods</a>, we are back to increase the data coverage of GPCRmd in a 2nd simulation
-                round....<a id="news2" class="textlink" onclick="go_to_news(this)">Show all</a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-xs-12 col-md-4">
-          <div class="subPanelLeft panel panel-primary">
-            <div class="news">
-              <a href="/newsLink1/">
-                <h2 class="newTitle">Nature publication</h2>
-              </a>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                ullamco laboris nisi ut aliquip ex ea commodo consequat...<a id="news3" class="textlink"
-                  onclick="go_to_news(this)">Show all</a>
+                href="https://www.nature.com/articles/s41592-020-0884-y" target="_blank">publication in Nature
+                Methods</a>, we are back to increase the data coverage of GPCRmd in a 2nd simulation 
+                round...<a id="news3" class="textlink" onclick="go_to_news(this)">Show all</a>
               </p>
             </div>
           </div>
@@ -327,7 +363,7 @@
           </a>
           <p class="famText lead">Our simulations have been computed and curated by our research team together
             with the collaboration of worldwide users that upload their own simulations.<br>
-            Check our <a class="jumbotronTextLink" href="/dynadb/datasets/">dataset</a> or <a class="jumbotronTextLink"
+            Take a look at our <a class="jumbotronTextLink" href="/dynadb/datasets/">dataset</a> or <a class="jumbotronTextLink"
               href="/accounts/memberpage/">upload your own simulation</a>!</p>
         </div>
 
@@ -343,7 +379,9 @@
                   <div class="item active" style="padding:15px;">
                     <h4 class="extrainfo_title">Simulations in GPCRmd</h4>
                     <div style="overflow-x: auto;overflow-y: hidden">
-                      <div id="stats_subm" data-subm_data="{{subm_data}}" style="width: 100%; height: 100%;margin:auto;">
+                      {% comment %} <div id="stats_subm" data-subm_data="{{subm_data}}" style="width: 100%; height: 100%;margin:auto;">
+                      </div> {% endcomment %}
+                      <div id="stats_subm" data-subm_data='[["Mar 2017", 3, "3", 3, "3"], ["Apr 2017", 4, "4", 4, "4"], ["May 2017", 6, "6", 6, "6"], ["Jun 2017", 6, "", 6, ""], ["Jul 2017", 6, "", 6, ""], ["Aug 2017", 6, "", 6, ""], ["Sep 2017", 6, "", 6, ""], ["Oct 2017", 6, "", 6, ""], ["Nov 2017", 6, "", 6, ""], ["Dec 2017", 6, "", 6, ""], ["Jan 2018", 6, "", 6, ""], ["Feb 2018", 6, "", 6, ""], ["Mar 2018", 6, "", 6, ""], ["Apr 2018", 6, "", 6, ""], ["May 2018", 9, "9", 15, "15"], ["Jun 2018", 47, "47", 129, "129"], ["Jul 2018", 50, "50", 138, "138"], ["Aug 2018", 50, "", 138, ""], ["Sep 2018", 50, "", 138, ""], ["Oct 2018", 112, "112", 324, "324"], ["Nov 2018", 115, "115", 333, "333"], ["Dec 2018", 161, "161", 471, "471"], ["Jan 2019", 188, "188", 552, "552"], ["Feb 2019", 190, "190", 558, "558"], ["Mar 2019", 191, "191", 561, "561"], ["Apr 2019", 191, "", 561, ""], ["May 2019", 191, "", 561, ""], ["Jun 2019", 191, "", 561, ""], ["Jul 2019", 191, "", 561, ""], ["Aug 2019", 191, "", 561, ""], ["Sep 2019", 191, "", 561, ""], ["Oct 2019", 191, "", 561, ""], ["Nov 2019", 191, "", 561, ""], ["Dec 2019", 195, "195", 570, "570"], ["Jan 2020", 202, "202", 586, "586"], ["Feb 2020", 202, "", 586, ""], ["Mar 2020", 202, "", 586, ""], ["Apr 2020", 202, "", 586, ""], ["May 2020", 202, "", 586, ""], ["Jun 2020", 202, "", 586, ""], ["Jul 2020", 202, "", 586, ""], ["Aug 2020", 202, "", 586, ""], ["Sep 2020", 202, "", 586, ""], ["Oct 2020", 207, "207", 591, "591"], ["Nov 2020", 208, "208", 592, "592"], ["Dec 2020", 208, "", 592, ""], ["Jan 2021", 208, "", 592, ""], ["Feb 2021", 208, "", 592, ""], ["Mar 2021", 211, "211", 595, "595"], ["Apr 2021", 211, "", 595, ""], ["May 2021", 211, "", 595, ""], ["Jun 2021", 222, "222", 632, "632"], ["Jul 2021", 222, "", 632, ""], ["Aug 2021", 222, "", 632, ""], ["Sep 2021", 222, "", 632, ""], ["Oct 2021", 222, "", 632, ""], ["Nov 2021", 222, "", 632, ""], ["Dec 2021", 222, "", 632, ""], ["Jan 2022", 554, "554", 1628, "1628"], ["Feb 2022", 586, "586", 1724, "1724"], ["Mar 2022", 587, "587", 1727, "1727"], ["Apr 2022", 588, "588", 1730, "1730"], ["May 2022", 588, "", 1730, ""], ["Jun 2022", 588, "", 1730, ""], ["Jul 2022", 589, "589", 1731, "1731"], ["Aug 2022", 589, "", 1731, ""], ["Sep 2022", 589, "", 1731, ""], ["Oct 2022", 589, "", 1731, ""], ["Nov 2022", 592, "592", 1734, "1734"], ["Dec 2022", 592, "", 1734, ""], ["Jan 2023", 595, "595", 1737, "1737"]]' style="width: 100%; height: 100%;margin:auto;">
                       </div>
                     </div>
                   </div>
@@ -353,6 +391,7 @@
                     <div style="overflow-x: auto;overflow-y: hidden">
                       <div id="fam_stats" style="width: 300px; height: 400px;margin:auto" data-fam_stats="{{fam_stats}}">
                       </div>
+                      <div class="centerLabel">{{total_fam_stats}}</div>
                     </div>
                   </div>
 
@@ -361,6 +400,7 @@
                     <div style="overflow-x: auto;overflow-y: hidden">
                       <div id="subtype_stats" style="width: 300px; height: 400px;margin:auto"
                         data-subtype_stats="{{subtype_stats}}"></div>
+                      <div class="centerLabel">{{total_subtype_stats}}</div>
                     </div>
                   </div>
 
@@ -368,6 +408,7 @@
                     <h4 class="extrainfo_title">Simulated PDB structures with known structure</h4>
                     <div style="overflow-x: auto;overflow-y: hidden">
                       <div id="pdb_stats" style="width: 300px; height: 400px;margin:auto" data-pdb_stats="{{pdb_stats}}">
+                        <div class="centerLabel">{{total_pdb_stats}}</div>
                       </div>
                     </div>
                   </div>
@@ -671,7 +712,6 @@
       window.location.href = '/news/#' + newsid;
     }
   </script>
-
 
   {% endblock %}
 

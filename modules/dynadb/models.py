@@ -887,7 +887,7 @@ class DyndbFilesNonGPCR(models.Model):
         (6, 'Report'),
         (7, 'Others'),
     )
-    type = models.SmallIntegerField( choices=file_types, default=0)
+    type = models.SmallIntegerField(choices=file_types, default=0)
     id_ngpcr_dynamics = models.ForeignKey('DyndbNonGPCRDynamics', null=True, on_delete=models.CASCADE) 
     filename = models.CharField(max_length=80)
     filepath = models.CharField(max_length=520, blank=True, null=True, unique=True)

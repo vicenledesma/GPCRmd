@@ -2,7 +2,7 @@
   <h4 class="menu_title">Full dataset</h4>
   <!--datasets dropdown-->
   <div class="dropdown optbar">
-    <button type="button" id="dataset_button" class="btn btn-primary btn-sm dropdown-toggle-aux" data-toggle="dropdown" name="datasetlist">
+    <button type="button" id="dataset_button" class="btn btn-default btn-sm dropdown-toggle-aux" data-toggle="dropdown" name="datasetlist">
       Simulation datasets 
       <span class="caret"></span>
     </button>
@@ -27,7 +27,7 @@
   </div>
   <!--itypes dropdown-->
   <div class="dropdown optbar">
-    <button type="button" id="itype_button" class="btn btn-primary btn-sm dropdown-toggle-aux" data-toggle="dropdown" name="typelist">
+    <button type="button" id="itype_button" class="btn btn-default btn-sm dropdown-toggle-aux" data-toggle="dropdown" name="typelist">
       Interaction Type 
       <span class="caret"></span>
     </button>
@@ -98,7 +98,7 @@
   </div> 
   <!--Interacting partners dropdown -->
   <div class=" dropdown optbar">
-    <button type="button" id="ipartner_button" class="btn btn-primary btn-sm dropdown-toggle-aux" data-toggle="dropdown" name="partnerlist">
+    <button type="button" id="ipartner_button" class="btn btn-default btn-sm dropdown-toggle-aux" data-toggle="dropdown" name="partnerlist">
       Interaction Partners 
       <span class="caret"></span>
     </button>
@@ -114,7 +114,7 @@
         </label>
       </li>
       <li>
-        <label class="partners_checkbox mycheckbox">
+        <label class="partners_checkbox mycheckbox dropdown-toggle-aux">
           {% if "lg" in ligandonly %}
           <input type="checkbox" id="Protein to ligand contacts" name="molec" class="option_location" value="lg" checked/>
           {% else %}
@@ -127,7 +127,7 @@
   </div>
   <!--Clusters dropdown-->
   <div class="dropdown optbar">
-    <select name="clusters" id="clusters_dropdown" class="btn btn-sm btn-primary">
+    <select name="clusters" id="clusters_dropdown" class="btn btn-default btn-sm dropdown-toggle-aux">
       {% for clust in clusrange_all %}
       {% if clust == cluster %}
       <option class="clusteropt" value={{clust}} selected=selected> {{clust}} clusters </option>

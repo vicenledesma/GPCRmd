@@ -194,6 +194,7 @@ def gpcrmd_home(request):
                 ['Pending',missing_fams]
                 ]
     context["fam_stats"]=json.dumps(fam_stats)
+    context["total_fam_stats"] = total_fams
 
     #Subtypes sumulated
     sim_subtyppes=len(subtype_set)
@@ -208,7 +209,7 @@ def gpcrmd_home(request):
                 ['Pending',missing_subtypes]
                 ]
     context["subtype_stats"]=json.dumps(subtype_stats)
-
+    context["total_subtype_stats"] = total_subtyppes
 
     #PDB ids sumulated
     pdb_id_sim=len(pdb_id_set)
@@ -223,8 +224,7 @@ def gpcrmd_home(request):
                 ['Pending',missing_pdb_ids]
                 ]
     context["pdb_stats"]=json.dumps(pdb_stats)
-
-
+    context["total_pdb_stats"] = pdb_id_total
 
     gpcrmdtree_path= settings.MEDIA_ROOT+"Precomputed/Summary_info/gpcrmdtree.data"
 

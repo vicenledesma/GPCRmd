@@ -6,6 +6,24 @@ a {
   vertical-align: top;
 }
 
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover{
+  background-color: white;
+  border: 1.5px solid #171010;
+  color: #171010;
+}
+
+#HB{
+  width: 100%;
+}
+
+.pagination > li > a{
+  color: #BF3C1F;
+}
+
+.pagination > li > a:hover{
+  color: #171010;
+}
+
 .navbar-left {
   width: 60%;
 }
@@ -51,6 +69,13 @@ a {
   padding-bottom: 5%;
 }
 
+#ngl_iframe0, #ngl_iframe1{
+  border:none;
+}
+#clusterbutton0, #clusterbutton1{
+  width: 100%;
+}
+
 
 #main_plot_body {
   position: relative; 
@@ -60,7 +85,15 @@ a {
 }
 
 #itype_link{
-  color: #337ab7; /*link blue*/
+  color: #BF3C1F;
+}
+
+.simList{
+  width: 50%;
+}
+
+#viewer_link_bottom0, #viewer_link_bottom1{
+  margin-left:3px;
 }
 
 #menus {
@@ -161,7 +194,7 @@ input[type=checkbox] {
   max-height: 400px;
   overflow-y: scroll;
   overflow-x: hidden;
-  min-width: 275px;
+  width: 180%;
 }
 
 .molec-check {
@@ -337,7 +370,7 @@ hr {
 
 #uncheck_all_sim {
   position: sticky;
-  top: 0%;
+  top: 3%;
   margin-left: 35%;
 }
 
@@ -638,6 +671,19 @@ hr {
 
 .docRow{
   margin-bottom:3%;
+}
+
+
+.extra-itype{
+  margin-top: 25% !important;
+}
+
+
+.itype_img {
+  width: 200px;
+  float: right;
+  margin-top: 10%;
+  margin-right: 2%;
 }
 
 

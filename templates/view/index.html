@@ -2,9 +2,14 @@
   <script src="https://cdn.plot.ly/plotly-2.4.2.min.js"></script>
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
   <script type="text/javascript">
-    google.load("visualization", "1", { packages: ["corechart"], "language": "en" });
+    google.load("visualization", "1", {
+      packages: ["corechart"],
+      "language": "en"
+    });
   </script>
-  <script>document.domain = document.domain;</script>
+  <script>
+    document.domain = document.domain;
+  </script>
   {% extends "home/base.html" %}
   {% load static %}
 
@@ -93,7 +98,7 @@
                       <p class="falselist">Middle button click: center camera on atom.</p>
                       <p style="padding-left:15px">Right button hold and move: translate camera in screen plane.</p>
                     </span>
-                    <p>For more information, see the <a href="{% url 'view:viewer_docs' %}" target="_blank">docs</a>.
+                    <p>For more information, see the <a class='textlink' href="{% url 'view:viewer_docs' %}" target="_blank">docs</a>.
                     </p>
     
                   </div>
@@ -102,7 +107,7 @@
 
               <!-- viewer_and_analysis -->
               <div id="viewer_and_analysis" class="row" 
-                style="height:100%;position: relative; overflow-y: auto; overflow-x: hidden;padding:12px 1px;">
+                style="height:100%;position: relative; padding:12px 1px;">
 
                 <!-- Warning: non-computed tool -->
                 <div id="toolAlert" class="alert alert-warning" role="alert" style="display:none;">
@@ -122,13 +127,14 @@
                           <div class="row" id="VisualizationDiv"
                             style="background-color:#F3F3F3; border-radius:2px;padding:5px;"
                             data-bind_domain="{{bind_domain}}" data-presel_pos="{{presel_pos}}">
-                            <h4 style="padding:0;margin:0;">GPCRmd Viewer</h4>
+                            <h4 style="padding:0;margin:0;font-weight: bold;">GPCRmd Viewer</h4>
                           </div>
                         </div>
     
                         <div style="margin:5px 0 5px 0;">
                           <div class="row" style="padding:10px 10px 5px 10px;background-color:#ffffff;border-bottom:1px solid 
                           ;border-radius:0;">
+                            <div class="col-md-7">
                             {% if all_prot_names %}
                               <span>{{all_prot_names}}</span>
                               {% if pdbid %}
@@ -147,11 +153,14 @@
                               {% endif %}
                               </span>
                             {% endif %}
+                            </div>
+                            <div class="col-md-5">
                             <a href="{% url 'dynadb:query_dynamics' dyn_id %}" target="_blank"
                               class="indexBtnSize btn btn-default pull-right"><span
                               class="glyphicon glyphicon-download-alt"></span> Simulation report and files</a>
                           </div>
                         </div>    
+                        </div>
     
                         <!-- ============= IFRAME =========== -->
                         <span id="loading">
@@ -188,12 +197,12 @@
                                 style="z-index:11;visibility:hidden">
                                   <button id="selectedTraj" class="btn btn-default btn-xs dropdown-toggle" type="button"
                                     data-toggle="dropdown"
-                                    style="margin-left:3px;margin-top:7px;min-width:150px;text-align:left"
+                                  style="width:217px;"
                                     data-tpath={{traj_list.0.0}} data-fplot_file="{{traj_list.0.3.1.2}}"
                                     data-test="{{traj_list.0.3.6}}" data-trajidtoframenum="{{trajidToFramenum}}">
-                                    <span class="pull-left">
-                                      <b>Trajectory ID:</b> <span id="selectedTraj_id">{{ traj_list.0.2 }}</span>
-                                      <span id="selectedTraj_note">
+                                  <span class="pull-left indexBtnSize">
+                                    <b>Trajectory ID:</b> <span class="indexBtnSize" id="selectedTraj_id">{{ traj_list.0.2 }}</span>
+                                    <span class="indexBtnSize" id="selectedTraj_note">
                                         {% if traj_list.0.4 %}
                                         ({{traj_list.0.4}})
                                         {% endif %}
@@ -232,10 +241,10 @@
                               <div class="dropdown" style="z-index:10">
                                 <button id="onclicksel" class="btn btn-default btn-xs dropdown-toggle showWhenNGLLoad"
                                   type="button" data-toggle="dropdown" aria-expanded="false"
-                                  style="margin-left:3px;margin-top:7px;min-width:150px;text-align:left;visibility:hidden">
-                                  <span class="pull-left">
+                                  style="margin-top:7px;width:217px;visibility:hidden">
+                                  <span class="pull-left indexBtnSize">
                                     <b>On click mode: </b>
-                                    <span id="onclickbtntext">dists.</span>
+                                    <span class="indexBtnSize" id="onclickbtntext">dists.</span>
                                   </span>
                                   <span class="caret pull-right" style="margin-top:13px"></span></button>
                                 <ul id="onclickshowdropd" class="dropdown-menu" style="height: auto;padding:0">
@@ -377,7 +386,7 @@
                         <div style="text-align:center;margin:0;">
 
                           <div class="row" style="background-color:#F3F3F3; border-radius:2px;padding:5px;">
-                            <h4 style="padding:0;margin:0;">Selection</h4>
+                            <h4 style="padding:0;margin:0;font-weight: bold;">Selection</h4>
                             <span id="selectionDiv"></span><span id="EDselectionDiv"></span>
                           </div>
 
@@ -1123,7 +1132,7 @@
     
                           <!-- edSel -->
                           {% if ed_mats and pdbid %}
-                            <div id="edSel" style="margin-bottom:5px" data-r_angl="{{ed_mats.0}}"
+                          <div id="edSel" style="margin-bottom:5px" data-r_angl="{{ed_align_matrix.0}}"
                               data-trajmat_dict="{{ed_mats}}">
                               <div class="row" style="margin-top:15px;">
                                 <div class="section_pan"
@@ -1252,6 +1261,7 @@
                                             class="indexBtnSize btn btn-default changefocus ed_map_el act_seq_input"
                                             style="margin-left:10px" data-toggle="popover" data-placement="right"
                                             data-content="Click to apply." data-trigger="manual"> Apply</button>
+
                                           <div class="row" style="margin:10px;width:auto;height:250px;overflow:auto;">
                                             {% for prot_name, seq_pos in prot_seq_pos %}
                                             <div style="clear: left;padding-bottom:20px">
@@ -1783,6 +1793,25 @@
                                                 </center>
                                               </td>
                                             </tr>
+                                          <!--                          <tr>
+                                  <td style="text-align:right;font-weight:bold">Map size</td>
+                                  <td style="text-align:center">
+                                    <center>
+                                      <div class="slider_div" style="max-width:150px;display:inline-block">
+                                        <input class="slider edslider" data-valtype="mapsize" data-map="2fofc" value="20" min="0" max="100" step="1" type="range">
+                                      </div>
+                                      <div class="slider_val" style="width:20px;display:inline-block;color:#b3b3b3">20</div>
+                                    </center>
+                                  </td>
+                                  <td style="text-align:center">                              
+                                    <center>
+                                      <div class="slider_div" style="max-width:150px;display:inline-block">
+                                        <input class="slider edslider" data-map="fofc" data-valtype="mapsize" value="20" min="0" max="100" step="1" type="range">
+                                      </div>
+                                      <div class="slider_val"  style="color:#b3b3b3;width:20px;display:inline-block">20</div>
+                                    </center>
+                                  </td>
+                                </tr>-->
                                             <tr>
                                               <td style="text-align:right;font-weight:bold">Zoom</td>
                                               <td style="text-align:center" colspan="2">
@@ -1833,7 +1862,7 @@
                         {% if traj_list %}
                           <div style="text-align:center;margin:0;padding:5px;">
                             <div class="row" style="background-color:#F3F3F3; border-radius:2px;">
-                              <h4 id="analysisDiv" style="padding:0;margin:0;padding:5px;">GPCRmd Toolkit
+                            <h4 id="analysisDiv" style="padding:0;margin:0;padding:5px;font-weight: bold;">GPCRmd Toolkit
                               </h4>
                             </div>
                           </div>
@@ -3043,14 +3072,13 @@
                               {% endif %}
       
                               <!-- ============= Pockets  =========== -->      
-
                               {% if pockets %}
                                 <div class="row">
                             <div id="analysis_pockets_pan" class="section_pan" data-toggle="collapse"
                               data-target="#analysis_pockets"
                               style="cursor:pointer; padding:10px 10px 5px 10px; background-color: #ffffff; border-radius:0;">
                                     <span>Pockets</span>
-                              <span style="float:right;margin-right:5px;"
+                              <span  id="analysis_pockets_icon" style="float:right;margin-right:5px;"
                                 class="glyphicon glyphicon-chevron-down arrow"></span>
                                   </div>
                                 </div>
@@ -3107,6 +3135,23 @@
                                           </tr>
                                         </thead>
                                         <tbody>
+                                    <!-- Now this is dynamically created -->
+                                    <!--               {% for key, value in pockets.items %}
+                                    {% if key == traj_list.0.2 %}
+                                      {% for data, descript in value.items %}
+                                        {% for descriptor in descript %}
+                                          <tr>
+                                            <td>{{ descriptor.name }}</td>
+                                            <td>
+                                              <span style="height:20px;width:20px;background-color:{{ descriptor.name | tunnel_color_from_clusternum }};border-radius: 50%;display: inline-block;"></span>
+                                            </td>
+                                            <td>{{ descriptor.average_volume }}</td>
+                                            <td>{{ descriptor.average_hydrophobicity_Density }}</td>
+                                          </tr>
+                                        {% endfor %}
+                                      {% endfor %}
+                                    {% endif %}
+                                  {% endfor %} -->
                                         </tbody>
                                       </table>
                                     </div>
@@ -3121,6 +3166,7 @@
                                 </div>
                               {% endif %}
       
+
                               <!-- ============= Genetic variants =========== -->
                               {% if pdb_vars|length > 2 %}
                                 <div class="row">
@@ -3237,13 +3283,13 @@
                                         <thead>
                                           <tr>
                                             <th></th>
-                                      <th class="tabHeaderVar">Position</th>
-                                      <th class="tabHeaderVar">GPCRdb num</th>
-                                      <th class="tabHeaderVar">Variant</th>
+                                            <th class="tabHeaderVar">Position</th>
+                                            <th class="tabHeaderVar">GPCRdb num</th>
+                                            <th class="tabHeaderVar">Variant</th>
                                             {% for datad in var_info_data %}
-                                      <th class="tabHeaderVar basictooltip" data-toggle="tooltip"
-                                        title="{{datad.description}}">
-                                              {{datad.name}}
+                                            <th class="tabHeaderVar basictooltip" data-toggle="tooltip"> 
+                                              {% comment %} title="{{datad.description}}"> {% endcomment %}
+                                                    {{datad.name}}
                                             </th>
                                             {% endfor %}
                                           </tr>
@@ -3275,6 +3321,7 @@
                                               {% if vardata_val|to_lowercase == datad.multiple_options.show_if_val %}
                                               {% if datad.id == "Disease" %}
                                         <a class="tabHeaderVar basictooltip" data-toggle="tooltip"
+                                                target="_blank"
                                                 href="https://www.disgenet.org/browser/2/1/1/{{var_li.0|get_item:var_info_data.0.id}}"
                                                 title="VDA =
                                                 {% with datad.multiple_options.ids.2 as opt_id%}
@@ -3299,6 +3346,7 @@
                                               {% else %}
                                               {% if datad.is_href %}
                                         <a class="tabHeaderVar"
+                                          target="_blank"
                                           href="{{datad.is_href}}{{vardata_val}}">{{vardata_val}}</a>
                                               {% else %}
                                               {{vardata_val}}
@@ -3357,7 +3405,7 @@
                                 </div>
                                 
                                 <div id="analysis_cs" class="row collapse" data-aa3to1="{{aa3to1}}"
-                                  data-resid_to_resname="{{resid_to_resname}}" data-residnames="{{cs_resid_names}}">
+                                  data-resid_to_resname="{{resid_to_resname}}" data-residnames="{{cs_resid_name}}">
                                   <div style="margin-top:10px;margin-bottom:15px;margin-left:5px">
                                     <p class="cs_title">Predictor</p>
                                     <label for="cs_shifty" class="cs_option">
@@ -3422,7 +3470,9 @@
                                                       <tr>
                                                         <td>{{cs_opt.name}}</td>
                                                         <td>
-                                                    {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options type='resid' ref="comp"|add:cs_opt.ref mul=True %}
+                                                    {% include "view/dropdown_w_selector.html" with
+                                                          option_list=cs_opt.options type='resid' ref="comp"|add:cs_opt.ref
+                                                          mul=True %}
                                                         </td>
                                                       </tr>
                                                       {% endfor %}
@@ -3447,7 +3497,8 @@
                                                   <tr>
                                                     <td>{{cs_opt.name}}</td>
                                                     <td>
-                                                      {% include "view/dropdown_w_selector.html" with type='atom' option_list=cs_opt.options ref=cs_opt.ref mul=True %}
+                                                {% include "view/dropdown_w_selector.html" with type='atom'
+                                                      option_list=cs_opt.options ref=cs_opt.ref mul=True %}
                                                     </td>
                                                   </tr>
                                                   {% endfor %}
@@ -3457,7 +3508,7 @@
                                           </div>
         
                                           <div>
-                                            <button type="button" id="cs_apply_comp" class="cs_apply btn btn-success btn-sm"
+                                      <button type="button" id="cs_apply_comp" class="cs_apply btn btn-success"
                                               value="comp">Apply changes</button>
                                       <a download href="/dynadb/files/Dynamics/"
                                         class="btn btn-default cs_download_raw">
@@ -3503,7 +3554,8 @@
                                                   <tr>
                                                     <td>{{cs_opt.name}}</td>
                                                     <td>
-                                                      {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options type='resid' ref="sresid" mul=False %}
+                                                {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options
+                                                      type='resid' ref="sresid" mul=False %}
                                                     </td>
                                                   </tr>
                                                   {% endif %}
@@ -3512,7 +3564,8 @@
                                                   <tr>
                                                     <td>{{cs_opt.name}}</td>
                                                     <td>
-                                                      {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options type='atom' ref="satom" mul=False %}
+                                                {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options
+                                                      type='atom' ref="satom" mul=False %}
                                                     </td>
                                                   </tr>
                                                   {% endfor %}
@@ -3532,7 +3585,7 @@
                                             </div>
                                           </div>
                                           <div>
-                                            <button type="button" id="cs_apply_satom" class="cs_apply btn btn-success btn-sm"
+                                      <button type="button" id="cs_apply_satom" class="cs_apply btn btn-success"
                                               value="satom">Apply changes</button>
                                       <a download href="/dynadb/files/Dynamics/"
                                         class="btn btn-default cs_download_raw">
@@ -3600,7 +3653,9 @@
                                                       <tr>
                                                         <td>{{cs_opt.name}}</td>
                                                         <td>
-                                                          {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options type='resid' ref="2d"|add:cs_opt.ref mul=True %}
+                                                    {% include "view/dropdown_w_selector.html" with
+                                                          option_list=cs_opt.options type='resid' ref="2d"|add:cs_opt.ref
+                                                          mul=True %}
                                                         </td>
                                                       </tr>
                                                       {% endfor %}
@@ -3628,10 +3683,12 @@
                                                   {% for cs_opt in cs_selection_params.atom %}
                                                   <tr>
                                                     <td>
-                                                      {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options type='atom' ref="2datom1" mul=False %}
+                                                {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options
+                                                      type='atom' ref="2datom1" mul=False %}
                                                     </td>
                                                     <td>
-                                                      {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options type='atom2' ref="2datom2" mul=False %}
+                                                {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options
+                                                      type='atom2' ref="2datom2" mul=False %}
                                                     </td>
                                                   </tr>
                                                   {% endfor %}
@@ -3678,7 +3735,7 @@
                                           </table>
         
                                           <div>
-                                            <button type="button" id="cs_apply_2d" class="cs_apply btn btn-success btn-sm"
+                                      <button type="button" id="cs_apply_2d" class="cs_apply btn btn-success"
                                               value="2d">Apply changes</button>
                                       <a download href="/dynadb/files/Dynamics/"
                                         class="btn btn-default cs_download_raw">
@@ -3882,7 +3939,7 @@
                                           </div>
                                         </div>
                                         <br>
-                                        <button class="btn btn-success btn-sm" id="ac_submit" type="submit">Show in
+                                  <button class="btn btn-success" id="ac_submit" type="submit">Show in
                                           structure</button>
                                         <a href="/dynadb/files/Precomputed/allosteric_communication/dyn{{dyn_id}}/"
                                           id="download_ac" class="hidden_div">Download AC data <span
@@ -4114,6 +4171,7 @@
           hide_panel("analysis_ac");
           hide_icon("analysis_fplot_icon");
           hide_panel("analysis_fplot");
+            console.log('EIIII')
           break;
         // interaction frequencies, expand first section, 'bonds'
         case "#interaction_freqs_pan":
@@ -4137,6 +4195,13 @@
           hide_icon("analysis_fplot_icon");
           hide_panel("analysis_fplot");
           break;
+          case "#analysis_pockets_pan": 
+            scroll_to_tool(myTool.slice(1));
+            show_tool_icon("analysis_pockets_icon");
+            show_tool("analysis_pockets");
+            hide_icon("analysis_fplot_icon");
+            hide_panel("analysis_fplot");
+            break;
       }
       }
     });

@@ -12,7 +12,6 @@
   <div class="row famTreeBlock">
     <div class="ftDiv">
       <!-- famTree in the left -->
-      <button id="Reset" style="border-radius:0px">RESET</button>
       <div id="chart" data-chart_data="{{tree_data}}" class="ftImg col-lg-8">
       </div>
       <!-- Panel with intructions in the right -->
@@ -21,8 +20,12 @@
           <h3 class="panel-heading">3D-GPCRome tree</h3>
           <div class="panel-body">
             <p>The GPCRs are classified by class and family. In the exterior part of the circle
-              you can find the PDBs of each GPCR. <br>  <br> 
-              Click on a GPCR structure (PDB id) to access the MD simulations.</p>
+              you can find the PDBs of each GPCR. </p>
+              <div class="ftBtnDiv">
+                <button id="Reset" class="submitBtn btn" style="border-radius:0px; border-radius: 4px;">Reset View</button>
+              </div>
+              <br> 
+              <p> Click on a GPCR structure (PDB id) to access the MD simulations.</p>
             <div class="ftBtnDiv">
               <a class="submitBtn btn" href="https://youtu.be/sNQNWcBhIyg" target="_blank" role="button">How to use it</a>
             </div>

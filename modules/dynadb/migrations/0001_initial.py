@@ -362,22 +362,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='DyndbComplexCompound',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('id_complex_exp', models.ForeignKey('DyndbComplexExp', models.DO_NOTHING, db_column='id_complex_exp',null=False)),
-            #    ('id_complex_exp_id', models.IntegerField(blank=True, null=True)),
-                ('id_compound',models.ForeignKey('DyndbCompound', models.DO_NOTHING,  db_column='id_compound',null=True)),
-            #    ('id_compound_id', models.IntegerField(blank=True, null=True)),
-                ('type', models.TextField()),
-            ],
-            options={
-                'managed': True,
-                'db_table': 'dyndb_complex_compound',
-                'unique_together' : (('id_complex_exp', 'id_compound'),),
-            },
-        ),
-        migrations.CreateModel(
             name='DyndbComplexExp',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -473,6 +457,22 @@ class Migration(migrations.Migration):
             options={
                 'managed': False,
                 'db_table': 'dyndb_compound',
+            },
+        ),
+        migrations.CreateModel(
+            name='DyndbComplexCompound',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id_complex_exp', models.ForeignKey('DyndbComplexExp', models.DO_NOTHING, db_column='id_complex_exp',null=False)),
+            #    ('id_complex_exp_id', models.IntegerField(blank=True, null=True)),
+                ('id_compound',models.ForeignKey('DyndbCompound', models.DO_NOTHING,  db_column='id_compound',null=True)),
+            #    ('id_compound_id', models.IntegerField(blank=True, null=True)),
+                ('type', models.TextField()),
+            ],
+            options={
+                'managed': True,
+                'db_table': 'dyndb_complex_compound',
+                'unique_together' : (('id_complex_exp', 'id_compound'),),
             },
         ),
         migrations.CreateModel(

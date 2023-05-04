@@ -1,6 +1,5 @@
 {% extends "home/base.html" %}
 {% load static %}
-{% load static %}
 {% block addon_css %}
 <style>
     .panel-body {
@@ -40,7 +39,7 @@
             {%endif%}
             <br>
             {% if answer.inchi %}
-            <p><b>InChI</b>:<br>{{answer.inchi}} </p><br>
+            <p><b>InChI</b>:<br><p class="inchitext">{{answer.inchi}} </p></p><br>
             {%endif%}
             <br>
             {% if answer.inchicol %}
@@ -86,7 +85,7 @@
             <div id='leftdiv' class="col-sm-6">
                 <center><button style="display:none;" type="button" class="btn btn-primary ortoligand"
                         id={{answer.myid}}> See 3D </button></center><br>
-                <center><img src="/dynadb/files{{answer.imagelink}}" /></center>
+                <center><img src="{{answer.imagelink}}" /></center>
             </div>
             <div id='rightdiv' class="col-sm-6">
                 <div id="container-01" class="mol-container"></div>
