@@ -28,7 +28,9 @@ urlpatterns = [
    re_path(r'^$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
    # re_path(r'^', include(router.urls)),
    re_path(r'^search_allpdbs/$', views.SearchAllPdbs.as_view()),
+   re_path(r'^search_pdbs/(?P<pdbid>.*)$', views.SearchByPdbs.as_view()),
    re_path(r'^search_alluniprots/$', views.SearchAllUniprots.as_view()),
+   re_path(r'^search_uniprots/(?P<uniprotid>.*)$', views.SearchByUniprots.as_view()),
    re_path(r'^download_all/$', views.download_all, name="download_all"),
    # re_path(r'^celery-progress/', include('celery_progress.urls')), 
 

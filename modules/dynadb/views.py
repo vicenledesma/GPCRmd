@@ -10421,6 +10421,7 @@ def datasets(request):
                     ["Individual", data_indv]
                     ]
     context["stats_dataset"]=json.dumps(stats_dataset)
+    context["total_stats_dataset"]=data_gpcrmdcom + data_indv
     return render(request, 'dynadb/datasets.html', context)
 
 def searchtable_data(dynobj,nongpcr=True):

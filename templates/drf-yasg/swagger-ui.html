@@ -34,119 +34,121 @@
 
 {% block content %}
         {% comment %} DJANGO-REST-API BLOCK (api/urls.py) {% endcomment %}
-        <link rel="stylesheet" type="text/css" href="{% static 'drf-yasg/style.css' %}"/>
         <link rel="stylesheet" type="text/css" href="{% static 'drf-yasg/swagger-ui-dist/swagger-ui.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'drf-yasg/style.css' %}"/>
 
         <div id="swagger-ui">
         </div>
 
-        {% comment %} OTHER TOOLS {% endcomment %}
-        <div id="tools" class="swagger-ui swagger-container">
-            <div class="swagger-ui">
-                <div class="information-container wrapper">
-                    <section class="block col-12">
-                        <div>
-                            <div class="info">
-                                <hgroup class="main">
-                                    <h2 class="title">Other GPCRmd API tools</h2>
-                                </hgroup>
-                                <div class="description">
-                                    <div class="markdown">
-                                        <p>Tools related with files stored into the GPCRmd database (e.g. trajectories, topologies, parameters, protocols,...)</p>
+        {% if user.is_authenticated %}
+            {% comment %} OTHER TOOLS {% endcomment %}
+            <div id="tools" class="swagger-ui swagger-container">
+                <div class="swagger-ui">
+                    <div class="information-container wrapper">
+                        <section class="block col-12">
+                            <div>
+                                <div class="info">
+                                    <hgroup class="main">
+                                        <h2 class="title">Other GPCRmd API tools</h2>
+                                    </hgroup>
+                                    <div class="description">
+                                        <div class="markdown">
+                                            <p>Tools related with files stored into the GPCRmd database (e.g. trajectories, topologies, parameters, protocols,...)</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
-                </div>
-                <div id="downloader" class="wrapper">
-                    <section class="block col-12 block-desktop col-12-desktop">
-                        <div>
-                            <span>
-                                <div class="opblock-tag-section">
-                                    <h3 class="opblock-tag no-desc" id="operations-tag-downloader_all" data-tag="downloader_all" data-is-open="false" onclick="openclosetag(this)">
-                                        <a class="nostyle">
-                                            <span>downloader_all</span>
-                                        </a><small></small>
-                                        <button id="operations-button-downloader_all" aria-expanded="true" class="expand-operation" title="Collapse operation">
-                                            <svg class="arrow" width="20" height="20" aria-hidden="true" focusable="true">
-                                                <use id="arrow-downloader_all" href="#large-arrow-down"></use>
-                                            </svg>
-                                        </button>
-                                    </h3>
-                                    {% csrf_token %}
-                                    <form id="retreivefiles" action="/api/download_all/">
-                                        <div class="opblock opblock-get" id="operations-downloader_all" style="display:none">
-                                            <div class="opblock-body">
-                                                <div class="opblock-description-wrapper">
-                                                    <div class="opblock-description">
-                                                        <div class="markdown">
-                                                            <p>Get a zip with all the files related with the dynamics ids requested.</p>
-                                                                <p>{dyn_ids} is a list of dynamics ids, e.g. 36,90</p>
-                                                                <p style="color: #BF3C1F"> This tool is under development. For this reason, the limit of dyns is 5. </p>
+                        </section>
+                    </div>
+                    <div id="downloader" class="wrapper">
+                        <section class="block col-12 block-desktop col-12-desktop">
+                            <div>
+                                <span>
+                                    <div class="opblock-tag-section">
+                                        <h3 class="opblock-tag no-desc" id="operations-tag-downloader_all" data-tag="downloader_all" data-is-open="false" onclick="openclosetag(this)">
+                                            <a class="nostyle">
+                                                <span>downloader_all</span>
+                                            </a><small></small>
+                                            <button id="operations-button-downloader_all" aria-expanded="true" class="expand-operation" title="Collapse operation">
+                                                <svg class="arrow" width="20" height="20" aria-hidden="true" focusable="true">
+                                                    <use id="arrow-downloader_all" href="#large-arrow-down"></use>
+                                                </svg>
+                                            </button>
+                                        </h3>
+                                        {% csrf_token %}
+                                        <form id="retreivefiles" action="/api/download_all/">
+                                            <div class="opblock opblock-get" id="operations-downloader_all" style="display:none">
+                                                <div class="opblock-body">
+                                                    <div class="opblock-description-wrapper">
+                                                        <div class="opblock-description">
+                                                            <div class="markdown">
+                                                                <p>Get a zip with all the files related with the dynamics ids requested.</p>
+                                                                    <p>{dyn_ids} is a list of dynamics ids, e.g. 36,90</p>
+                                                                    <p style="color: #BF3C1F"> This tool is under development. For this reason, the limit of dyns is 5. </p>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="opblock-section">
-                                                    <div class="opblock-section-header">
-                                                        <div class="tab-header">
-                                                            <h4 class="opblock-title">Parameters</h4>
+                                                    <div class="opblock-section">
+                                                        <div class="opblock-section-header">
+                                                            <div class="tab-header">
+                                                                <h4 class="opblock-title">Parameters</h4>
+                                                            </div>
+                                                        </div>
+                                                        <div class="table-container">
+                                                            <table class="parameters">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="col col_header parameters-col_name">Name</th>
+                                                                        <th class="col col_header parameters-col_description">Values</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td class="col parameters-col_name">
+                                                                            <div class="parameter__name required">
+                                                                                dyn_ids
+                                                                                <span style="color: red;">&nbsp;*</span>
+                                                                            </div>
+                                                                            <div class="parameter__type">list</div>
+                                                                        </td>
+                                                                        <td class="col parameters-col_description">
+                                                                            <input id="dyn_ids" name="dyn_ids" type="text" class="" title="" placeholder="(e.g. 36,90)" value="">
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
                                                         </div>
                                                     </div>
-                                                    <div class="table-container">
-                                                        <table class="parameters">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th class="col col_header parameters-col_name">Name</th>
-                                                                    <th class="col col_header parameters-col_description">Values</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="col parameters-col_name">
-                                                                        <div class="parameter__name required">
-                                                                            dyn_ids
-                                                                            <span style="color: red;">&nbsp;*</span>
-                                                                        </div>
-                                                                        <div class="parameter__type">list</div>
-                                                                    </td>
-                                                                    <td class="col parameters-col_description">
-                                                                        <input id="dyn_ids" name="dyn_ids" type="text" class="" title="" placeholder="(e.g. 36,90)" value="">
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
+                                                    <div class="execute-wrapper">
+                                                        {% comment %} <button class="btn execute opblock-control__btn">Execute</button> {% endcomment %}
+                                                        <input class="btn execute opblock-control__btn" type="submit" id="retrieve_doi" value="Execute">
                                                     </div>
-                                                </div>
-                                                <div class="execute-wrapper">
-                                                    {% comment %} <button class="btn execute opblock-control__btn">Execute</button> {% endcomment %}
-                                                    <input class="btn execute opblock-control__btn" type="submit" id="retrieve_doi" value="Execute">
-                                                </div>
-                                                <div class="responses-wrapper">
-                                                    <div class="opblock-section-header">
-                                                        <h4>Responses</h4>
+                                                    <div class="responses-wrapper">
+                                                        <div class="opblock-section-header">
+                                                            <h4>Responses</h4>
+                                                        </div>
+                                                        <div id="error_dyns" class="error_loading alert alert-danger" style="display:none">
+                                                        </div>
+                                                        <div id="loading_dyns" class="error_loading" style="display:none">
+                                                            <p> Downloading information... <img id="loading_icon" src="/static/view/images/loading-gear.gif" height="18px"></p><p></p>
+                                                        </div>
+                                                        {% comment %} include the bar progress as response {% endcomment %}
+                                                        <div id="dowload_dyns" class="error_loading" style="display:none">
+                                                            <a id="dowload_dyns_link" href="">Download</a>
+                                                        </div>
+                                                        <br>
                                                     </div>
-                                                    <div id="error_dyns" class="error_loading alert alert-danger" style="display:none">
-                                                    </div>
-                                                    <div id="loading_dyns" class="error_loading" style="display:none">
-                                                        <p> Downloading information... <img id="loading_icon" src="/static/view/images/loading-gear.gif" height="18px"></p><p></p>
-                                                    </div>
-                                                    {% comment %} include the bar progress as response {% endcomment %}
-                                                    <div id="dowload_dyns" class="error_loading" style="display:none">
-                                                        <a id="dowload_dyns_link" href="">Download</a>
-                                                    </div>
-                                                    <br>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </span>
-                        </div>
-                    </section>
+                                        </form>
+                                    </div>
+                                </span>
+                            </div>
+                        </section>
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
 
 
     {% block footer %}

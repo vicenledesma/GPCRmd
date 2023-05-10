@@ -7,6 +7,7 @@ class AllDownloads(models.Model):
     dyn_ids = models.CharField(max_length=1000)
     creation_timestamp = models.DateTimeField()
     created_by_dbengine = models.CharField(max_length=40)
+    created_by = models.IntegerField(blank=True, null=True)
     filepath = models.CharField(max_length=520, blank=True, null=True)
     class Meta:
         managed = True

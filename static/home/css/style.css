@@ -633,7 +633,6 @@ p.subtitle {
     /* position: fixed; */
     padding-top: 1%;
     background-color: #171010;
-    position: relative;
     bottom: 0;
 }
 
@@ -1743,18 +1742,16 @@ label {
 }
 
 /* Home Statistics center labels */
-
 .centerLabel
 {
     position: absolute;
-    /* left: 222px;
-    top: 250px; */
-    left: 41%;
-    top: 52%;
-    width: 50px;
-    line-height: 50px;
+    width: 100%;
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
     color: #BF3C1F;
+    z-index: 10;
+    top: 49%;
+    height: 100%;
 }
+

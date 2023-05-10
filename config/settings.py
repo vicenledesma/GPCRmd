@@ -140,12 +140,18 @@ SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 # Rest Framework
 REST_FRAMEWORK = {
-    # 'DEFAULT_SCHEMA_CLASS': "drf-spectacular.openapi.AutoSchema",
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    # 'PAGE_SIZE': 10
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework.authentication.BasicAuthentication',
+    #     'rest_framework.authentication.SessionAuthentication',
+    # ]
 }
 SWAGGER_SETTINGS = {
-    'DOC_EXPANSION': "None" # Collapse everything 
+    'DOC_EXPANSION': "None", # Collapse everything 
+    'SECURITY_DEFINITIONS': {
+        'Basic': {
+            'type': 'basic'
+        },
+    },
 }
 
 # Templates

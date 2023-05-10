@@ -25,6 +25,7 @@
       window.swaggerUi = new SwaggerUi({
       url: "http://petstore.swagger.wordnik.com/api/api-docs",
       dom_id: "swagger-ui-container",
+      validatorUrl : null,
       supportedSubmitMethods: ['get', 'post', 'put', 'delete'],
       onComplete: function(swaggerApi, swaggerUi){
         log("Loaded SwaggerUI");

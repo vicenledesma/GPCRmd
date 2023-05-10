@@ -81,9 +81,9 @@
         <div class="col-sm-2 twoPanel">
             <h4 class="extrainfo_title">Contribution in GPCRmd</h4>
             <div style="overflow-x: auto;overflow-y: hidden">
-                <div id="stats_dataset" data-stats_dataset='{{stats_dataset}}' style="width: 100%; 
-                height: 100%;margin:auto;">
+                <div id="stats_dataset" data-stats_dataset='{{stats_dataset}}'>
                 </div>
+                <div class="centerLabel" style="left: 71px;top: 120px;position: absolute;width: 50%;">{{total_stats_dataset}}</div>
             </div>
         </div>
         <!-- Right panel: contributors dataset -->
@@ -171,16 +171,23 @@
          console.log(data_all);
          var data = google.visualization.arrayToDataTable(data_all);
          var options = {
-           slices: {
-             0: { color: '#BF3C1F' },
-             1: { color: '#b4aca9' }
-           },
-           pieSliceTextStyle:{color:"black", fontSize:16},
-           width:200,
-           height:200,
-           chartArea:{width:180,height:180},
-           legend: "none"
-           // legend: { alignment:"none", textStyle: {fontSize: 16}},
+            slices: {
+            0: { color: '#D96B52' },
+            1: { color: '#837d7b' }
+            },
+            pieHole: 0.4,
+            pieSliceTextStyle:{
+             color:"white", 
+             fontSize:15,
+             top: 10,
+             left: -50,
+             position: 'start',
+            },
+            width:200,
+            height:200,
+            chartArea:{width:180,height:180},
+            sliceVisibilityThreshold: 0,             
+            legend: 'none',
          };
 
          var chart = new google.visualization.PieChart(document.getElementById('stats_dataset'));

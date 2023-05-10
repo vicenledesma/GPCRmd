@@ -5513,9 +5513,9 @@ $(document).ready(function(){
           //   left: -50,
           //   position: 'start',
           // },
-          width:400,
-          height:450,
-          chartArea:{width:380,height:380},
+          // width:400,
+          // height:450,
+          // chartArea:{width:380,height:380},
           // legend:{ alignment:"center", textStyle: {fontSize: 20}},
           pieSliceText: 'none',
           sliceVisibilityThreshold: 0,             
@@ -5547,9 +5547,9 @@ $(document).ready(function(){
           //   left: -50,
           //   position: 'start',
           // },
-          width:400,
-          height:450,
-          chartArea:{width:380,height:380},
+            // width:100,
+            // height:150,
+          // chartArea:{width:80,height:80},
           // legend:{ alignment:"center", textStyle: {fontSize: 20}},
           pieSliceText: 'none',
           sliceVisibilityThreshold: 0,             
@@ -5562,8 +5562,6 @@ $(document).ready(function(){
       }
       google.load("visualization", "1", {packages:["corechart"],'callback': drawChart_subtypestats});
 
-
-      google.load("visualization", "1", {packages:["corechart"],'callback': drawChart_pdbstats});
       function drawChart_pdbstats() {
 
         var data_all = $("#pdb_stats").data("pdb_stats");
@@ -5594,6 +5592,7 @@ $(document).ready(function(){
 
         chart.draw(data, options);
       }
+      google.load("visualization", "1", {packages:["corechart"],'callback': drawChart_pdbstats});
 
       /*      var data_act_pre=$("#stats_act").data("act_data");
       function drawChart_activation() {

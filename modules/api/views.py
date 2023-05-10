@@ -3,11 +3,15 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
+from django.views.decorators.csrf import csrf_protect
+
 from rest_framework import generics
+from rest_framework.response import Response
 
 from modules.api.serializers import *
-from modules.dynadb.models import DyndbModel, DyndbProtein
+from modules.dynadb.models import DyndbDynamics, DyndbModel, DyndbProtein
 
+# search_allpdbs
 class SearchAllPdbs(generics.ListAPIView):
     """
     Retrieve a list with all Pdbs codes in GPCRmd database. 
@@ -15,7 +19,23 @@ class SearchAllPdbs(generics.ListAPIView):
 
     queryset = DyndbModel.objects.filter(is_published=True).values("pdbid").distinct().order_by("pdbid")
     serializer_class = AllPdbsSerializer
-    
+
+# search_pdbs/
+
+class SearchByPdbs(generics.ListAPIView):
+    """
+    Retrieve a list with all dynamic ids related with the pdb code in GPCRmd database. The input is case sensitive. (e.g. 5TVN not 5tvn)
+    """
+    serializer_class = DynsSerializer # Get info from DyndbDynamics using ids relationships
+
+    def get_queryset(self, *args, **kwargs):
+        pdbid = self.kwargs['pdbid']
+        model_ids = DyndbModel.objects.filter(pdbid__contains=pdbid).filter(is_published=True).values_list('id', flat=True)
+        queryset = DyndbDynamics.objects.filter(id_model__in=model_ids)
+        
+        return queryset
+        
+# search_alluniprots
 class SearchAllUniprots(generics.ListAPIView):
     """
     Retrieve a list with all Uniprot ids in GPCRmd database. 
@@ -24,6 +44,21 @@ class SearchAllUniprots(generics.ListAPIView):
     queryset = DyndbProtein.objects.filter(is_published=True).values("uniprotkbac").distinct().order_by("uniprotkbac")
     serializer_class = AllUniprotsSerializer
 
+# search_uniprots/
+class SearchByUniprots(generics.ListAPIView):
+    """
+    Retrieve a list with all dynamic ids related with the pdb code in GPCRmd database. The input is case sensitive. (e.g. P28222 not p28222)
+    """
+    serializer_class = DynsSerializer # Get info from DyndbDynamics using ids relationships
+
+    def get_queryset(self, *args, **kwargs):
+        uniprotid = self.kwargs['uniprotid']
+        query_ids=DyndbProtein.objects.filter(uniprotkbac__contains=uniprotid).filter(is_published=True).values_list('id', flat=True)
+        model_ids = DyndbModel.objects.filter(id_protein__in=query_ids)
+        queryset = DyndbDynamics.objects.filter(id_model__in=model_ids)
+
+        return queryset
+        
 # NOT API TOOLS ###############################################################################################################################################################
 
 import os
@@ -34,21 +69,22 @@ import json
 
 from wsgiref.util import FileWrapper
 
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.http import StreamingHttpResponse, HttpResponse
-from django.views.decorators.csrf import csrf_protect
 from django.utils import timezone
 
 from modules.dynadb.models import DyndbFiles, DyndbFilesDynamics
 from modules.api.models import AllDownloads
 
 class AllDownloader:
-    def __init__(self, dyns):
+    def __init__(self, dyns, user):
         """
         __init__ function to start and define parameters used on class Downloader. 
 
         Params: 
             > dyns --> List of dynamic ids. 
+            > user --> User id that request the file. 
             > outfile --> Name of the directory. 
             > l_dyns --> List python type of dyns parameter.
             > tmp --> Path of the main temporary folder.
@@ -57,6 +93,7 @@ class AllDownloader:
             > dyn_path --> Path of the temporary folder that will contain the files of one dynamic.
         """
         self.dyns = dyns
+        self.user = user
         try:
             id = AllDownloads.objects.latest('id').id
         except:
@@ -75,8 +112,12 @@ class AllDownloader:
 
         # Seach the files
         self.dic_files = {}
-        for dyn in self.l_dyns:
+        for dyn in self.l_dyns[0:5]:#Limit to 5 dyns 
             self.dic_files[f"dyn_{dyn}"] = list(DyndbFilesDynamics.objects.filter(id_dynamics = dyn).values_list("id_files", flat=True)) #[10394, 10395, 10396, 10397, 10398, 10399, 10400]     10395_dyn_36.psf  |  NOT 10398_trj_36_xtc_bonds 
+        
+        # Check list 
+        if self.dic_files == []:
+            return int("s") #Return an error to return error callajax   
 
         # Get the files 
         for dyn_key in self.dic_files:
@@ -89,6 +130,7 @@ class AllDownloader:
                 in_file = settings.MEDIA_ROOT[:-1] + file_path
                 out_file = dyn_path + "/" + file_name
                 print(in_file, out_file)
+                
         # Copy the files 
                 try:
                     shutil.copyfile(in_file, out_file)
@@ -108,6 +150,7 @@ class AllDownloader:
             dyn_ids = self.dyns,
             creation_timestamp = timezone.now(),
             created_by_dbengine = settings.DB_ENGINE,
+            created_by = self.user,
             filepath = self.tmpdir + ".zip",
         )
         downfileobj.save()
@@ -127,15 +170,13 @@ class AllDownloader:
         response["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 
+@login_required
 @csrf_protect
 def download_all(request): 
-    l_dyns = AllDownloader(request.GET['dyn_ids'])
-    # try:
+    l_dyns = AllDownloader(request.GET['dyn_ids'], request.user.id)
     l_dyns.prepare_file()
     data = dict()
-    data["url"] = l_dyns.zip # CHANGE URL 
-    return HttpResponse(json.dumps(data))
+    data["url"] = join("/dynadb/tmp/GPCRmd_downloads/", l_dyns.zip)  # CHANGE URL 
     # l_dyns.download_file()
-    # except:
-    #     return None
+    return HttpResponse(json.dumps(data))
 

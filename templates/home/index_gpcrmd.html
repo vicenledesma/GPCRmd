@@ -389,7 +389,8 @@
                   <div class="item" style="padding:15px">
                     <h4 class="extrainfo_title">Simulated GPCR families with known structure</h4>
                     <div style="overflow-x: auto;overflow-y: hidden">
-                      <div id="fam_stats" style="width: 300px; height: 400px;margin:auto" data-fam_stats="{{fam_stats}}">
+                      <div id="fam_stats" style="width: 100%;left: 200px;margin-right: auto;position: absolute;top: 150px;;" 
+                      data-fam_stats="{{fam_stats}}">
                       </div>
                       <div class="centerLabel">{{total_fam_stats}}</div>
                     </div>
@@ -398,7 +399,7 @@
                   <div class="item" style="padding:15px">
                     <h4 class="extrainfo_title">Simulated GPCR subtypes with known structure</h4>
                     <div style="overflow-x: auto;overflow-y: hidden">
-                      <div id="subtype_stats" style="width: 300px; height: 400px;margin:auto"
+                      <div id="subtype_stats" style="width: 100%;left: 200px;margin-right: auto;position: absolute;top: 150px;"
                         data-subtype_stats="{{subtype_stats}}"></div>
                       <div class="centerLabel">{{total_subtype_stats}}</div>
                     </div>
@@ -407,9 +408,9 @@
                   <div class="item" style="padding:15px">
                     <h4 class="extrainfo_title">Simulated PDB structures with known structure</h4>
                     <div style="overflow-x: auto;overflow-y: hidden">
-                      <div id="pdb_stats" style="width: 300px; height: 400px;margin:auto" data-pdb_stats="{{pdb_stats}}">
-                        <div class="centerLabel">{{total_pdb_stats}}</div>
-                      </div>
+                      <div id="pdb_stats" style="width: 100%;left: 200px;margin-right: auto;position: absolute;top: 150px;" 
+                        data-pdb_stats="{{pdb_stats}}"></div>
+                      <div class="centerLabel">{{total_pdb_stats}}</div>
                     </div>
                   </div>
 
@@ -475,8 +476,9 @@
                 <div class="item" style="padding:15px">
                   <h4 class="extrainfo_title">Simulated GPCR families</h4>
                   <p>Simulated GPCR families with known structure.*</p>
-                  <div style="overflow-x: auto;overflow-y: hidden">
-                    <div id="fam_stats" style="width: 300px; height: 400px;margin:auto" data-fam_stats="{{fam_stats}}">
+                  <div style="overflow-x: auto;overflow-y: hidden; width: 100%; height: 100%;">
+                    <div id="fam_stats" style="width: 100%;left: 200px;margin-right: auto;position: absolute;top: 150px;" 
+                    data-fam_stats="{{fam_stats}}" data-total_fam_stats="{{total_fam_stats}}">
                     </div>
                   </div>
                 </div>
@@ -484,17 +486,18 @@
                 <div class="item" style="padding:15px">
                   <h4 class="extrainfo_title">Simulated GPCR subtypes</h4>
                   <p>Simulated GPCR subtypes with known structure.*</p>
-                  <div style="overflow-x: auto;overflow-y: hidden">
-                    <div id="subtype_stats" style="width: 300px; height: 400px;margin:auto"
-                      data-subtype_stats="{{subtype_stats}}"></div>
+                  <div style="overflow-x: auto;overflow-y: hidden; width: 100%; height: 100%;">
+                    <div id="subtype_stats" style="width: 100%;left: 200px;margin-right: auto;position: absolute;top: 150px;"
+                      data-subtype_stats="{{subtype_stats}}" data-total_subtype_stats="{{total_subtype_stats}}"></div>
                   </div>
                 </div>
 
                 <div class="item" style="padding:15px">
-                  <h4 class="extrainfo_title">Simulated PDB structures</h4>
+                  <h4 class="extrainfo_title">Simulated PDBO structures</h4>
                   <p>Simulated GPCRs with known structure.*</p>
-                  <div style="overflow-x: auto;overflow-y: hidden">
-                    <div id="pdb_stats" style="width: 300px; height: 400px;margin:auto" data-pdb_stats="{{pdb_stats}}">
+                  <div style="overflow-x: auto;overflow-y: hidden; width: 100%; height: 100%;">
+                    <div id="pdb_stats" data-total_pdbs_stats="{{total_pdbs_stats}}" style="width: 100%;left: 200px;margin-right: auto;position: absolute;top: 150px;" 
+                    data-pdb_stats="{{pdb_stats}}" >
                     </div>
                   </div>
                 </div>
