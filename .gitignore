@@ -1,8 +1,10 @@
 *.pyc
 *.log
 *.backup
-#protwis/settings_local.py
+config/settings_*.py
+config/SECRETS.py
 solr-4.10.2/example/logs/*
+logs
 *~
 *.sdf
 dynadb/interactions.csv

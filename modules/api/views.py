@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from modules.api.serializers import *
 from modules.dynadb.models import DyndbDynamics, DyndbModel, DyndbProtein
 
-# search_allpdbs
+# search_all_pdbs
 class SearchAllPdbs(generics.ListAPIView):
     """
     Retrieve a list with all Pdbs codes in GPCRmd database. 
@@ -20,7 +20,7 @@ class SearchAllPdbs(generics.ListAPIView):
     queryset = DyndbModel.objects.filter(is_published=True).values("pdbid").distinct().order_by("pdbid")
     serializer_class = AllPdbsSerializer
 
-# search_pdbs/
+# search_dyn_pdbs/
 
 class SearchByPdbs(generics.ListAPIView):
     """
@@ -35,7 +35,7 @@ class SearchByPdbs(generics.ListAPIView):
         
         return queryset
         
-# search_alluniprots
+# search_all_uniprots
 class SearchAllUniprots(generics.ListAPIView):
     """
     Retrieve a list with all Uniprot ids in GPCRmd database. 
@@ -44,7 +44,7 @@ class SearchAllUniprots(generics.ListAPIView):
     queryset = DyndbProtein.objects.filter(is_published=True).values("uniprotkbac").distinct().order_by("uniprotkbac")
     serializer_class = AllUniprotsSerializer
 
-# search_uniprots/
+# search_dyn_uniprots/
 class SearchByUniprots(generics.ListAPIView):
     """
     Retrieve a list with all dynamic ids related with the pdb code in GPCRmd database. The input is case sensitive. (e.g. P28222 not p28222)
@@ -56,6 +56,19 @@ class SearchByUniprots(generics.ListAPIView):
         query_ids=DyndbProtein.objects.filter(uniprotkbac__contains=uniprotid).filter(is_published=True).values_list('id', flat=True)
         model_ids = DyndbModel.objects.filter(id_protein__in=query_ids)
         queryset = DyndbDynamics.objects.filter(id_model__in=model_ids)
+
+        return queryset
+    
+class SearchByDyn(generics.ListAPIView):
+    """
+    Retrieve information related with the dynamic id in GPCRmd database. Same information displayed in the Search tool: http://kasparov.upf.edu/dynadb/search/ (e.g. 11 or 17 or 21)
+    """
+    serializer_class = DynsSearchSerializer # Get info from DyndbDynamics using ids relationships
+
+    def get_queryset(self, *args, **kwargs):
+        dyn_id = self.kwargs['dyn_id']
+
+        queryset=DyndbDynamics.objects.filter(id=dyn_id)
 
         return queryset
         
