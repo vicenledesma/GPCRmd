@@ -7,7 +7,7 @@ from django import forms
 from django.contrib.auth import update_session_auth_hash
 from django.urls import reverse, path
 #from django.contrib.auth.views import password_reset, password_reset_confirm, password_reset_done, password_reset_complete
-from django.contrib.auth import views 
+from django.contrib.auth import views as auth_views
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
@@ -122,8 +122,6 @@ def register(request,
     return render(request, 'accounts/register.html', {
         'form': form,
     })
-
-
 
 def reg_mail(request):
     """Indicates to the user that they will receive a mail for activation"""
@@ -314,35 +312,13 @@ def change_passw(request):
 
 
 ##### Reset password
-
-def reset(request):
-    """Displays the form to enter the email of the account for which we want to reset the password"""
-    return views.PasswordResetView.as_view(request,
-        template_name='accounts/registration/password_reset_form.html',
-        email_template_name='accounts/registration/password_reset_email.html',
-        succes_url='/accounts/password_reset/done',
-        form_class=PasswordResetForm
-        )
-
-def reset_done(request):
-    """Indicates the user that he will receive an email to reset the password. This appears even if the email introduced is not associated to any account"""
-    return views.PasswordResetDoneView.as_view(request, 
-    template_name = 'accounts/registration/password_reset_done.html'
-    )
-
 def reset_confirm(request, uidb64=None, token=None):
     """The user is recognized with the url token and can enter the new password"""
-    return views.PasswordResetConfirmView.as_view(request, 
+    return auth_views.PasswordResetConfirmView.as_view(request, 
         template_name='accounts/registration/password_reset_confirm.html',
         uidb64=uidb64, 
         token=token,
         succes_url=reverse('accounts:password_reset_complete')         
-        )
-
-def reset_complete(request):
-    """Displays a message confirming that the new password is set"""
-    return views.PasswordResetComplete.as_view(request, 
-        template_name = 'accounts/registration/password_reset_complete.html'
         )
 
 @login_required

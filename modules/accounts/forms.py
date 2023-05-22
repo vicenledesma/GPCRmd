@@ -46,7 +46,8 @@ class RegistrationForm(forms.ModelForm):
         # Email subject *must not* contain newlines
         subject = ''.join(subject.splitlines())
         body = loader.render_to_string(email_template_name, context)
-        email_message = EmailMultiAlternatives(subject, body, from_email, [to_email],headers=settings.EMAIL_TRANSACTIONAL_HEADERS)
+        to_email = to_email.split(",")
+        email_message = EmailMultiAlternatives(subject, body, from_email, to_email,headers=settings.EMAIL_TRANSACTIONAL_HEADERS)
         if html_email_template_name is not None:
             html_email = loader.render_to_string(html_email_template_name, context)
             email_message.attach_alternative(html_email, 'text/html')
@@ -166,7 +167,7 @@ class ChangeMailForm(forms.ModelForm):
         # Email subject *must not* contain newlines
         subject = ''.join(subject.splitlines())
         body = loader.render_to_string(email_template_name, context)
-        email_message = EmailMultiAlternatives(subject, body, from_email, [to_email],headers=settings.EMAIL_TRANSACTIONAL_HEADERS)
+        email_message = EmailMultiAlternatives(subject, body, from_email, to_email,headers=settings.EMAIL_TRANSACTIONAL_HEADERS)
         if html_email_template_name is not None:
             html_email = loader.render_to_string(html_email_template_name, context)
             email_message.attach_alternative(html_email, 'text/html')
@@ -218,7 +219,7 @@ class PasswordResetForm(PasswordResetForm_default):
         subject = ''.join(subject.splitlines())
         body = loader.render_to_string(email_template_name, context)
 
-        email_message = EmailMultiAlternatives(subject, body, from_email, [to_email],headers=settings.EMAIL_TRANSACTIONAL_HEADERS)
+        email_message = EmailMultiAlternatives(subject, body, from_email, to_email,headers=settings.EMAIL_TRANSACTIONAL_HEADERS)
         if html_email_template_name is not None:
             html_email = loader.render_to_string(html_email_template_name, context)
             email_message.attach_alternative(html_email, 'text/html')
