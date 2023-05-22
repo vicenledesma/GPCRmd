@@ -52,7 +52,6 @@ class DynsSearchSerializer(serializers.ModelSerializer):
     forcefield = serializers.CharField(source = 'ff', allow_null=True)
     forcefield_version = serializers.CharField(source = 'ffversion', allow_null=True)
 
-
     def get_dyncomp(self, obj):
         dyncomps = DyndbDynamicsComponents.objects.filter(id_dynamics=obj)
         return DyndbComponentsSerializer(dyncomps , many=True).data
@@ -81,6 +80,10 @@ class DynsSearchSerializer(serializers.ModelSerializer):
             'forcefield_version', 
             ] 
 
-        
-
+# search_list_dyn      
+class ListDynsSearchSerializer(serializers.ListField):
+    dyn_id = serializers.IntegerField(source='id') 
+    class Meta:
+        model = DyndbDynamics
+        fields = ['dyn_id']
     

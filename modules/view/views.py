@@ -512,7 +512,6 @@ def obtain_rel_dicts(result,numbers,chain_name,current_class,seq_pos,seq_pos_n,g
                 seq_pos[seq_pos_n][2]=gnum_or_nth
                 seq_pos_n+=1
     #######
-    print(pdbid) # Use OPM to get segments 3REY.A
     seg_li=[]
     for seg in range(2,17): #2,17
         slen=len(rs_by_seg[seg])
@@ -522,7 +521,6 @@ def obtain_rel_dicts(result,numbers,chain_name,current_class,seq_pos,seq_pos_n,g
             seg_li.append([rs_by_seg[seg][0]])
         else:
             seg_li.append([rs_by_seg[seg][0],rs_by_seg[seg][-1]])
-    print(seg_li)
     #######
     other_classes=list({"A","B","C","F"} - set(current_class))
     other_classes_ok=[]
@@ -1396,7 +1394,7 @@ def get_pocket_pdb_files(request, pocket_data) -> dict:
     pockets, traj_pockID_coordfile, traj_isovalueFile = pocket_data
     traj_name = request.POST.get("traj_name")
     pocketid_and_color_list = json.loads(request.POST.get("pocketid_and_color_list"))
-
+    print(traj_pockID_coordfile)
     # Obtain each pocket's PDB file
     pocket_pdbs = {}
     for pocketID, color in map(lambda x: (x["id"], x["color"]), pocketid_and_color_list):
@@ -1419,7 +1417,7 @@ def generate_pocket_plot(request, pocket_data) -> json_item:
     traj_id = request.POST.get("traj_id")
     pocketid_and_color_list = json.loads(request.POST.get("pocketid_and_color_list"))
     smoothing_window_size = int(request.POST.get("smoothing_window_size"))
-
+    print(traj_pockID_coordfile)
     # Create plot
     p = figure(title="Volume per frame", x_axis_label="Frame", y_axis_label="Volume",
                sizing_mode="stretch_width", name="pocket_plot")
@@ -2325,7 +2323,6 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
         light_sel_s.add("protein")
         light_sel=" or ".join(light_sel_s)
         (structure_file,structure_file_id,structure_name, traj_list,trajidToFramenum)=obtain_dyn_files(dynfiles,True)
-        print(traj_list)
         if int(dyn_id)==176:
             structure_file="Dynamics/11661_metadyn_176.pdb"
             structure_name="11661_metadyn_176.pdb"
@@ -2417,7 +2414,6 @@ def index(request, dyn_id, sel_pos=False,selthresh=False, network_def=False, wat
                                 else:
                                     non_gpcr_chains.append(chain_name)
                 prot_seq_pos[prot_id]=(prot_name,seq_pos)
-            print(dprot_chains)
             keys_to_rm=set()
             for key, val in dprot_chains.items():
                 if val==([],[]):

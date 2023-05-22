@@ -1,10 +1,13 @@
 import requests
 import pandas as pd
 import io
+from tqdm import tqdm
 from os import path 
 import sys
 from django.core.management.base import BaseCommand, CommandError
 from config.settings import MODULES_ROOT
+
+from modules.protein.models import ProteinPDB, ProteinState
 
 class Command(BaseCommand):
     help = "Get state information from GPCRdb and relate it with PDBid into a dictionary."
@@ -50,23 +53,32 @@ class Command(BaseCommand):
                 elif table == 1 and over_header == 0: 
                     table_info.writelines(line+"\n")
 
-            # Get the dataset from gpcrdb on pandas
-            print("     > Getting the dataset...")
-            gpcrdb_table = pd.read_html("{MODULES_ROOT}/protein/management/tools/gpcrdb_table.html")
-            gpcrdb_table = gpcrdb_table[0].iloc[1:,1:-1] 
+        # Get the dataset from gpcrdb on pandas
+        print("     > Getting the dataset...")
+        gpcrdb_table = pd.read_html(f"{MODULES_ROOT}/protein/management/tools/gpcrdb_table.html")
+        gpcrdb_table = gpcrdb_table[0].iloc[1:,1:-1] 
 
-            # Create State dictionary from table 
-            print("     > Creating the state dictionary ([pdb] = state)... ")
-            dic_state = {}
-            for index, row in gpcrdb_table.iterrows():
-                pdb_id = str(row["PDB"])
-                state = str(row["State"])
-                if pdb_id not in dic_state.keys():
-                    dic_state[pdb_id] = state
+        # Create State dictionary from table 
+        print("     > Creating the state dictionary ([pdb] = state)... & update ProteinState model.")
+        dic_state = {}
+        for index, row in tqdm(gpcrdb_table.iterrows(), total=gpcrdb_table.shape[0]):
+            pdb_id = str(row["PDB"])
+            state = str(row["State"])
+            if pdb_id not in dic_state.keys():
+                dic_state[pdb_id] = state
+        # Save the elements into table ProteinPDB
+                state_id = ProteinState.objects.filter(name=state).values("id")
+                if not ProteinPDB.objects.filter(pdb=pdb_id).exists():
+                    query = ProteinPDB(pdb = pdb_id, state = int(state_id[0]["id"]))
+                    query.save()
+                else:
+                    # print(f"     > PDB {pdb_id} already exists.")
+                    continue
 
-            # Write information into data.py file on dynadb main directory
-            print("     > Writing info into modules/dynadb/data.py...")
-            dic_state_file = open(mode="w", file=f"{MODULES_ROOT}/dynadb/data.py")
-            dic_state_file.write(f"pdb_state={dic_state}")
+        # Write information into data.py file on dynadb main directory
+        print("     > Writing info into modules/dynadb/data.py...")
+        dic_state_file = open(mode="w", file=f"{MODULES_ROOT}/dynadb/data.py")
+        dic_state_file.write(f"pdb_state={dic_state}")
+        dic_state_file.close()
 
         

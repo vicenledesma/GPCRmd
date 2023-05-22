@@ -285,3 +285,10 @@ class ProteinGProteinPair(models.Model):
 
     class Meta():
         db_table = 'protein_gprotein_pair'
+
+class ProteinPDB(models.Model):
+    pdb = models.CharField(max_length=4, unique=True)
+    state = models.IntegerField()
+
+    class Meta():
+        db_table = 'protein_pdb'

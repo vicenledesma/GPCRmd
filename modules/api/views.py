@@ -59,6 +59,7 @@ class SearchByUniprots(generics.ListAPIView):
 
         return queryset
     
+# search_dyn
 class SearchByDyn(generics.ListAPIView):
     """
     Retrieve information related with the dynamic id in GPCRmd database. Same information displayed in the Search tool: http://kasparov.upf.edu/dynadb/search/ (e.g. 11 or 17 or 21)
@@ -67,13 +68,11 @@ class SearchByDyn(generics.ListAPIView):
 
     def get_queryset(self, *args, **kwargs):
         dyn_id = self.kwargs['dyn_id']
-
         queryset=DyndbDynamics.objects.filter(id=dyn_id)
 
         return queryset
-        
-# NOT API TOOLS ###############################################################################################################################################################
 
+# NOT API TOOLS ###############################################################################################################################################################
 import os
 from os.path import join
 import shutil
@@ -168,19 +167,34 @@ class AllDownloader:
         )
         downfileobj.save()
 
-    def download_file(self, *args, **kwargs):
-        the_file = self.tmpdir + ".zip"
+    def download_file(self, downfile, *args, **kwargs):
+        the_file = downfile + ".zip"
+        print(the_file)
         filename = os.path.basename(the_file)
-        chunk_size = 8192
-        response = StreamingHttpResponse(
+        print(filename)
+        # chunk_size = 8192
+        response = HttpResponse(
             FileWrapper(
                 open(the_file, "rb"),
-                chunk_size,
+                # chunk_size,
             ),
-            content_type=mimetypes.guess_type(the_file)[0],
+            content_type='application/zip',
         )
+        print(response)
         response["Content-Length"] = os.path.getsize(the_file)
         response["Content-Disposition"] = f"attachment; filename={filename}"
+        # return response
+        # temp = tempfile.TemporaryFile()
+        # archive = zipfile.ZipFile(temp, 'w', zipfile.ZIP_DEFLATED)
+        # for index in range(10):
+        #     filename = __file__ # Select your files here.                           
+        #     archive.write(filename, 'file%d.txt' % index)
+        # archive.close()
+        # wrapper = FileWrapper(temp)
+        # response = HttpResponse(wrapper, content_type='application/zip')
+        # response['Content-Disposition'] = 'attachment; filename=test.zip'
+        # response['Content-Length'] = temp.tell()
+        # temp.seek(0)
         return response
 
 @login_required
@@ -190,6 +204,6 @@ def download_all(request):
     l_dyns.prepare_file()
     data = dict()
     data["url"] = join("/dynadb/tmp/GPCRmd_downloads/", l_dyns.zip)  # CHANGE URL 
-    # l_dyns.download_file()
+    # l_dyns.download_file(l_dyns.tmpdir)
     return HttpResponse(json.dumps(data))
 

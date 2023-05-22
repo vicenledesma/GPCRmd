@@ -2689,6 +2689,7 @@ def obtain_dyn_files(paths_dict):
             structure_name=myfile_name
         elif myfile_name.endswith((".xtc", ".trr", ".netcdf", ".dcd")):
             traj_list.append((myfile, myfile_name, f_id))
+    print(traj_list)
     return (structure_file,structure_file_id,structure_name, traj_list)
 
 def assign_seq_pdb(pdb_name,dynamics_id,dynprot_obj,seq_pdb,pdb_chain_li):
@@ -3410,9 +3411,7 @@ def get_mutations_view(request):
     if request.method == 'POST':
         try:
             fasta = request.POST['alignment']
-            print(fasta)
             refseq = request.POST['sequence']
-            print(refseq)
             if check_fasta(fasta,allow_stop=False):
                 return JsonResponse(get_mutations(fasta,refseq),safe=False)
             elif check_fasta(fasta,allow_stop=True):
@@ -3881,7 +3880,6 @@ def pdbcheck_molecule(request,submission_id,form_type):
             data['download_url_log'] = None
             fieldset_mc = dict()
             fieldset_ps = dict()
-            print("POST ",request.POST)
             for key in request.POST:
                 print("keyi ", key)
                 if key.find(prefix_mc) == 0:
@@ -4333,7 +4331,6 @@ def PROTEINreuseview(request, submission_id ):
     qSubMolNew=DyndbSubmissionMolecule.objects.filter(submission_id=submission_id)
     if qSubPNew.exists() and qSubMolNew.exists() and qSubModNew.exists():
         enabled=True
-    print(qSub)
     int_id=[]
     int_id0=[]
     alias=[]
@@ -4415,11 +4412,7 @@ def SMALL_MOLECULEreuseview(request, submission_id, model_id ):
         llo=("; ").join(qALIAS.values_list('other_names',flat=True))
         alias.append(llo) 
         qCOMP.append(qCOMPtt) 
-    print(alias)
-    print(qCOMP)
-    print(qMOL)
     listExtraMolColapse=list(range(max(int_id),40))
-    print(listExtraMolColapse)
     fdbSub = dyndb_Submission_Molecule()
     last=int_id0[-1]
     qSubNotMod=DyndbSubmissionMolecule.objects.exclude(int_id=None).exclude(not_in_model=False).filter(submission_id=submission_id,molecule_id__dyndbfilesmolecule__id_files__id_file_types=19,molecule_id__id_compound__std_id_molecule__dyndbfilesmolecule__id_files__id_file_types=19).order_by('int_id').annotate(url=F('molecule_id__dyndbfilesmolecule__id_files__url'),urlstd=F('molecule_id__id_compound__std_id_molecule__dyndbfilesmolecule__id_files__url'))
@@ -4459,11 +4452,7 @@ def SMALL_MOLECULEreuseview(request, submission_id, model_id ):
             lloNotMod=("; ").join(qALIASNotMod.values_list('other_names',flat=True))
             aliasNotMod.append(lloNotMod) 
             qCOMPNotMod.append(qCOMPttNotMod) 
-        print(aliasNotMod)
-        print(qCOMPNotMod)
-        print(qMOLNotMod)
         listExtraMolColapseNotMod=list(range(max(int_idNotMod+int_id),40))
-        print(listExtraMolColapseNotMod)
         fdbSub = dyndb_Submission_Molecule()
         last=max(int_id0NotMod+int_id0)
         lastNotMod=max(int_id0NotMod)
@@ -4490,9 +4479,6 @@ def SMALL_MOLECULEreuseview(request, submission_id, model_id ):
         qALIASNotMod=""
         aliasNotMod.append("") 
         qCOMPNotMod.append("") 
-        print(alias)
-        print(qCOMP)
-        print(qMOL)
         listExtraMolColapseNotMod=list(range(max(int_idNotMod),40))
         fdbSub = dyndb_Submission_Molecule()
         lastNotMod=int_id0[-1]

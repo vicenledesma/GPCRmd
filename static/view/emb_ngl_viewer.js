@@ -4404,6 +4404,7 @@ $("#pocket_plot_button").on("click", function() {
     }
 
     let htmlPocketData = getPocketHTMLdata(); 
+    console.log(htmlPocketData);
     requestPocketPlot(htmlPocketData);
 });
 
@@ -4418,7 +4419,8 @@ function getPocketHTMLdata() {
     // Get data from HTML
     let dynID = $(".str_file").data("dyn_id");
     let trajID = $(".traj_element.tsel").attr("id").replace("traj_id_","");
-    let trajName = $(".traj_element.tsel").data("tpath").split("/")[1];
+    let trajName_list = $(".traj_element.tsel").data("tpath").split("/");
+    let trajName = trajName_list.pop();
     let smoothingWindowSize = $("#smoothing_window_size").val();
     let showNearbyResidues = $("#show_nearby_residues").prop('checked');
 

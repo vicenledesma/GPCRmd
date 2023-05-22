@@ -3,7 +3,7 @@ Quickstart: https://drf-yasg.readthedocs.io/en/stable/readme.html#quickstart
 """
 
 from django.contrib import admin
-from django.urls import include, re_path
+from django.urls import include, re_path, path
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
