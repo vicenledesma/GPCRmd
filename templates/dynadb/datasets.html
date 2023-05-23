@@ -80,10 +80,10 @@
 
         <div class="col-sm-2 twoPanel">
             <h4 class="extrainfo_title">Contribution in GPCRmd</h4>
-            <div style="overflow-x: auto;overflow-y: hidden">
+            <div style="overflow-x: hidden;overflow-y: hidden">
                 <div id="stats_dataset" data-stats_dataset='{{stats_dataset}}'>
                 </div>
-                <div class="centerLabel" style="left: 71px;top: 120px;position: absolute;width: 50%;">{{total_stats_dataset}}</div>
+                <div class="centerLabel" style="left: 145px;top: 160px;position: absolute;width:0px;">{{total_stats_dataset}}</div>
             </div>
         </div>
         <!-- Right panel: contributors dataset -->
@@ -176,17 +176,11 @@
             1: { color: '#837d7b' }
             },
             pieHole: 0.4,
-            pieSliceTextStyle:{
-             color:"white", 
-             fontSize:15,
-             top: 10,
-             left: -50,
-             position: 'start',
-            },
-            width:200,
-            height:200,
-            chartArea:{width:180,height:180},
-            sliceVisibilityThreshold: 0,             
+            chartArea: { left: 30},
+            width:240,
+            height:240,
+            sliceVisibilityThreshold: 0,    
+            pieSliceText: 'none',
             legend: 'none',
          };
 

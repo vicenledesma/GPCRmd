@@ -5506,20 +5506,18 @@ $(document).ready(function(){
             1: { color: '#837d7b' }
           },
           pieHole: 0.4,
-          // pieSliceTextStyle:{
-          //   color:"white", 
-          //   fontSize:15,
-          //   top: 10,
-          //   left: -50,
-          //   position: 'start',
-          // },
-          // width:400,
-          // height:450,
-          // chartArea:{width:380,height:380},
-          // legend:{ alignment:"center", textStyle: {fontSize: 20}},
+          // chartArea:{left: 125, top:-50, width:650, height:650 },
+          pieSliceTextStyle:{
+            color:"white", 
+            fontSize:12,
+            position: 'start',
+          },
+          width: 400,
+          height: 400,
+          legend:{ alignment:"center", position:'none', textStyle: {fontSize: 12}},
           pieSliceText: 'none',
           sliceVisibilityThreshold: 0,             
-          legend: 'labeled',
+          // legend: 'labeled',
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('fam_stats'));
@@ -5540,20 +5538,18 @@ $(document).ready(function(){
             1: { color: '#837d7b' }
           },
           pieHole: 0.4,
-          // pieSliceTextStyle:{
-          //   color:"white", 
-          //   fontSize:15,
-          //   top: 10,
-          //   left: -50,
-          //   position: 'start',
-          // },
-            // width:100,
-            // height:150,
-          // chartArea:{width:80,height:80},
-          // legend:{ alignment:"center", textStyle: {fontSize: 20}},
+          // chartArea:{left: 125, top:-50, width:550, height:550 },
+          pieSliceTextStyle:{
+            color:"white", 
+            fontSize:12,
+            position: 'start',
+          },
+          width: 400,
+          height: 400,
+          legend:{ alignment:"center", position:'none', textStyle: {fontSize: 12}},
           pieSliceText: 'none',
           sliceVisibilityThreshold: 0,             
-          legend: 'labeled',
+          // legend: 'labeled',
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('subtype_stats'));
@@ -5572,20 +5568,18 @@ $(document).ready(function(){
             1: { color: '#837d7b' }
           },
           pieHole: 0.4,
-          // pieSliceTextStyle:{
-          //   color:"white", 
-          //   fontSize:15,
-          //   top: 10,
-          //   left: -50,
-          //   position: 'start',
-          // },
-          // width:400,
-          // height:450,
-          // chartArea:{width:380,height:380},
-          // legend:{ alignment:"center", textStyle: {fontSize: 20}},
+          // chartArea:{left: 125, top:-50, width:550, height:550 },
+          pieSliceTextStyle:{
+            color:"white", 
+            fontSize:12,
+            position: 'start',
+          },
+          width: 400,
+          height: 400,
+          legend:{ alignment:"center", position:'none', textStyle: {fontSize: 12}},
           pieSliceText: 'none',
           sliceVisibilityThreshold: 0,             
-          legend: 'labeled',
+          // legend: 'labeled',
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('pdb_stats'));
