@@ -154,8 +154,8 @@ def corplots(out,path):
 
 	# Plottin time with bokeh
 	p = figure(
-		plot_height=500,
-		plot_width=900,
+		height=500,
+		width=900,
 		#title="Example freq",
 		y_range=y_range,
 		x_range=x_range,
@@ -177,7 +177,7 @@ def corplots(out,path):
 	p.circle(
 		x=out,
 		y=path,
-		legend="Correlation value: "+cor, 
+		legend_label="Correlation value: "+cor, 
 		size=12,
 		source=mysource,		
 		)
@@ -193,7 +193,9 @@ def corplots(out,path):
             x_offset=5, 
             y_offset=5, 
             source=mysource, 
-            render_mode='canvas')
+	    	text_font = {'value': 'canvas'}
+            # render_mode='canvas'
+			)
 	p.add_layout(labels)
 
 	# A legend just for correlation plot

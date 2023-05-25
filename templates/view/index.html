@@ -3470,9 +3470,7 @@
                                                       <tr>
                                                         <td>{{cs_opt.name}}</td>
                                                         <td>
-                                                    {% include "view/dropdown_w_selector.html" with
-                                                          option_list=cs_opt.options type='resid' ref="comp"|add:cs_opt.ref
-                                                          mul=True %}
+                                                    {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options type='resid' ref="comp"|add:cs_opt.ref mul=True %}
                                                         </td>
                                                       </tr>
                                                       {% endfor %}
@@ -3497,8 +3495,7 @@
                                                   <tr>
                                                     <td>{{cs_opt.name}}</td>
                                                     <td>
-                                                {% include "view/dropdown_w_selector.html" with type='atom'
-                                                      option_list=cs_opt.options ref=cs_opt.ref mul=True %}
+                                                {% include "view/dropdown_w_selector.html" with type='atom' option_list=cs_opt.options ref=cs_opt.ref mul=True %}
                                                     </td>
                                                   </tr>
                                                   {% endfor %}
@@ -3554,8 +3551,7 @@
                                                   <tr>
                                                     <td>{{cs_opt.name}}</td>
                                                     <td>
-                                                {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options
-                                                      type='resid' ref="sresid" mul=False %}
+                                                {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options type='resid' ref="sresid" mul=False %}
                                                     </td>
                                                   </tr>
                                                   {% endif %}
@@ -3564,8 +3560,7 @@
                                                   <tr>
                                                     <td>{{cs_opt.name}}</td>
                                                     <td>
-                                                {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options
-                                                      type='atom' ref="satom" mul=False %}
+                                                {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options type='atom' ref="satom" mul=False %}
                                                     </td>
                                                   </tr>
                                                   {% endfor %}
@@ -3653,9 +3648,7 @@
                                                       <tr>
                                                         <td>{{cs_opt.name}}</td>
                                                         <td>
-                                                    {% include "view/dropdown_w_selector.html" with
-                                                          option_list=cs_opt.options type='resid' ref="2d"|add:cs_opt.ref
-                                                          mul=True %}
+                                                    {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options type='resid' ref="2d"|add:cs_opt.ref mul=True %}
                                                         </td>
                                                       </tr>
                                                       {% endfor %}
@@ -3683,12 +3676,10 @@
                                                   {% for cs_opt in cs_selection_params.atom %}
                                                   <tr>
                                                     <td>
-                                                {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options
-                                                      type='atom' ref="2datom1" mul=False %}
+                                                {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options type='atom' ref="2datom1" mul=False %}
                                                     </td>
                                                     <td>
-                                                {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options
-                                                      type='atom2' ref="2datom2" mul=False %}
+                                                {% include "view/dropdown_w_selector.html" with option_list=cs_opt.options type='atom2' ref="2datom2" mul=False %}
                                                     </td>
                                                   </tr>
                                                   {% endfor %}

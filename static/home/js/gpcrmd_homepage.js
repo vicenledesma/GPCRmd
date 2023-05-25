@@ -4784,8 +4784,8 @@ $(document).ready(function(){
     const svg = mydiv.append("svg")
        // .attr("width", "100%")
        // .attr("height", "100%")
-      .on("zoom", zoomed)
-      .call(zoom) 
+      // .on("zoom", zoomed)
+      // .call(zoom) 
       .attr("style","display:block;margin:auto;")
       .attr('viewBox','0 0 '+(width + 130)+' '+(width + 130))
       .attr('preserveAspectRatio','xMinYMin')
@@ -4796,12 +4796,16 @@ $(document).ready(function(){
       .attr("transform", "translate(" + (width+130) / 2 + "," + (width+130) / 2 + ")")
       ;
 
+    mydiv.on("zoom", zoomed);
+    mydiv.call(zoom);
+    
+
     var transform = d3.zoomIdentity //<-- create your transform with your initialScale
       .translate(0, 0)
       .scale(1);
 
     $("#Reset").click(() => {
-      svg.transition()
+      mydiv.transition()
         .duration(750)
         .call(zoom.transform, transform)
         // .call(zoom.translateTo, 500, 500)
@@ -5298,7 +5302,7 @@ $(document).ready(function(){
 
     node.append("circle")
       .attr("fill", "#575757")
-      .attr("r", d => d.data.Simulated == "Yes" ? 5 : d.data.Simulated == "No" ? 2 : 2)
+      .attr("r", d => d.data.Simulated == "Yes" ? 2 : d.data.Simulated == "No" ? 1 : 2)
       .attr("class",function(d) {
         if (d.height==0){
           return "clickable"
@@ -5309,7 +5313,7 @@ $(document).ready(function(){
 
     node.append("circle")
       .attr("fill", d => d.data.State == "Active" ? "green" : d.data.State == "Inactive" ? "red" : d.data.State == "Intermediate" ? "orange" : "black")
-      .attr("r", 2.5)
+      .attr("r", 1.5)
       .attr("class",function(d) {
         if (d.height==0){
           return "clickable"

@@ -8,7 +8,7 @@ QUERY_CHECK_PUBLISHED = True
 FILES_NO_LOGIN = False
 
 #Determine http or https (ssl)
-SSL=False
+SSL=True
 DEV = False
 
 #Settings selection
@@ -262,7 +262,7 @@ CACHES = {
 }
 
 #MDSRV
-MDSRV_UPSTREAM='http://localhost:8081'
+MDSRV_UPSTREAM='https://localhost:8081'
 
 AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = 'accounts:login'
