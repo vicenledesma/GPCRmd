@@ -19,4 +19,6 @@ urlpatterns = [
     re_path(r'^updating/$', views.is_updating, name='is_updating'),
     re_path(r'^remove_marker/$', views.remove_marker, name='remove_marker'),
     re_path(r'^quickloadall_both/$', views.quickloadall_both, name="quickloadall_both"),
+    re_path(r'^cookies&privacy-policy/$', views.cookies_privacy_policy, name="cookies_privacy_policy"),
+
 ]
