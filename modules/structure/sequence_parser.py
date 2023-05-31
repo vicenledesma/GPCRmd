@@ -574,8 +574,6 @@ class SequenceParserPW(object):
             query = sequence
 
         wt, chain_seq, score, start, end = self.align_to_wt(query)
-        print(wt)
-        print(chain_seq)
         offset = 0
         for w, c in zip(wt, chain_seq):
             if w == c:

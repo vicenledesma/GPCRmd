@@ -47,11 +47,9 @@ def write_entry(line,fileh,serial):
     else:
         newserial = "*****" 
     
-    print("".join((line[:6],newserial,line[11:])), file=fileh,end="")
     
 def split_protein_pdb(filename,modeled_residues,outputfolder=None):
         '''Get sequence from a PDB file in a given interval defined by a combination of Segment Identifier (segid), starting residue number (start), end residue number (stop), chain identifier (chain). All can be left in blank. Returns 1) a list of minilist: each minilist has the resid and the aminoacid code. 2) a string with the sequence.'''
-        print(modeled_residues)
         fpdb=open(filename,'r')
         header = "CRYST1    0.000    0.000    0.000  90.00  90.00  90.00 P 1           1"
         rootname,ext = path.splitext(filename)
@@ -60,10 +58,8 @@ def split_protein_pdb(filename,modeled_residues,outputfolder=None):
             rootname = path.join(outputfolder,basename)
         proteinpdbfilename = rootname+"_protein.pdb"
         proteinpdb = open(proteinpdbfilename,'w',newline='\n')
-        print(header, file=proteinpdb)
         nonproteinpdbfilename = rootname+"_non_protein.pdb"
         nonproteinpdb = open(nonproteinpdbfilename,'w',newline='\n')
-        print(header, file=nonproteinpdb)
 
         cpos=0 #current residue position
         ppos=0 #previous residue position

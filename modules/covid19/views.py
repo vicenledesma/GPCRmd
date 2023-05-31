@@ -1736,7 +1736,6 @@ def upload_descriptors(request,dyn_id):
         form = UploadDescriptorsForm(request.POST, request.FILES)
         if form.is_valid():
             #pdb_id=form.cleaned_data['pdb_id']
-            print(dyn_id)
             csv_file=request.FILES['csv_file']
             #print(csv_file.read())
             try:

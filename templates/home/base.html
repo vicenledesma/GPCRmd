@@ -131,7 +131,7 @@
 <body>
   {% mainmenu %}
 
-  <div class="container" id="content">
+  <div class="container" id="content" style="height:auto">
 
     <div class="alert alert-warning alert-dismissible" id='update_warning'
       style="padding:5px 30px 5px 10px;margin:0 20px;position:absolute;z-index:10; display: none !important;">
@@ -162,8 +162,13 @@
         <h4 class="footTitle">CONTACT & LINKS</h4>
         <p class="footA shortfoot"><a class="footA" href=https://twitter.com/GPCRmd><img class="footlogo" src="{% static 'home/images/footer/twitter-logo.png' %}"></img></a></p>
         <p class="footA shortfoot"><a class="footA" href="mailto:info@gpcrmd.org"><img  class="footlogo" src="{% static 'home/images/footer/mail.png' %}"></img></a></p>
-        <p class="footA shortfoot"><a class="footA" href="https://gpcrmd-docs.readthedocs.io/en/latest/" target="_blank">Documuntation</a></p>
-        <p class="footA"><a class="footA" href="https://gpcrmd-docs.readthedocs.io/en/latest/source/citing-gpcrmd.html" target="_blank">Cite us</a></p>
+        <p class="footA shortfoot"><a class="footA" href="https://develgpcrmd-docs.readthedocs.io/en/latest/" target="_blank">Documentation</a></p>
+        <p class="footA"><a class="footA" href="https://develgpcrmd-docs.readthedocs.io/en/latest/source/citing-gpcrmd.html" target="_blank">Cite us</a></p>
+        <p class="footA"><a class="footA" href="https://devel.gpcrmd.org/privacy-policy/" target="_blank">Privacy policy</a></p>
+        <p class="footA"><a class="footA" href="https://devel.gpcrmd.org/cookies-policy/" target="_blank">Cookies policy</a></p>
+        <p class="footA"><a class="footA" href="https://devel.gpcrmd.org/disclaimer/" target="_blank">Disclaimer</a></p>
+        <p class="footA"><a class="footA" href="https://devel.gpcrmd.org/terms&conditions/" target="_blank">Terms & Conditions</a></p>
+
       </div>
 
       <!-- Supported by -->
@@ -219,6 +224,7 @@
 
       // Change text of cookie (remove ads autoadverstiment )
       document.getElementById('cc-nb-text').innerText = "We use cookies and other tracking technologies to improve your browsing experience on our website, to analyze our website traffic, and to understand where our visitors are coming from.";
+      document.getElementById('title_targeting').style.display = "none"
 
       //Check if load-of-all-systems-after-update is ongoing. If so show warning
       $.ajax({

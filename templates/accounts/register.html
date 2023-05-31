@@ -16,6 +16,7 @@
     <div class="col-md-4 col-md-offset-1">
       <div class="col-md-12 regPanel panel panel-primary">
         <div class=" panel-body">
+          <a class="textlink" href="/accounts/logout">Log out</a></li>
           <h2 class="panel-heading">Simulation Submission</h2>
         </div>
       </div>
@@ -25,11 +26,12 @@
         <div class="panel-body">
 
           <div class="newAcc">
+            <h3 class="orangeTit">Welcome {{ username }}</h3>
             <h4 class="orangeTit">CREATE A NEW ACCOUNT</h4>
           </div>
           <p style="text-align: justify;">Fill in the form to create a new account.</p>
 
-          <p style="text-align: justify;"> As a registered user, you will be able to access the GPCRmd Simulation
+          {% comment %} <p style="text-align: justify;"> As a registered user, you will be able to access the GPCRmd Simulation
             Submission tool.</p>
 
           <p style="text-align: justify;">Any time later, you will be able to modify all submitted personal data.</p>
@@ -45,7 +47,7 @@
             data in these files may be exercised by applying in writing, including a photocopy of your identity card,
             passport, or equivalent to: <br>Parc de Recerca Biomèdica de Barcelona (PRBB), <br>Dr. Aiguader, 88 <br> 08003
             Barcelona (Spain).
-          </p>
+          </p> {% endcomment %}
 
         </div>
       </div>

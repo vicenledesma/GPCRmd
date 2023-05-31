@@ -2197,7 +2197,6 @@ def do_analysis(request): #warning, delete this view!
                     histhbond[tuple(hbond)]=1
         for keys in histhbond:
             histhbond[keys]= round(histhbond[keys]/len(t),3)*100
-            print(keys)
             if abs(keys[0]-keys[2])>60 and histhbond[keys]>10: #the hbond is not between neighbourd atoms and the frecuency across the traj is more than 10%
                 labelbond=label([keys[0],histhbond[keys],keys[2]])
                 labelbond=labelbond.replace(' ','')
@@ -4603,7 +4602,6 @@ def DYNAMICSreuseview(request, submission_id, model_id ):
                             Scom_inst[ii][0]={}
                             Scom_obj[ii][0]={}
                             Pscompmod[ii][0]={}
-                        print(key,val)
                         Pscompmod[ii][0][key]=val
             print("\nlista numero 0 \n",Pscompmod[ii][0].items() )
             print("\nlongitud de indexcl \n",len(indexcl),"dinamica",ii) 
@@ -4933,15 +4931,12 @@ def MODELview(request, submission_id):
             ### the input arguments are two tuples. the first one
             if not (type(intervalA)==tuple  and type(intervalB)==tuple):
                 response= "both input items must be tuples"
-                print(response)
                 return response
             if not (type(intervalA[0])==int  and type(intervalA[1])==int and type(intervalB[0])==int  and type(intervalB[1])==int):   
                 response= "the elements in the tuples must be integers"
-                print(response)
                 return response
             if intervalA[0] > intervalA[1] or intervalB[0] > intervalB[1]:
                 response= "the first element of the tuple must be the smallest value"
-                print(response)
                 return response
             print (intervalA," ",intervalB)
             if intervalA[0] < intervalB[0]:
@@ -6518,7 +6513,6 @@ def _upload_dynamics_files(request,submission_id,trajectory=None,trajectory_max_
     if request.method == "POST":
         exceptions = False
         data = dict()
-        print(request.POST)
         data['download_url_file'] = []
         submission_path = get_file_paths("dynamics",url=False,submission_id=submission_id)
         submission_url = get_file_paths("dynamics",url=True,submission_id=submission_id)    
@@ -6670,7 +6664,6 @@ def _upload_dynamics_files(request,submission_id,trajectory=None,trajectory_max_
     elif request.method == "GET":
         q_uploaded_files = DyndbSubmissionDynamicsFiles.objects.filter(submission_id=submission_id,type=dbtype)
         q_uploaded_files = q_uploaded_files.order_by('filenum').values_list('url',flat=True)
-        print(q_uploaded_files) 
         return render(request,'dynadb/DYNAMICS_file_upload.html',{'action':action,'file_type':file_type,
         'long_name':file_types[file_type]['long_name'],'description':file_types[file_type]['description'],
         'new_window':new_window,'success':None,'error':'','download_urls':q_uploaded_files,'accept_ext':accept_string,'no_js':no_js,'get':True})
@@ -6687,7 +6680,6 @@ def DYNAMICSview(request, submission_id, model_id=None):
     initFiles={'update_timestamp':timezone.now(),'creation_timestamp':timezone.now() ,'submission_id':None ,'created_by_dbengine':def_user_dbengine, 'last_update_by_dbengine':def_user_dbengine,'created_by':def_user, 'last_update_by':def_user  }
                    
     def dynamics_file_table (dname, DFpk): #d_fmolec_t, dictext_id 
-        print(dname)
         fdbF={}
         fdbFobj={}
         qft=DyndbFileTypes.objects.all().values()
@@ -9094,7 +9086,6 @@ def SMALL_MOLECULEview(request, submission_id):
                     print("There is a molecule in the database with this submission_id and int_id not matching the one in the form which in addition is not contained in the db!!! TTPPPPP")
                     deleteModelbyUpdateMolecule(qSm.filter(int_id=ii).values_list('molecule_id',flat=True)[0],ii,submission_id)
             #generation of the sinchi
-            print(dictcomp[ii])
             if 'pubchem_cid' in dictcomp[ii].keys():
                 if dictcomp[ii]['pubchem_cid']!='':
                     print("a")
@@ -9351,7 +9342,6 @@ def SMALL_MOLECULEview(request, submission_id):
                     print(dictmol[ii][key], val)
             dictmol[ii]['id_compound']=CFpk
             aaa=dictmol[ii]['inchi'].split('=')[1]
-            print(aaa)
             dictmol[ii]['inchi']=aaa
            #####AQUI ME QUEDE!!!! 
             fdbMF[ii]=dyndb_Molecule(dictmol[ii])
@@ -9553,7 +9543,6 @@ def dictfetchall(cursor):
 def submission_summaryiew(request,submission_id):
 #protein section
     qSub=DyndbSubmissionProtein.objects.filter(submission_id=submission_id).exclude(int_id=None).order_by('int_id')
-    print(qSub)
     int_id=[]
     int_id0=[]
     alias=[]
@@ -9604,8 +9593,6 @@ def submission_summaryiew(request,submission_id):
     urls=[]
     for l in qSub:
         urls.append(str(l.url).strip())
-        print(l.url)
-        print(urls)
         labtypes=l.COMPOUND_TYPE[l.type]
         labtypels.append(labtypes) 
         if  not l.not_in_model:
@@ -9623,9 +9610,6 @@ def submission_summaryiew(request,submission_id):
         qCOMP.append(qCOMPtt) 
     print("LABTYPES",labtypels)
     print("int_ids0",int_ids0)
-    print(alias)
-    print(qCOMP)
-    print(qMOL)
     fdbSubs = dyndb_Submission_Molecule()
 #model section
     qModel=DyndbModel.objects.filter(dyndbsubmissionmodel__submission_id=submission_id)
@@ -9769,7 +9753,6 @@ def submission_summaryiew(request,submission_id):
 def protein_summaryiew(request,submission_id):
 #protein section
     qSub=DyndbSubmissionProtein.objects.filter(submission_id=submission_id).order_by('int_id')
-    print(qSub)
     int_id=[]
     int_id0=[]
     alias=[]
@@ -9820,8 +9803,6 @@ def molecule_summaryiew(request,submission_id):
     urls=[]
     for l in qSub:
         urls.append(str(l.url).strip())
-        print(l.url)
-        print(urls)
         labtypes=l.COMPOUND_TYPE[l.type]
         labtypels.append(labtypes) 
         if  not l.not_in_model:
@@ -12418,7 +12399,6 @@ def step4_submit(request, submission_id):
         # Get list of all files submitted in this input thing, and iterate over them
         files_list = request.FILES.getlist(filekey)
         i=0
-        print(files_list)
         for filecontent in files_list:
             # Get file extension
             (up_filename, ext) = filecontent.name.split('.', 1)
@@ -12719,12 +12699,9 @@ def step5_submit(request, submission_id):
     # Check whether the fdbREFF instance of dyndb_ReferenceForm is valid:
     SubmitRef=True
     qRFdoi=DyndbReferences.objects.filter(doi=request.POST['doi'])
-    print(FRpk)
     FRpk = FRpk[0]
-    print(FRpk)
     qSubmission=DyndbSubmission.objects.filter(id=submission_id)
     qT=list(qSubmission.filter(dyndbsubmissionprotein__submission_id=submission_id,dyndbsubmissionmolecule__submission_id=submission_id,dyndbsubmissionmodel__submission_id=submission_id,dyndbdynamics__submission_id=submission_id).values('dyndbsubmissionprotein__protein_id','dyndbsubmissionmolecule__molecule_id','dyndbsubmissionmolecule__molecule_id__id_compound','dyndbsubmissionmodel__model_id','dyndbdynamics__id'))
-    print(qT)
     dictprot={'id_protein':qT[0]['dyndbsubmissionprotein__protein_id'], 'id_references':FRpk}
     dictmod={'id_model':qT[0]['dyndbsubmissionmodel__model_id'], 'id_references':FRpk }
     dictdyn={'id_dynamics':qT[0]['dyndbdynamics__id'], 'id_references':FRpk }

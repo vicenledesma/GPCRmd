@@ -141,7 +141,6 @@ class AllDownloader:
                 file_name = list(DyndbFiles.objects.filter(id = f_id).values_list("filename", flat=True))[0]
                 in_file = settings.MEDIA_ROOT[:-1] + file_path
                 out_file = dyn_path + "/" + file_name
-                print(in_file, out_file)
                 
         # Copy the files 
                 try:
@@ -169,9 +168,7 @@ class AllDownloader:
 
     def download_file(self, downfile, *args, **kwargs):
         the_file = downfile + ".zip"
-        print(the_file)
         filename = os.path.basename(the_file)
-        print(filename)
         # chunk_size = 8192
         response = HttpResponse(
             FileWrapper(
@@ -180,7 +177,6 @@ class AllDownloader:
             ),
             content_type='application/zip',
         )
-        print(response)
         response["Content-Length"] = os.path.getsize(the_file)
         response["Content-Disposition"] = f"attachment; filename={filename}"
         # return response

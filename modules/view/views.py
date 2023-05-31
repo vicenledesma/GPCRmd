@@ -1329,7 +1329,6 @@ def obtain_pocket_data(dyn_id, traj_list) -> tuple:
 
     root = settings.MEDIA_ROOT
     pock_path = os.path.join(root,"Precomputed/MDpocket")
-    print(pock_path)
     # 3 level dictionary with: trajectory: pocketID: descriptors
     pockets = {}
     # 3 level dictionary with: trajectory: pocketID: path_to_coordinates_file.pdb
@@ -1394,7 +1393,6 @@ def get_pocket_pdb_files(request, pocket_data) -> dict:
     pockets, traj_pockID_coordfile, traj_isovalueFile = pocket_data
     traj_name = request.POST.get("traj_name")
     pocketid_and_color_list = json.loads(request.POST.get("pocketid_and_color_list"))
-    print(traj_pockID_coordfile)
     # Obtain each pocket's PDB file
     pocket_pdbs = {}
     for pocketID, color in map(lambda x: (x["id"], x["color"]), pocketid_and_color_list):
@@ -1417,7 +1415,6 @@ def generate_pocket_plot(request, pocket_data) -> json_item:
     traj_id = request.POST.get("traj_id")
     pocketid_and_color_list = json.loads(request.POST.get("pocketid_and_color_list"))
     smoothing_window_size = int(request.POST.get("smoothing_window_size"))
-    print(traj_pockID_coordfile)
     # Create plot
     p = figure(title="Volume per frame", x_axis_label="Frame", y_axis_label="Volume",
                sizing_mode="stretch_width", name="pocket_plot")

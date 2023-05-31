@@ -316,7 +316,6 @@ class FamilyAlignment(views.APIView):
     """
 
     def get(self, request, slug=None, segments=None, latin_name=None, statistics=False):
-        print(statistics)
         if slug is not None:
             # Check for specific species
             if latin_name is not None:
@@ -696,7 +695,6 @@ class StructureAssignGenericNumbers(views.APIView):
         io = PDBIO()
         io.set_structure(out_struct)
         io.save(out_stream)
-        print(len(out_stream.getvalue()))
         # filename="{}_GPCRdb.pdb".format(root)
         return Response(out_stream.getvalue())
 

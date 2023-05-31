@@ -237,9 +237,22 @@ def contact(request):
     context = {}
     return render(request, 'home/contact.html', context )
 
-def cookies_privacy_policy(request):
+# LEGAL TERMS
+def disclaimer(request):
+    context = {}
+    return render(request, 'home/disclaimer.html', context )
+
+def cookies_policy(request):
+    context = {}
+    return render(request, 'home/cookies_policy.html', context )
+
+def privacy_policy(request):
     context = {}
     return render(request, 'home/privacy_policy.html', context )
+
+def terms(request):
+    context = {}
+    return render(request, 'home/terms.html', context )
 
 def community(request):
     context = {}
@@ -446,7 +459,6 @@ def quickloadall_both(request):
     dynfiledata = dynfiledata.annotate(file_is_traj=F('dyndbfilesdynamics__id_files__id_file_types__is_trajectory'))
     dynfiledata = dynfiledata.annotate(file_ext=F('dyndbfilesdynamics__id_files__id_file_types__extension'))
     dynfiledata = dynfiledata.values("dyn_id","file_path","file_is_traj","file_ext")
-    print(dynfiledata)
     dyn_dict = {}
     for dyn in dynfiledata:
         dyn_id=dyn["dyn_id"]
@@ -488,7 +500,6 @@ def quickloadall_both(request):
             dyn_dict[dyn_id]["pdb"].append(file_short)
 
     filesli=[[d["pdb"][0],d["traj"]] for d in dyn_dict.values() if d["pdb"]]
-    print(filesli)
     context={
         "mdsrv_url":mdsrv_url,
         "filesli":json.dumps(filesli)

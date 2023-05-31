@@ -9,7 +9,7 @@ FILES_NO_LOGIN = False
 
 #Determine http or https (ssl)
 SSL=True
-DEV = False
+DEV = True
 
 #Settings selection
 if DEV == False:
@@ -86,6 +86,7 @@ MIDDLEWARE = DEBUG_TOOLBAR_MIDDLEWARE+\
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # 'config.custom_middlewares.WsgiLogErrors',
@@ -252,6 +253,13 @@ if DEBUG:
     }
 
 SESSION_ENGINE="django.contrib.sessions.backends.file"
+
+#session expire
+SESSION_EXPIRE_SECONDS = 1800 # Expire after 30 minutes
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True #Invalid session
+
+SESSION_TIMEOUT_REDITECT = 'accounts:login'
 
 #CACHE
 CACHES = {

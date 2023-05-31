@@ -215,7 +215,6 @@ class Command(BaseCommand):
             "model":{"file_obj":"dyndbfilesmodel","file_type_field":None},
             "dynamics":{"file_obj":"dyndbfilesdynamics","file_type_field":"type"}}
             file_subtypes_dict = get_file_subtypes_dict()
-            print(file_subtypes_dict)
             work_dict = dict()
             if submission_ids is not None and object_id_dict is not None:
                 raise ValueError("Only one keyword, 'submission_ids' or 'object_id_dict', can be defined.")

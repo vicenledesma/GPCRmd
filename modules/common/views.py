@@ -772,7 +772,6 @@ def SelectionGproteinToggle(request):
     context['gprots'] = ProteinGProtein.objects.all()
     
     if preferred == 'true':
-        print(request.session['selection'])
         return render(request, 'common/selection_filters_pref_gproteins_selector.html', context)
     else:
         return render(request, 'common/selection_filters_gproteins_selector.html', context)
@@ -827,7 +826,6 @@ def SelectionSchemesPredefined(request):
     all_gns = ResidueNumberingScheme.objects.exclude(slug=settings.DEFAULT_NUMBERING_SCHEME)
     gns = False
     if numbering_schemes == 'All':
-        print(len(selection.numbering_schemes), all_gns.count())
         if len(selection.numbering_schemes) == all_gns.count():
             gns = []
         else:

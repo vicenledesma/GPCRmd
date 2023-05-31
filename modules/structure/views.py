@@ -1483,7 +1483,6 @@ def webformdata(request) :
                 else:
                     pos_id = ''
                     aux_id = '1'
-                print(key,aux_id,pos_id)
 
                 if 'aux'+aux_id not in auxiliary:
                     auxiliary['aux'+aux_id] = {'position':data['position'+pos_id],'type':data['protein_type'+pos_id],'presence':data['presence'+pos_id]}

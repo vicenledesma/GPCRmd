@@ -6717,7 +6717,7 @@ $("#show_nearby_residues").on("change", function() {
         seloptdiv.hide()
         
         $.ajax({
-            url: "../ac_update/"+dyn_id,
+            url: "../ac_update/"+dyn_id+"/",
             data_type: 'json',
             type: 'POST',
             data: form.serialize(),

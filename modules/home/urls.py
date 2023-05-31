@@ -19,6 +19,10 @@ urlpatterns = [
     re_path(r'^updating/$', views.is_updating, name='is_updating'),
     re_path(r'^remove_marker/$', views.remove_marker, name='remove_marker'),
     re_path(r'^quickloadall_both/$', views.quickloadall_both, name="quickloadall_both"),
-    re_path(r'^cookies&privacy-policy/$', views.cookies_privacy_policy, name="cookies_privacy_policy"),
+    re_path(r'^disclaimer/$', views.disclaimer, name="disclaimer"),
+    re_path(r'^privacy-policy/$', views.privacy_policy, name="privacy_policy"),
+    re_path(r'^terms&conditions/$', views.terms, name="terms"),
+    re_path(r'^cookies-policy/$', views.cookies_policy, name="cookies_policy"),
+
 
 ]

@@ -175,7 +175,6 @@ class UploadFileForm(forms.Form):
         all_files = self.files.getlist('traj_files')
         for file_data in all_files:
             file_name = file_data.name 
-            print(file_name)
             ext = os.path.splitext(file_name)[1]
             valid_extensions = ['.xtc','.dcd']
             if not ext in valid_extensions:
